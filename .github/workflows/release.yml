@@ -12,6 +12,7 @@ jobs:
     secrets: inherit
   
   docker:
+    needs: test
     name: Build
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -37,7 +38,7 @@ jobs:
         run: docker build -f Headlines.WebUI/dockerfile/Dockerfile-prod .    
   
   publish:
-    needs: [test, docker]
+    needs: docker
     name: Publish to GHCR
     runs-on: ubuntu-latest
     permissions:
