@@ -66,6 +66,7 @@ jobs:
           context: .
           file: Headlines.WebAPI/Dockerfile
           push: true
+          build-args: package_pass=${{ secrets.PBILEK_PACKAGES_TOKEN }}
           tags: ${{ steps.meta-webapi.outputs.tags }}
           labels: ${{ steps.meta-webapi.outputs.labels }}
           
@@ -96,5 +97,6 @@ jobs:
           context: .
           file: Headlines.RSSProcessingMicroService/Dockerfile
           push: true
+          build-args: package_pass=${{ secrets.PBILEK_PACKAGES_TOKEN }}
           tags: ${{ steps.meta-rss.outputs.tags }}
           labels: ${{ steps.meta-rss.outputs.labels }}
