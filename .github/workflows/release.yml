@@ -28,13 +28,13 @@ jobs:
           echo "DB_INITIAL_CATALOG=Headlines" >> .env          
       
       - name: "🚀 build webui"
-        run: docker build Headlines.WebUI/dockerfile/Dockerfile-prod
+        run: docker build -f Headlines.WebUI/dockerfile/Dockerfile-prod
       
       - name: "🚀 build webapi"
-        run: docker build Headlines.WebAPI/Dockerfile
+        run: docker build -f Headlines.WebAPI/Dockerfile
         
       - name: "🚀 build rss"
-        run: docker build Headlines.RSSProcessingMicroService/Dockerfile
+        run: docker build -f Headlines.RSSProcessingMicroService/Dockerfile
   
   publish:
     needs: [test, docker]
@@ -63,7 +63,7 @@ jobs:
       - name: "🚀 build and push web api "
         uses: docker/build-push-action@v3
         with:
-          context: Headlines
+          context: .
           file: Headlines.WebAPI/Dockerfile
           push: true
           tags: ${{ steps.meta-webapi.outputs.tags }}
@@ -78,7 +78,7 @@ jobs:
       - name: "🚀 build and push web ui"
         uses: docker/build-push-action@v3
         with:
-          context: Headlines
+          context: .
           file: Headlines.WebUI/dockerfile/Dockerfile-prod
           push: true
           tags: ${{ steps.meta-webui.outputs.tags }}
@@ -93,7 +93,7 @@ jobs:
       - name: "🚀 build and push rss"
         uses: docker/build-push-action@v3
         with:
-          context: Headlines
+          context: .
           file: Headlines.RSSProcessingMicroService/Dockerfile
           push: true
           tags: ${{ steps.meta-rss.outputs.tags }}
