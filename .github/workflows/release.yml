@@ -1,0 +1,100 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: Test
+    uses: PetrBilek1/headlines/.github/workflows/development.yml@master
+    secrets: inherit
+  
+  docker:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v3
+      
+      - name: "🔧 create .env files"
+        run: |
+          echo "DOMAIN=localhost" > .env
+          echo "DB_LOGIN=sa" >> .env
+          echo "DB_PASSWORD=Aa123456" >> .env
+          echo "DB_DATA_SOURCE=headlines.db" >> .env
+          echo "DB_INITIAL_CATALOG=Headlines" >> .env          
+      
+      - name: "🚀 build webui"
+        run: docker build Headlines.WebUI/dockerfile/Dockerfile-prod
+      
+      - name: "🚀 build webapi"
+        run: docker build Headlines.WebAPI/Dockerfile
+        
+      - name: "🚀 build rss"
+        run: docker build Headlines.RSSProcessingMicroService/Dockerfile
+  
+  publish:
+    needs: [test, docker]
+    name: Publish to GHCR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v3
+        
+      - name: "🔧 log in to the container registry"
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_TOKEN }}
+          
+      - name: "🔧 extract webapi metadata"
+        id: meta-webapi
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/headlines-webapi
+          
+      - name: "🚀 build and push web api "
+        uses: docker/build-push-action@v3
+        with:
+          context: Headlines
+          file: Headlines.WebAPI/Dockerfile
+          push: true
+          tags: ${{ steps.meta-webapi.outputs.tags }}
+          labels: ${{ steps.meta-webapi.outputs.labels }}
+          
+      - name: "🔧 extract webui metadata"
+        id: meta-webui
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/headlines-webui
+          
+      - name: "🚀 build and push web ui"
+        uses: docker/build-push-action@v3
+        with:
+          context: Headlines
+          file: Headlines.WebUI/dockerfile/Dockerfile-prod
+          push: true
+          tags: ${{ steps.meta-webui.outputs.tags }}
+          labels: ${{ steps.meta-webui.outputs.labels }}
+          
+      - name: "🔧 extract rss metadata"
+        id: meta-rss
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/headlines-rss
+          
+      - name: "🚀 build and push rss"
+        uses: docker/build-push-action@v3
+        with:
+          context: Headlines
+          file: Headlines.RSSProcessingMicroService/Dockerfile
+          push: true
+          tags: ${{ steps.meta-rss.outputs.tags }}
+          labels: ${{ steps.meta-rss.outputs.labels }}
