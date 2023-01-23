@@ -27,9 +27,6 @@ jobs:
           echo "DB_DATA_SOURCE=headlines.db" >> .env
           echo "DB_INITIAL_CATALOG=Headlines" >> .env          
                           
-      - name: "🔧 setup package sources"
-        run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
-      
       - name: "🚀 build webapi"
         run: docker build -f Headlines.WebAPI/Dockerfile --build-arg packagePass=${{ secrets.PBILEK_PACKAGES_TOKEN }} .
            
