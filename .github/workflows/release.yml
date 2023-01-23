@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      PBILEK_PACKAGES_TOKEN: ${{ secrets.PBILEK_PACKAGES_TOKEN }}
+      PBILEK_PACKAGES_TOKEN: kebab
     steps:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v3
