@@ -31,10 +31,10 @@ jobs:
         run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
       
       - name: "🚀 build webapi"
-        run: docker build -f Headlines.WebAPI/Dockerfile .
+        run: docker build -f Headlines.WebAPI/Dockerfile --build-arg packagePass=${{ secrets.PBILEK_PACKAGES_TOKEN }} .
            
       - name: "🚀 build rss"
-        run: docker build -f Headlines.RSSProcessingMicroService/Dockerfile .
+        run: docker build -f Headlines.RSSProcessingMicroService/Dockerfile --build-arg packagePass=${{ secrets.PBILEK_PACKAGES_TOKEN }} .
         
       - name: "🚀 build webui"
         run: docker build -f Headlines.WebUI/dockerfile/Dockerfile-prod .    
