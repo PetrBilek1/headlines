@@ -1,4 +1,4 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+ARG packagePass
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
@@ -6,6 +6,9 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
+
+RUN echo "<configuration><packageSources><add key=\"github\" value=\"https://nuget.pkg.github.com/PetrBilek1/index.json\" /></packageSources> <packageSourceCredentials><github><add key=\"Username\" value=\"PetrBilek1\" /><add key=\"ClearTextPassword\" value=\"$packagePass\" /></github></packageSourceCredentials></configuration>" > nuget.config
+
 COPY ["Headlines.WebAPI/Headlines.WebAPI.csproj", "Headlines.WebAPI/"]
 RUN dotnet restore "Headlines.WebAPI/Headlines.WebAPI.csproj"
 COPY . .
