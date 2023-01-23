@@ -1,6 +1,6 @@
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 ARG package_pass
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
 
