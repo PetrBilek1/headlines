@@ -28,15 +28,10 @@ jobs:
           echo "DB_INITIAL_CATALOG=Headlines" >> .env          
       
       - name: "🚀 build webui"
-        run: docker build -f Headlines.WebUI/dockerfile/Dockerfile-prod .
-        
-      - name: "🔧 setup dotnet"
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '7.0.x'
+        run: docker build -f Headlines.WebUI/dockerfile/Dockerfile-prod .        
           
       - name: "🔧 setup package sources"
-        run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
+        run: echo "<configuration><packageSources><add key=\"github\" value=\"https://nuget.pkg.github.com/PetrBilek1/index.json\" /></packageSources> <packageSourceCredentials><github><add key=\"Username\" value=\"PetrBilek1\" /><add key=\"ClearTextPassword\" value=\"${{ secrets.PBILEK_PACKAGES_TOKEN }}\" /></github></packageSourceCredentials></configuration>" > nuget.config
       
       - name: "🚀 build webapi"
         run: docker build -f Headlines.WebAPI/Dockerfile .
