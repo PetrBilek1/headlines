@@ -1,9 +1,13 @@
+ARG package_pass
+
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
+
+RUN echo "<configuration><packageSources><add key=\"github\" value=\"https://nuget.pkg.github.com/PetrBilek1/index.json\" /></packageSources> <packageSourceCredentials><github><add key=\"Username\" value=\"PetrBilek1\" /><add key=\"ClearTextPassword\" value=\"${package_pass}\" /></github></packageSourceCredentials></configuration>" > nuget.config
 
 COPY ["Headlines.RSSProcessingMicroService/Headlines.RSSProcessingMicroService.csproj", "Headlines.RSSProcessingMicroService/"]
 COPY ["Headlines.DependencyResolution/Headlines.DependencyResolution.csproj", "Headlines.DependencyResolution/"]
