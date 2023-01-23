@@ -1,0 +1,80 @@
+version: '3.4'
+
+networks:
+  headlines.network.internal:
+
+volumes:
+  mssql-data:
+
+services:
+  headlines.db:
+    container_name: headlines.db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: always
+    ports:
+      - 8003:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${DB_PASSWORD}
+    networks:
+      - headlines.network.internal
+    volumes:
+      - mssql-data:/var/opt/mssql  
+      
+  headlines.webapi:
+    container_name: headlines.webapi
+    build:
+      context: .
+      dockerfile: Headlines.WebAPI/Dockerfile   
+    networks:
+      - headlines.network.internal
+    ports:
+      - 8083:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - WEB_UI_DOMAIN=${DOMAIN}
+      #DATABASE
+      - DB_LOGIN=${DB_LOGIN}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATA_SOURCE=${DB_DATA_SOURCE}
+      - DB_INITIAL_CATALOG=${DB_INITIAL_CATALOG}
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  headlines.webui:
+    container_name: headlines.webui
+    build:
+      context: .
+      dockerfile: Headlines.WebUI/dockerfile/Dockerfile
+    networks:
+      - headlines.network.internal  
+    volumes:
+      - './Headlines.WebUI:/app'
+      - '/app/node_modules'
+    ports:
+      - 8081:8080
+
+  headlines.rss:
+    container_name: headlines.rss
+    restart: always
+    build:
+      context: .
+      dockerfile: Headlines.RSSProcessingMicroService/Dockerfile
+    ports:
+      - 8082:80
+    depends_on: 
+      - headlines.db
+    networks:
+      - headlines.network.internal
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      #DATABASE
+      - DB_LOGIN=${DB_LOGIN}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATA_SOURCE=${DB_DATA_SOURCE}
+      - DB_INITIAL_CATALOG=${DB_INITIAL_CATALOG}
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
