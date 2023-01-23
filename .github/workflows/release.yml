@@ -28,13 +28,13 @@ jobs:
           echo "DB_INITIAL_CATALOG=Headlines" >> .env          
       
       - name: "🚀 build webui"
-        run: docker build -f Headlines.WebUI/dockerfile/Dockerfile-prod
+        run: docker build -f Headlines.WebUI/dockerfile/Dockerfile-prod .
       
       - name: "🚀 build webapi"
-        run: docker build -f Headlines.WebAPI/Dockerfile
+        run: docker build -f Headlines.WebAPI/Dockerfile .
         
       - name: "🚀 build rss"
-        run: docker build -f Headlines.RSSProcessingMicroService/Dockerfile
+        run: docker build -f Headlines.RSSProcessingMicroService/Dockerfile .
   
   publish:
     needs: [test, docker]
