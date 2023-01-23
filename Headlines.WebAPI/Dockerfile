@@ -1,4 +1,4 @@
-ARG packagePass
+ARG package_pass
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
@@ -7,7 +7,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 
-RUN echo "<configuration><packageSources><add key=\"github\" value=\"https://nuget.pkg.github.com/PetrBilek1/index.json\" /></packageSources> <packageSourceCredentials><github><add key=\"Username\" value=\"PetrBilek1\" /><add key=\"ClearTextPassword\" value=\"${packagePass}\" /></github></packageSourceCredentials></configuration>" > nuget.config
+RUN echo "<configuration><packageSources><add key=\"github\" value=\"https://nuget.pkg.github.com/PetrBilek1/index.json\" /></packageSources> <packageSourceCredentials><github><add key=\"Username\" value=\"PetrBilek1\" /><add key=\"ClearTextPassword\" value=\"${package_pass}\" /></github></packageSourceCredentials></configuration>" > nuget.config
 
 COPY ["Headlines.WebAPI/Headlines.WebAPI.csproj", "Headlines.WebAPI/"]
 RUN dotnet restore "Headlines.WebAPI/Headlines.WebAPI.csproj"
