@@ -1,0 +1,4 @@
+﻿add-migration NAZEV
+remove-migration
+
+update-database
