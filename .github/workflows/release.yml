@@ -11,22 +11,26 @@ jobs:
     uses: PetrBilek1/headlines/.github/workflows/development.yml@master
     secrets: inherit
   
-  docker:
+  docker-webui:
     needs: test
-    name: Build
+    name: Build WebUI
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: "☁️ checkout repository"
-        uses: actions/checkout@v3
-      
-      - name: "🔧 create .env files"
-        run: |
-          echo "DOMAIN=localhost" > .env
-          echo "DB_LOGIN=sa" >> .env
-          echo "DB_PASSWORD=Aa123456" >> .env
-          echo "DB_DATA_SOURCE=headlines.db" >> .env
-          echo "DB_INITIAL_CATALOG=Headlines" >> .env          
+        uses: actions/checkout@v3        
+        
+      - name: "🚀 build webui"
+        run: docker build -f Headlines.WebUI/dockerfile/Dockerfile-prod .    
+        
+  docker-webapi:
+    needs: test
+    name: Build WebAPI
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v3        
                           
       - name: "🚀 build webapi"
         run: docker build --build-arg package_pass=${{ secrets.PBILEK_PACKAGES_TOKEN }} -f Headlines.WebAPI/Dockerfile .
@@ -35,10 +39,22 @@ jobs:
         run: docker build --build-arg package_pass=${{ secrets.PBILEK_PACKAGES_TOKEN }} -f Headlines.RSSProcessingMicroService/Dockerfile .
         
       - name: "🚀 build webui"
-        run: docker build -f Headlines.WebUI/dockerfile/Dockerfile-prod .    
+        run: docker build -f Headlines.WebUI/dockerfile/Dockerfile-prod . 
+  
+  docker-rss:
+    needs: test
+    name: Build RSS
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v3        
+                             
+      - name: "🚀 build rss"
+        run: docker build --build-arg package_pass=${{ secrets.PBILEK_PACKAGES_TOKEN }} -f Headlines.RSSProcessingMicroService/Dockerfile .
   
   publish:
-    needs: docker
+    needs: [ docker-webui, docker-webapi, docker-rss ]
     name: Publish to GHCR
     runs-on: ubuntu-latest
     permissions:
