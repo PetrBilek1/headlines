@@ -34,12 +34,6 @@ jobs:
                           
       - name: "🚀 build webapi"
         run: docker build --build-arg package_pass=${{ secrets.PBILEK_PACKAGES_TOKEN }} -f Headlines.WebAPI/Dockerfile .
-           
-      - name: "🚀 build rss"
-        run: docker build --build-arg package_pass=${{ secrets.PBILEK_PACKAGES_TOKEN }} -f Headlines.RSSProcessingMicroService/Dockerfile .
-        
-      - name: "🚀 build webui"
-        run: docker build -f Headlines.WebUI/dockerfile/Dockerfile-prod . 
   
   docker-rss:
     needs: test
