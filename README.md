@@ -4,16 +4,20 @@
 
 ### Technologies used:
 **Frontend:**
-
  - **Vue.js**
 
 **Backend:**
-
- - **ASP.NET Core**
+ - **ASPNET Core**
  - **Entity Framework Core**
  - **Microsoft SQL**
 
-**Dev Ops:**
+**Testing:**
+ - [XUnit](https://github.com/xunit/xunit)
+ - [Testcontainers](https://github.com/testcontainers/testcontainers-dotnet)
+ - [FluentAssertions](https://github.com/fluentassertions/fluentassertions)
+ - [Moq](https://github.com/moq/moq4)
+ - [Bogus](https://github.com/bchavez/Bogus)
 
+**Dev Ops:**
  - **Docker**
  - **Kubernetes**
