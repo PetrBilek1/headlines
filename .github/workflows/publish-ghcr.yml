@@ -1,4 +1,4 @@
-name: Publish to GHCR
+name: Publish containers
 
 on:
   workflow_call:
