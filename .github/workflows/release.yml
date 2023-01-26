@@ -22,5 +22,8 @@ jobs:
   publish:
     needs: [test, build]
     name: Publish
+    permissions:
+      contents: read
+      packages: write
     uses: PetrBilek1/headlines/.github/workflows/publish-ghcr.yml@master
     secrets: inherit
