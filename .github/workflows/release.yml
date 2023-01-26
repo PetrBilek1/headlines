@@ -20,7 +20,7 @@ jobs:
     secrets: inherit
   
   publish:
-    needs: [test, build]
+    needs: build
     name: Publish
     permissions:
       contents: read
