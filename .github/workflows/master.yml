@@ -1,0 +1,48 @@
+name: Master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: Test
+    uses: PetrBilek1/headlines/.github/workflows/development.yml@master
+    secrets: inherit
+  
+  docker-webui:
+    needs: test
+    name: Build WebUI
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v3        
+        
+      - name: "🚀 build webui"
+        run: docker build -f Headlines.WebUI/dockerfile/Dockerfile-prod .    
+        
+  docker-webapi:
+    needs: test
+    name: Build WebAPI
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v3        
+                          
+      - name: "🚀 build webapi"
+        run: docker build --build-arg package_pass=${{ secrets.PBILEK_PACKAGES_TOKEN }} -f Headlines.WebAPI/Dockerfile .
+  
+  docker-rss:
+    needs: test
+    name: Build RSS
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v3        
+                             
+      - name: "🚀 build rss"
+        run: docker build --build-arg package_pass=${{ secrets.PBILEK_PACKAGES_TOKEN }} -f Headlines.RSSProcessingMicroService/Dockerfile .
