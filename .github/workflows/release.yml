@@ -2,18 +2,25 @@ name: Release
 
 on:
   release:
-    types: [published]
+    types: 
+      - published
     branches:
       - master
 
 jobs:
-  test-build:
-    name: Test & Build
-    uses: PetrBilek1/headlines/.github/workflows/master.yml@master
+  test:
+    name: Test
+    uses: PetrBilek1/headlines/.github/workflows/test.yml@master
+    secrets: inherit
+  
+  build:
+    needs: test
+    name: Build
+    uses: PetrBilek1/headlines/.github/workflows/build.yml@master
     secrets: inherit
   
   publish:
-    needs: test-build
+    needs: [test, build]
     name: Publish to GHCR
     runs-on: ubuntu-latest
     permissions:
