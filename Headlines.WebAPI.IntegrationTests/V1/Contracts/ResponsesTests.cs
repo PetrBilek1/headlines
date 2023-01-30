@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
+using Headlines.WebAPI.Contracts;
 using Headlines.WebAPI.Contracts.V1.Models;
+using Headlines.WebAPI.Contracts.V1.Responses.ArticleSources;
 using Headlines.WebAPI.Contracts.V1.Responses.HeadlineChanges;
 using Headlines.WebAPI.Contracts.V1.Responses.UserUpvotes;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
@@ -21,17 +23,29 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
                 .Select(x => x.Name)
                 .ToHashSet();
 
-            var responses = typeof(IApiMarker).Assembly
+            var responses = typeof(IApiContractsMarker).Assembly
                 .GetTypes()
                 .Where(x => !string.IsNullOrEmpty(x.Namespace) && x.Namespace.StartsWith("Headlines.WebAPI.Contracts.V1.Responses"))
                 .Select(x => $"{x.Namespace!.Replace("Headlines.WebAPI.Contracts.V1.Responses.", "")}_{x.Name}")
                 .ToList();
 
             //Assert
+            responses.Should().HaveCountGreaterThan(0);
+
             foreach (var response in responses)
             {
                 tests.Should().Contain(response);
             }
+        }
+
+        [Fact]
+        public void ArticleSources_GetAllResponse()
+        {
+            //Assert
+            TestExtensions.AssertProperties<GetAllResponse>(new()
+            {
+                ("ArticleSources", typeof(List<ArticleSourceModel>), new string[] { _jsonPropertyAttribute })
+            });
         }
 
         [Fact]

@@ -12,7 +12,7 @@
                             <router-link to="/" class="nav-link text-dark" asp-area="">Titulky</router-link>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark">Články - brzy</a>
+                            <router-link to="/articles" class="nav-link text-dark" asp-area="">Články</router-link>
                         </li>
                     </ul>
                 </div>

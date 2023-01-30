@@ -5,6 +5,15 @@ namespace Headlines.WebAPI.Contracts.V1
 {
     public sealed class MapperV1
     {
+        public ArticleSourceModel MapArticleSource(ArticleSourceDTO articleSource)
+        {
+            return new ArticleSourceModel
+            {
+                Id = articleSource.Id,
+                Name = articleSource.Name
+            };
+        }
+
         public ArticleModel MapArticle(ArticleDTO article)
         {
             return new ArticleModel

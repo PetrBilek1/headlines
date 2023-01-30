@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using Headlines.Enums;
+using Headlines.WebAPI.Contracts;
 using Headlines.WebAPI.Contracts.V1.Models;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
-using System.Reflection;
 using Xunit;
 
 namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
@@ -21,17 +21,30 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
                 .Select(x => x.Name)
                 .ToHashSet();
 
-            var models = typeof(IApiMarker).Assembly
+            var models = typeof(IApiContractsMarker).Assembly
                 .GetTypes()
                 .Where(x => x.Namespace == "Headlines.WebAPI.Contracts.V1.Models")
                 .Select(x => x.Name)
                 .ToList();
 
             //Assert
+            models.Should().HaveCountGreaterThan(0);
+
             foreach(var model in models)
             {
                 tests.Should().Contain(model);
             }
+        }
+
+        [Fact]
+        public void ArticleSourceModel()
+        {
+            //Assert
+            TestExtensions.AssertProperties<ArticleSourceModel>(new()
+            {
+                ("Id", typeof(long), new string[] { _jsonPropertyAttribute }),
+                ("Name", typeof(string), new string[] { _jsonPropertyAttribute }),
+            });
         }
 
         [Fact]

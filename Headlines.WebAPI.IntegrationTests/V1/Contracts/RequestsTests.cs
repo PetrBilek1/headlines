@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Headlines.WebAPI.Contracts;
 using Headlines.WebAPI.Contracts.V1.Requests.HeadlineChanges;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
 using Xunit;
@@ -20,13 +21,15 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
                 .Select(x => x.Name)
                 .ToHashSet();
 
-            var requests = typeof(IApiMarker).Assembly
+            var requests = typeof(IApiContractsMarker).Assembly
                 .GetTypes()
                 .Where(x => !string.IsNullOrEmpty(x.Namespace) && x.Namespace.StartsWith("Headlines.WebAPI.Contracts.V1.Requests"))
                 .Select(x => x.Name)
                 .ToList();
 
             //Assert
+            requests.Should().HaveCountGreaterThan(0);
+
             foreach (var request in requests)
             {
                 tests.Should().Contain(request);

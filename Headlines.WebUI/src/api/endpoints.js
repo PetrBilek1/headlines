@@ -28,5 +28,10 @@ export default {
         Get(userToken) {
             return getApiAddress() + "/v1/UserUpvotes/Get?userToken=" + userToken
         }    
+    },
+    ArticleSources: {
+        GetAll() {
+            return getApiAddress() + "/v1/ArticleSources/GetAll"
+        }
     }
 }

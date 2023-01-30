@@ -2,7 +2,6 @@
 using Headlines.BL.DAO;
 using Headlines.DTO.Entities;
 using Headlines.ORM.Core.Entities;
-using Headlines.WebAPI.Contracts.V1.Models;
 using Microsoft.Extensions.DependencyInjection;
 using PBilek.ORM.Core.Enum;
 using PBilek.ORM.Core.UnitOfWork;
@@ -56,6 +55,21 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
             var changes = await _headlineChangeDAO.GetAllAsync(default);
 
             return _mapper.Map<List<HeadlineChangeDTO>>(changes);
+        }
+
+        public async Task<List<ArticleSourceDTO>> InsertArticleSourcesAsync(IEnumerable<ArticleSourceDTO> articleSources)
+        {
+            using var uow = _uowProvider.CreateUnitOfWork();
+            List<ArticleSource> inserted = new();
+
+            foreach (ArticleSourceDTO articleSourceDTO in articleSources)
+            {
+                inserted.Add(await GetOrInsertArticleSourceAsync(articleSourceDTO));
+            }
+
+            await uow.CommitAsync();
+
+            return _mapper.Map<List<ArticleSourceDTO>>(inserted);
         }
 
         public async Task<UserUpvotesDTO> InsertUserUpvotesAsync(UserUpvotesDTO userUpvotes)

@@ -9,6 +9,16 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
     {
         public static int Seed { get; } = 6684796;
 
+        public static IEnumerable<ArticleSourceDTO> GenerateArticleSources(int count)
+        {
+            var articleSourceGenerator = ArticleSourceDTO();
+
+            for (int i = 0; i < count; i++)
+            {
+                yield return articleSourceGenerator.Generate();
+            }
+        }
+
         public static IEnumerable<HeadlineChangeDTO> GenerateHeadlineChanges(int count)
         {
             var articleSourceGenerator = ArticleSourceDTO();
@@ -78,7 +88,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
                 .RuleFor(x => x.Id, y => default)
                 .RuleFor(x => x.Name, faker => faker.Lorem.Word())
                 .RuleFor(x => x.RssUrl, y => Guid.NewGuid().ToString())
-                .RuleFor(x => x.UrlIdSource, y => Enums.ArticleUrlIdSource.Id);
+                .RuleFor(x => x.UrlIdSource, y => ArticleUrlIdSource.Id);
         }
     }
 }
