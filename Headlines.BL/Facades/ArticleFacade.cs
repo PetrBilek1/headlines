@@ -57,7 +57,7 @@ namespace Headlines.BL.Facades
             return _mapper.Map<List<ArticleDTO>>(articles);
         }
 
-        public async Task<long> GetArticlesCountByFiltersSkipTakeAsync(string currentTitlePrompt, long[]? articleSources = null, CancellationToken cancellationToken = default)
+        public async Task<long> GetArticlesCountByFiltersAsync(string currentTitlePrompt, long[]? articleSources = null, CancellationToken cancellationToken = default)
         {
             using IUnitOfWork uow = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
