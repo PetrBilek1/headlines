@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Headlines.WebAPI.Contracts.V1.Requests.Articles;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Headlines.WebAPI.Controllers.v1
 {
@@ -11,7 +12,7 @@ namespace Headlines.WebAPI.Controllers.v1
         public const int DefaultTake = 10;
 
         [HttpPost("GetArticlesSkipTake")]
-        public async Task<IActionResult> GetArticlesSkipTake()
+        public async Task<IActionResult> GetArticlesSkipTake([FromBody] GetArticlesSkipTakeRequest request, CancellationToken cancellationToken)
         {
             return Ok();
         }
