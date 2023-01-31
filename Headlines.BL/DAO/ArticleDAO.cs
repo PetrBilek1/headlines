@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using PBilek.Infrastructure.DatetimeProvider;
 using PBilek.ORM.Core.UnitOfWork;
 using PBilek.ORM.EntityFrameworkCore.DAO;
-using System.Linq;
 
 namespace Headlines.BL.DAO
 {
@@ -32,7 +31,7 @@ namespace Headlines.BL.DAO
                 .ToListAsync(cancellationToken);
         }
 
-        public Task<long> GetCountByFiltersSkipTakeAsync(int skip, int take, string currentTitlePrompt, CancellationToken cancellationToken, long[]? articleSources = null)
+        public Task<long> GetCountByFiltersAsync(string currentTitlePrompt, CancellationToken cancellationToken, long[]? articleSources = null)
         {
             return GetByFiltersSkipTakeQueryable(null, null, currentTitlePrompt, articleSources)
                 .LongCountAsync(cancellationToken);

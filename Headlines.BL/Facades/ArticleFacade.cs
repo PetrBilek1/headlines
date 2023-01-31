@@ -57,11 +57,11 @@ namespace Headlines.BL.Facades
             return _mapper.Map<List<ArticleDTO>>(articles);
         }
 
-        public async Task<long> GetArticlesCountByFiltersSkipTakeAsync(int skip, int take, string currentTitlePrompt, long[]? articleSources = null, CancellationToken cancellationToken = default)
+        public async Task<long> GetArticlesCountByFiltersSkipTakeAsync(string currentTitlePrompt, long[]? articleSources = null, CancellationToken cancellationToken = default)
         {
             using IUnitOfWork uow = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
-            long count = await _articleDAO.GetCountByFiltersSkipTakeAsync(skip, take, currentTitlePrompt, cancellationToken, articleSources);
+            long count = await _articleDAO.GetCountByFiltersAsync(currentTitlePrompt, cancellationToken, articleSources);
 
             return count;
         }
