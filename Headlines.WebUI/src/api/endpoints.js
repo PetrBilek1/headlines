@@ -33,5 +33,10 @@ export default {
         GetAll() {
             return getApiAddress() + "/v1/ArticleSources/GetAll"
         }
+    },
+    Articles: {
+        GetSkipTake() {
+            return getApiAddress() + "/v1/Articles/GetSkipTake"
+        }
     }
 }

@@ -11,8 +11,8 @@ namespace Headlines.WebAPI.Controllers.v1
         public const int MaxTake = 50;
         public const int DefaultTake = 10;
 
-        [HttpPost("GetArticlesSkipTake")]
-        public async Task<IActionResult> GetArticlesSkipTake([FromBody] GetArticlesSkipTakeRequest request, CancellationToken cancellationToken)
+        [HttpPost("GetSkipTake")]
+        public async Task<IActionResult> GetSkipTake([FromBody] GetSkipTakeRequest request, CancellationToken cancellationToken)
         {
             return Ok();
         }

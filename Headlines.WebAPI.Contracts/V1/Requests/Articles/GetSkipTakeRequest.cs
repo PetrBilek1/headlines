@@ -2,7 +2,7 @@
 
 namespace Headlines.WebAPI.Contracts.V1.Requests.Articles
 {
-    public sealed class GetArticlesSkipTakeRequest
+    public sealed class GetSkipTakeRequest
     {
         [JsonProperty("skip")]
         public int? Skip { get; set; }

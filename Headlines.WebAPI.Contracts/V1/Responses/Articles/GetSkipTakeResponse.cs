@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Headlines.WebAPI.Contracts.V1.Responses.Articles
 {
-    public sealed class GetArticlesSkipTakeResponse
+    public sealed class GetSkipTakeResponse
     {
         [JsonProperty("articles")]
         public List<ArticleModel> Articles { get; set; }

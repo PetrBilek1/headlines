@@ -29,9 +29,9 @@
                 </div>
             </div>
             <div style="width: 100%; margin-left: 10px;">
-                <input class="form-control form-control-lg" type="text" placeholder="Titulek" v-model="sourcesTitle">
+                <input class="form-control form-control-lg" type="text" placeholder="Titulek" v-model="searchPrompt">
             </div>
-            <button class="btn btn-lg btn-light" style="width: 100px; margin-left: 10px;" type="button">
+            <button class="btn btn-lg btn-light" style="width: 100px; margin-left: 10px;" type="button" @click="fetchArticlePage(selectedPage)">
                 <fai :icon="['fas', 'magnifying-glass']"></fai>
             </button>
         </div>       
@@ -49,7 +49,8 @@ export default {
         return {
             allSourcesSelected: false,
             articleSources: [],
-            sourcesTitle: "",
+            searchPrompt: "",
+            articlesPerPage: 10,
             selectedPage: 0,
             articlePage: []
         }
@@ -88,8 +89,28 @@ export default {
         setAllSourcesSelected() {
             this.allSourcesSelected = this.articleSources.every(x => x.isSelected)
         },
-        fetchArticlePage(page) {
+        getSelectedSourcesArray() {
+            var selected = []
 
+            this.articleSources.forEach(x => {
+                if (x.isSelected) {
+                    selected.push(x.source.id)
+                }
+            })
+
+            return selected
+        },
+        fetchArticlePage(page) {
+            axios
+                .post(endpoints.Articles.GetSkipTake(), {
+                    skip: page * this.articlesPerPage,
+                    take: this.articlesPerPage,
+                    searchPrompt: this.searchPrompt,
+                    articleSources: this.getSelectedSourcesArray()
+                })
+                .then(response => {
+                    console.log(response.data)
+                })
         }
     },
     created() {
