@@ -9,7 +9,7 @@ volumes:
 services:
   headlines.db:
     container_name: headlines.db
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: ghcr.io/petrbilek1/mssql-fts-ha:latest
     restart: always
     ports:
       - 8003:1433
@@ -25,7 +25,9 @@ services:
     container_name: headlines.webapi
     build:
       context: .
-      dockerfile: Headlines.WebAPI/Dockerfile   
+      dockerfile: Headlines.WebAPI/Dockerfile 
+    depends_on:
+      - headlines.db
     networks:
       - headlines.network.internal
     ports:

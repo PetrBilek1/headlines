@@ -17,7 +17,7 @@ namespace Headlines.ORM.Core.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0")
+                .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -32,13 +32,11 @@ namespace Headlines.ORM.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("CurrentTitle")
-                        .IsRequired()
                         .HasMaxLength(1024)
                         .HasColumnType("nvarchar(1024)")
                         .HasColumnName("CURRENT_TITLE");
 
                     b.Property<string>("Link")
-                        .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)")
                         .HasColumnName("LINK");
@@ -52,7 +50,6 @@ namespace Headlines.ORM.Core.Migrations
                         .HasColumnName("SOURCE_ID");
 
                     b.Property<string>("UrlId")
-                        .IsRequired()
                         .HasMaxLength(1024)
                         .HasColumnType("nvarchar(1024)")
                         .HasColumnName("URL_ID");
@@ -76,13 +73,11 @@ namespace Headlines.ORM.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)")
                         .HasColumnName("NAME");
 
                     b.Property<string>("RssUrl")
-                        .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)")
                         .HasColumnName("RSS_URL");
@@ -114,13 +109,11 @@ namespace Headlines.ORM.Core.Migrations
                         .HasColumnName("DETECTED");
 
                     b.Property<string>("TitleAfter")
-                        .IsRequired()
                         .HasMaxLength(1024)
                         .HasColumnType("nvarchar(1024)")
                         .HasColumnName("TITLE_AFTER");
 
                     b.Property<string>("TitleBefore")
-                        .IsRequired()
                         .HasMaxLength(1024)
                         .HasColumnType("nvarchar(1024)")
                         .HasColumnName("TITLE_BEFORE");
@@ -150,12 +143,10 @@ namespace Headlines.ORM.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Json")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("JSON");
 
                     b.Property<string>("UserToken")
-                        .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)")
                         .HasColumnName("USER_TOKEN");
