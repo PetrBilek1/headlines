@@ -33,7 +33,11 @@
         background-color: #1B818C !important;
     }
 
-    .navbar-brand, .nav-link {
+    .navbar-brand {
+        color: #E8BE6D !important;
+    }
+
+    .nav-link {
         color: #FFFFFF !important;
     }
 
