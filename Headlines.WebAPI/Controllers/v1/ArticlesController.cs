@@ -3,6 +3,7 @@ using Headlines.DTO.Entities;
 using Headlines.WebAPI.Contracts.V1.Requests.Articles;
 using Headlines.WebAPI.Contracts.V1.Responses.Articles;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 
 namespace Headlines.WebAPI.Controllers.v1
 {
@@ -24,15 +25,8 @@ namespace Headlines.WebAPI.Controllers.v1
         [HttpPost("GetSkipTake")]
         public async Task<IActionResult> GetSkipTake([FromBody] GetSkipTakeRequest request, CancellationToken cancellationToken)
         {
-            request.Skip ??= 0;
-            request.Take ??= DefaultTake;
-            request.Take = Math.Min(request.Take.Value, MaxTake);
+            await CompleteSkipTakeRequest(request, cancellationToken);
 
-            if (request.ArticleSources == null)
-            {
-                List<ArticleSourceDTO> sources = await _articleSourceFacade.GetAllArticleSourcesAsync(cancellationToken);
-                request.ArticleSources = sources.Select(x => x.Id).ToArray();
-            }
             if (!request.ArticleSources.Any())
             {
                 return Ok(new GetSkipTakeResponse
@@ -49,6 +43,19 @@ namespace Headlines.WebAPI.Controllers.v1
                 Articles = new(),
                 MatchesFiltersCount = 0
             });
+        }
+
+        private async Task CompleteSkipTakeRequest(GetSkipTakeRequest request, CancellationToken cancellationToken)
+        {
+            request.Skip ??= 0;
+            request.Take ??= DefaultTake;
+            request.Take = Math.Min(request.Take.Value, MaxTake);
+
+            if (request.ArticleSources == null)
+            {
+                List<ArticleSourceDTO> sources = await _articleSourceFacade.GetAllArticleSourcesAsync(cancellationToken);
+                request.ArticleSources = sources.Select(x => x.Id).ToArray();
+            }
         }
     }
 }
