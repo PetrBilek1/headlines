@@ -25,19 +25,19 @@ namespace Headlines.BL.DAO
                 .ToListAsync(cancellationToken);
         }
 
-        public Task<List<Article>> GetByFiltersSkipTakeAsync(int skip, int take, string currentTitlePrompt, CancellationToken cancellationToken, long[]? articleSources = null)
+        public Task<List<Article>> GetByFiltersSkipTakeAsync(int skip, int take, string currentTitlePrompt, CancellationToken cancellationToken, long[]? articleSources = null, DateTime? from = null, DateTime? to = null)
         {
-            return GetByFiltersSkipTakeQueryable(skip, take, currentTitlePrompt, articleSources)
+            return GetByFiltersSkipTakeQueryable(skip, take, currentTitlePrompt, articleSources, from, to)
                 .ToListAsync(cancellationToken);
         }
 
-        public Task<long> GetCountByFiltersAsync(string currentTitlePrompt, CancellationToken cancellationToken, long[]? articleSources = null)
+        public Task<long> GetCountByFiltersAsync(string currentTitlePrompt, CancellationToken cancellationToken, long[]? articleSources = null, DateTime? from = null, DateTime? to = null)
         {
-            return GetByFiltersSkipTakeQueryable(null, null, currentTitlePrompt, articleSources)
+            return GetByFiltersSkipTakeQueryable(null, null, currentTitlePrompt, articleSources, from, to)
                 .LongCountAsync(cancellationToken);
         }
 
-        private IQueryable<Article> GetByFiltersSkipTakeQueryable(int? skip, int? take, string currentTitlePrompt, long[]? articleSources)
+        private IQueryable<Article> GetByFiltersSkipTakeQueryable(int? skip, int? take, string currentTitlePrompt, long[]? articleSources, DateTime? from, DateTime? to)
         {
             IQueryable<Article> query = DbContext.Set<Article>().AsQueryable();
 
@@ -49,6 +49,16 @@ namespace Headlines.BL.DAO
             if (articleSources != null)
             {
                 query = query.Where(x => articleSources.Contains(x.SourceId));
+            }
+
+            if (from.HasValue)
+            {
+                query = query.Where(x => x.Published >= from);
+            }
+
+            if (to.HasValue)
+            {
+                query = query.Where(x => x.Published <= to);
             }
 
             if (skip.HasValue)

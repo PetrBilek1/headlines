@@ -48,20 +48,20 @@ namespace Headlines.BL.Facades
             return _mapper.Map<ArticleDTO>(article);
         }
 
-        public async Task<List<ArticleDTO>> GetArticlesByFiltersSkipTakeAsync(int skip, int take, string currentTitlePrompt, long[]? articleSources = null, CancellationToken cancellationToken = default)
+        public async Task<List<ArticleDTO>> GetArticlesByFiltersSkipTakeAsync(int skip, int take, string currentTitlePrompt, long[]? articleSources = null, DateTime? from = null, DateTime? to = null, CancellationToken cancellationToken = default)
         {
             using IUnitOfWork uow = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
-            List<Article> articles = await _articleDAO.GetByFiltersSkipTakeAsync(skip, take, currentTitlePrompt, cancellationToken, articleSources);
+            List<Article> articles = await _articleDAO.GetByFiltersSkipTakeAsync(skip, take, currentTitlePrompt, cancellationToken, articleSources, from, to);
 
             return _mapper.Map<List<ArticleDTO>>(articles);
         }
 
-        public async Task<long> GetArticlesCountByFiltersAsync(string currentTitlePrompt, long[]? articleSources = null, CancellationToken cancellationToken = default)
+        public async Task<long> GetArticlesCountByFiltersAsync(string currentTitlePrompt, long[]? articleSources = null, DateTime? from = null, DateTime? to = null, CancellationToken cancellationToken = default)
         {
             using IUnitOfWork uow = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
-            long count = await _articleDAO.GetCountByFiltersAsync(currentTitlePrompt, cancellationToken, articleSources);
+            long count = await _articleDAO.GetCountByFiltersAsync(currentTitlePrompt, cancellationToken, articleSources, from, to);
 
             return count;
         }
