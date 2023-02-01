@@ -1,16 +1,15 @@
 ﻿using FluentAssertions;
 using Headlines.DTO.Entities;
-using Headlines.WebAPI.Contracts.V1.Models;
 using Headlines.WebAPI.Contracts.V1.Responses.HeadlineChanges;
 using Headlines.WebAPI.Controllers.V1;
 using Headlines.WebAPI.Resources.V1;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
 using System.Net;
-using System.Reflection;
 using Xunit;
 
 namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
 {
+    [Collection("HeadlineChanges")]
     public sealed class GetSkipTakeTests : IClassFixture<WebAPIFactory>
     {
         private readonly HttpClient _client;

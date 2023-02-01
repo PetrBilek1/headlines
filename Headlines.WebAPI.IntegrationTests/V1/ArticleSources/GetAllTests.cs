@@ -6,6 +6,7 @@ using Xunit;
 
 namespace Headlines.WebAPI.Tests.Integration.V1.ArticleSources
 {
+    [Collection("ArticleSources")]
     public class GetAllTests : IClassFixture<WebAPIFactory>
     {
         private readonly HttpClient _client;

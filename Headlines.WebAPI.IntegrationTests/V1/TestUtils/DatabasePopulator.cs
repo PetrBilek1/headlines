@@ -72,6 +72,21 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
             return _mapper.Map<List<ArticleSourceDTO>>(inserted);
         }
 
+        public async Task<List<ArticleDTO>> InsertArticlesAsync(IEnumerable<ArticleDTO> articles)
+        {
+            using var uow = _uowProvider.CreateUnitOfWork();
+            List<Article> inserted = new();
+
+            foreach (ArticleDTO articleDTO in articles)
+            {
+                inserted.Add(await GetOrInsertArticleAsync(articleDTO));
+            }
+
+            await uow.CommitAsync();
+
+            return _mapper.Map<List<ArticleDTO>>(inserted);
+        }
+
         public async Task<UserUpvotesDTO> InsertUserUpvotesAsync(UserUpvotesDTO userUpvotes)
         {
             using var uow = _uowProvider.CreateUnitOfWork();

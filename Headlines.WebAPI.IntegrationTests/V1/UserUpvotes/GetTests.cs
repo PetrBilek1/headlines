@@ -2,16 +2,15 @@
 using Headlines.DTO.Entities;
 using Headlines.Enums;
 using Headlines.WebAPI.Contracts.V1.Models;
-using Headlines.WebAPI.Contracts.V1.Requests.HeadlineChanges;
 using Headlines.WebAPI.Contracts.V1.Responses.HeadlineChanges;
 using Headlines.WebAPI.Contracts.V1.Responses.UserUpvotes;
-using Headlines.WebAPI.Resources.V1;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
 using System.Net;
 using Xunit;
 
 namespace Headlines.WebAPI.Tests.Integration.V1.UserUpvotes
 {
+    [Collection("UserUpvotes")]
     public sealed class GetTests : IClassFixture<WebAPIFactory>
     {
         private readonly HttpClient _client;

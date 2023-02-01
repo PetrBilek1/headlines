@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Builders;
-using DotNet.Testcontainers.Configurations;
 using Headlines.DependencyResolution;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -15,24 +14,35 @@ namespace Headlines.WebAPI.Tests.Integration
 {
     public sealed class WebAPIFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
     {
-        private readonly MsSqlTestcontainer _dbContainer = new TestcontainersBuilder<MsSqlTestcontainer>()
-                .WithDatabase(new MsSqlTestcontainerConfiguration
-                {
-                    Password = "localdevpassword#123",                    
-                })
-                .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-                .WithCleanUp(true)
-                .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(1433))
-                .Build();
+        private readonly string _dbPassword;
+        private readonly int _dbPort;
+        private readonly TestcontainersContainer _dbContainer;
 
         private Mock<IDateTimeProvider>? _dateTimeProviderMock = null;
+
+        public WebAPIFactory()
+        {
+            _dbPassword = "Aa123456";
+            _dbPort = new Random().Next(50000, 59999);
+
+            _dbContainer = new TestcontainersBuilder<TestcontainersContainer>()
+                .WithName($"mssql-fts-ha-{Guid.NewGuid()}")
+                .WithImage("ghcr.io/petrbilek1/mssql-fts-ha:latest")
+                .WithEnvironment("ACCEPT_EULA", "Y")
+                .WithEnvironment("MSSQL_SA_PASSWORD", _dbPassword)
+                .WithEnvironment("MSSQL_TCP_PORT", _dbPort.ToString())
+                .WithPortBinding(_dbPort)
+                .WithCleanUp(true)
+                .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(_dbPort))
+                .Build();
+        }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {            
             builder.ConfigureTestServices(services =>
-            {
+            {   
                 services.RemoveORMDependencyGroup();
-                services.AddORMDependencyGroup($"{_dbContainer.ConnectionString} TrustServerCertificate=true;");
+                services.AddORMDependencyGroup($"Data Source={_dbContainer.Hostname},{_dbPort}; Initial Catalog=Catalog; User Id=sa; Password={_dbPassword}; TrustServerCertificate=true;");
 
                 if (_dateTimeProviderMock != null)
                 {

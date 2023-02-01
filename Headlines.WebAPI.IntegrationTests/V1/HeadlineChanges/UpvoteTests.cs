@@ -5,13 +5,12 @@ using Headlines.WebAPI.Contracts.V1.Models;
 using Headlines.WebAPI.Contracts.V1.Requests.HeadlineChanges;
 using Headlines.WebAPI.Contracts.V1.Responses.HeadlineChanges;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
-using Newtonsoft.Json;
 using System.Net;
-using System.Reflection;
 using Xunit;
 
 namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
 {
+    [Collection("HeadlineChanges")]
     public sealed class UpvoteTests : IClassFixture<WebAPIFactory>
     {
         private readonly HttpClient _client;

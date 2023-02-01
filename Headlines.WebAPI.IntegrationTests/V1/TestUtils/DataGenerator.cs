@@ -19,6 +19,17 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
             }
         }
 
+        public static IEnumerable<ArticleDTO> GenerateArticles(int count)
+        {
+            var articleSourceGenerator = ArticleSourceDTO();
+            var articleGenerator = ArticleDTO().RuleFor(x => x.Source, articleSourceGenerator);
+
+            for (int i = 0; i < count; i++)
+            {
+                yield return articleGenerator.Generate();
+            }
+        }
+
         public static IEnumerable<HeadlineChangeDTO> GenerateHeadlineChanges(int count)
         {
             var articleSourceGenerator = ArticleSourceDTO();
