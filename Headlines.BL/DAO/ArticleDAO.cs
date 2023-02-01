@@ -25,19 +25,19 @@ namespace Headlines.BL.DAO
                 .ToListAsync(cancellationToken);
         }
 
-        public Task<List<Article>> GetByFiltersSkipTakeAsync(int skip, int take, string currentTitlePrompt, CancellationToken cancellationToken, long[]? articleSources = null, DateTime? from = null, DateTime? to = null)
+        public Task<List<Article>> GetByFiltersSkipTakeAsync(int skip, int take, CancellationToken cancellationToken, string? currentTitlePrompt = null, long[]? articleSources = null, DateTime? from = null, DateTime? to = null)
         {
             return GetByFiltersSkipTakeQueryable(skip, take, currentTitlePrompt, articleSources, from, to)
                 .ToListAsync(cancellationToken);
         }
 
-        public Task<long> GetCountByFiltersAsync(string currentTitlePrompt, CancellationToken cancellationToken, long[]? articleSources = null, DateTime? from = null, DateTime? to = null)
+        public Task<long> GetCountByFiltersAsync(CancellationToken cancellationToken, string? currentTitlePrompt = null, long[]? articleSources = null, DateTime? from = null, DateTime? to = null)
         {
             return GetByFiltersSkipTakeQueryable(null, null, currentTitlePrompt, articleSources, from, to)
                 .LongCountAsync(cancellationToken);
         }
 
-        private IQueryable<Article> GetByFiltersSkipTakeQueryable(int? skip, int? take, string currentTitlePrompt, long[]? articleSources, DateTime? from, DateTime? to)
+        private IQueryable<Article> GetByFiltersSkipTakeQueryable(int? skip, int? take, string? currentTitlePrompt, long[]? articleSources, DateTime? from, DateTime? to)
         {
             IQueryable<Article> query = DbContext.Set<Article>().AsQueryable();
 
@@ -72,7 +72,7 @@ namespace Headlines.BL.DAO
 
             }
 
-            return query;
+            return query.OrderByDescending(x => x.Published);
         }
     }
 }

@@ -133,6 +133,69 @@ namespace Headlines.BL.Tests.Facades
             result.Link.Should().Be(article.Link);
         }
 
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(0, 10)]
+        [InlineData(1, 10)]
+        public async Task GetArticlesByFiltersSkipTakeAsync_ShouldReturnArticles(int skip, int take)
+        {
+            //Arrange
+            List<Article> data = _data.Articles.GetRange(skip, Math.Min(_data.Articles.Count() - skip, take));
+
+            _uowProviderMock.Setup(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking))
+                .Returns(_uowMock.Object);
+            _uowMock.Setup(x => x.Dispose());
+
+            _articleDaoMock.Setup(x => x.GetByFiltersSkipTakeAsync(skip, take, It.IsAny<CancellationToken>(), null, null, null, null))
+                .ReturnsAsync(data);
+
+            //Act
+            List<ArticleDTO> result = await _sut.GetArticlesByFiltersSkipTakeAsync(skip, take, null, null, null, null, default);
+
+            //Assert
+            _uowProviderMock.Verify(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking), Times.Once());
+            _uowMock.Verify(x => x.Dispose(), Times.Once);
+            _articleDaoMock.Verify(x => x.GetByFiltersSkipTakeAsync(skip, take, default, null, null, null, null), Times.Once);
+
+            result.Should().NotBeNull();
+            result.Should().HaveCount(Math.Min(_data.Articles.Count() - skip, take));
+
+            for(int i = 0; i < data.Count(); i++)
+            {
+                var expected = data[i];
+                var actual = result[i];
+
+                expected.Id.Should().Be(actual.Id);
+                expected.SourceId.Should().Be(actual.SourceId);
+                expected.Published.Should().Be(actual.Published);
+                expected.UrlId.Should().Be(actual.UrlId);
+                expected.CurrentTitle.Should().Be(actual.CurrentTitle);
+                expected.Link.Should().Be(actual.Link);
+            }
+        }
+
+        [Fact]
+        public async Task GetArticlesCountByFiltersAsync_ShouldReturnCount()
+        {
+            //Arrange
+            _uowProviderMock.Setup(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking))
+                .Returns(_uowMock.Object);
+            _uowMock.Setup(x => x.Dispose());
+
+            _articleDaoMock.Setup(x => x.GetCountByFiltersAsync(default, null, null, null, null))
+                .ReturnsAsync(_data.Articles.Count);
+
+            //Act
+            long result = await _sut.GetArticlesCountByFiltersAsync(null, null, null, null, default);
+
+            //Assert
+            _uowProviderMock.Verify(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking), Times.Once());
+            _uowMock.Verify(x => x.Dispose(), Times.Once);
+            _articleDaoMock.Verify(x => x.GetCountByFiltersAsync(default, null, null, null, null), Times.Once);
+
+            result.Should().Be(_data.Articles.Count);
+        }
+
         private sealed class TestData
         {
             public string[] UrlIds => new[] { Article1.UrlId, Article2.UrlId };
