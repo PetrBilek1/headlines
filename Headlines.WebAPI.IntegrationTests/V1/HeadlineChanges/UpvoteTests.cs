@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
 {
-    [Collection("HeadlineChanges")]
+    [Collection(SerialLine.One)]
     public sealed class UpvoteTests : IClassFixture<WebAPIFactory>
     {
         private readonly HttpClient _client;

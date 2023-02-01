@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
 {
-    [Collection("HeadlineChanges")]
+    [Collection(SerialLine.Three)]
     public sealed class GetTopUpvotedTests : IClassFixture<WebAPIFactory>
     {
         private readonly HttpClient _client;
