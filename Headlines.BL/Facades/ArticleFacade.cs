@@ -47,5 +47,23 @@ namespace Headlines.BL.Facades
 
             return _mapper.Map<ArticleDTO>(article);
         }
+
+        public async Task<List<ArticleDTO>> GetArticlesByFiltersSkipTakeAsync(int skip, int take, string? currentTitlePrompt = null, long[]? articleSources = null, DateTime? from = null, DateTime? to = null, CancellationToken cancellationToken = default)
+        {
+            using IUnitOfWork uow = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
+
+            List<Article> articles = await _articleDAO.GetByFiltersSkipTakeAsync(skip, take, cancellationToken, currentTitlePrompt, articleSources, from, to);
+
+            return _mapper.Map<List<ArticleDTO>>(articles);
+        }
+
+        public async Task<long> GetArticlesCountByFiltersAsync(string? currentTitlePrompt = null, long[]? articleSources = null, DateTime? from = null, DateTime? to = null, CancellationToken cancellationToken = default)
+        {
+            using IUnitOfWork uow = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
+
+            long count = await _articleDAO.GetCountByFiltersAsync(cancellationToken, currentTitlePrompt, articleSources, from, to);
+
+            return count;
+        }
     }
 }

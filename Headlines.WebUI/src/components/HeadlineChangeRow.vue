@@ -97,7 +97,7 @@ export default {
         getLocalTimeString(dateTimeUTC) {
             const date = new Date(dateTimeUTC + '+00:00')
 
-            return moment(date).format("HH:mm DD. MM.")
+            return moment(date).format("HH:mm DD.MM.")
         },
         enterTitle(type) {
             var titleBefore = this.$refs["titlebefore"]

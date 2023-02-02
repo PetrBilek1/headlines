@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using Headlines.WebAPI.Contracts;
+using Headlines.WebAPI.Contracts.V1.Requests.Articles;
 using Headlines.WebAPI.Contracts.V1.Requests.HeadlineChanges;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
 using Xunit;
@@ -13,20 +15,22 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         [Fact]
         public void ShouldCoverAllRequestsByTests()
         {
-            //Arrange
+            //Arrange            
             var tests = typeof(RequestsTests)
                 .GetMethods()
                 .Where(x => x.CustomAttributes.Any(y => y.AttributeType.FullName == "Xunit.FactAttribute"))
                 .Select(x => x.Name)
                 .ToHashSet();
 
-            var requests = typeof(IApiMarker).Assembly
+            var requests = typeof(IApiContractsMarker).Assembly
                 .GetTypes()
                 .Where(x => !string.IsNullOrEmpty(x.Namespace) && x.Namespace.StartsWith("Headlines.WebAPI.Contracts.V1.Requests"))
-                .Select(x => x.Name)
+                .Select(x => $"{x.Namespace!.Replace("Headlines.WebAPI.Contracts.V1.Requests.", "")}_{x.Name}")
                 .ToList();
 
             //Assert
+            requests.Should().HaveCountGreaterThan(0);
+
             foreach (var request in requests)
             {
                 tests.Should().Contain(request);
@@ -34,7 +38,20 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         }
 
         [Fact]
-        public void UpvoteRequest()
+        public void Articles_GetSkipTakeRequest()
+        {
+            //Assert
+            TestExtensions.AssertProperties<GetSkipTakeRequest>(new()
+            {
+                ("Skip", typeof(int?), new string[] { _jsonPropertyAttribute }),
+                ("Take", typeof(int?), new string[] { _jsonPropertyAttribute }),
+                ("SearchPrompt", typeof(string), new string[] { _jsonPropertyAttribute }),
+                ("ArticleSources", typeof(long[]), new string[] { _jsonPropertyAttribute })
+            });
+        }
+
+        [Fact]
+        public void HeadlineChanges_UpvoteRequest()
         {
             //Assert
             TestExtensions.AssertProperties<UpvoteRequest>(new()

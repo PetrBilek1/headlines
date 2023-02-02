@@ -1,16 +1,14 @@
-﻿using Bogus.DataSets;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Headlines.DTO.Entities;
-using Headlines.WebAPI.Contracts.V1.Models;
 using Headlines.WebAPI.Contracts.V1.Responses.HeadlineChanges;
 using Headlines.WebAPI.Controllers.V1;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
 using System.Net;
-using System.Reflection;
 using Xunit;
 
 namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
 {
+    [Collection(SerialLine.Three)]
     public sealed class GetTopUpvotedTests : IClassFixture<WebAPIFactory>
     {
         private readonly HttpClient _client;

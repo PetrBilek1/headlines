@@ -5,23 +5,24 @@
 namespace Headlines.ORM.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class AddIndexToArticle : Migration
+    public partial class AddFullTextSearchSupport : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateIndex(
-                name: "IX_ARTICLE_URL_ID",
-                table: "ARTICLE",
-                column: "URL_ID");
+            migrationBuilder.Sql(
+                sql: "CREATE FULLTEXT CATALOG FT_CATALOG AS DEFAULT;",
+                suppressTransaction: true);
+
+            migrationBuilder.Sql(
+                sql: "CREATE FULLTEXT INDEX ON ARTICLE(CURRENT_TITLE) KEY INDEX PK_ARTICLE;",
+                suppressTransaction: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_ARTICLE_URL_ID",
-                table: "ARTICLE");
+
         }
     }
 }

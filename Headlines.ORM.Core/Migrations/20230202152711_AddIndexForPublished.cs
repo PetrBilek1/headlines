@@ -5,23 +5,23 @@
 namespace Headlines.ORM.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class AddIndex : Migration
+    public partial class AddIndexForPublished : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateIndex(
-                name: "IX_HEADLINE_CHANGE_UPVOTE_COUNT",
-                table: "HEADLINE_CHANGE",
-                column: "UPVOTE_COUNT");
+                name: "IX_ARTICLE_PUBLISHED",
+                table: "ARTICLE",
+                column: "PUBLISHED");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropIndex(
-                name: "IX_HEADLINE_CHANGE_UPVOTE_COUNT",
-                table: "HEADLINE_CHANGE");
+                name: "IX_ARTICLE_PUBLISHED",
+                table: "ARTICLE");
         }
     }
 }

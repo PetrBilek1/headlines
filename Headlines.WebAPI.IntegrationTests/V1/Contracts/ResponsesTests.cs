@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
+using Headlines.WebAPI.Contracts;
 using Headlines.WebAPI.Contracts.V1.Models;
-using Headlines.WebAPI.Contracts.V1.Responses.HeadlineChanges;
-using Headlines.WebAPI.Contracts.V1.Responses.UserUpvotes;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
 using Xunit;
 
@@ -21,13 +20,15 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
                 .Select(x => x.Name)
                 .ToHashSet();
 
-            var responses = typeof(IApiMarker).Assembly
+            var responses = typeof(IApiContractsMarker).Assembly
                 .GetTypes()
                 .Where(x => !string.IsNullOrEmpty(x.Namespace) && x.Namespace.StartsWith("Headlines.WebAPI.Contracts.V1.Responses"))
                 .Select(x => $"{x.Namespace!.Replace("Headlines.WebAPI.Contracts.V1.Responses.", "")}_{x.Name}")
                 .ToList();
 
             //Assert
+            responses.Should().HaveCountGreaterThan(0);
+
             foreach (var response in responses)
             {
                 tests.Should().Contain(response);
@@ -35,10 +36,20 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         }
 
         [Fact]
+        public void ArticleSources_GetAllResponse()
+        {
+            //Assert
+            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.ArticleSources.GetAllResponse>(new()
+            {
+                ("ArticleSources", typeof(List<ArticleSourceModel>), new string[] { _jsonPropertyAttribute })
+            });
+        }
+
+        [Fact]
         public void HeadlineChanges_GetSkipTakeResponse()
         {
             //Assert
-            TestExtensions.AssertProperties<GetSkipTakeResponse>(new()
+            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.HeadlineChanges.GetSkipTakeResponse>(new()
             {
                 ("HeadlineChanges", typeof(List<HeadlineChangeModel>), new string[] { _jsonPropertyAttribute })
             });
@@ -48,7 +59,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         public void HeadlineChanges_GetTopUpvotedResponse()
         {
             //Assert
-            TestExtensions.AssertProperties<GetTopUpvotedResponse>(new()
+            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.HeadlineChanges.GetTopUpvotedResponse>(new()
             {
                 ("HeadlineChanges", typeof(List<HeadlineChangeModel>), new string[] { _jsonPropertyAttribute })
             });
@@ -58,7 +69,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         public void HeadlineChanges_UpvoteResponse()
         {
             //Assert
-            TestExtensions.AssertProperties<UpvoteResponse>(new()
+            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.HeadlineChanges.UpvoteResponse>(new()
             {
                 ("Upvotes", typeof(List<UpvoteModel>), new string[] { _jsonPropertyAttribute })
             });
@@ -68,9 +79,20 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         public void UserUpvotes_GetResponse()
         {
             //Assert
-            TestExtensions.AssertProperties<GetResponse>(new()
+            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.UserUpvotes.GetResponse>(new()
             {
                 ("Upvotes", typeof(List<UpvoteModel>), new string[] { _jsonPropertyAttribute })
+            });
+        }
+
+        [Fact]
+        public void Articles_GetSkipTakeResponse()
+        {
+            //Assert
+            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.Articles.GetSkipTakeResponse>(new()
+            {
+                ("Articles", typeof(List<ArticleModel>), new string[] { _jsonPropertyAttribute }),
+                ("MatchesFiltersCount", typeof(long), new string[] { _jsonPropertyAttribute })
             });
         }
     }

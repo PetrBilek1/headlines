@@ -5,18 +5,18 @@ WORKDIR /app
 
 ENV PATH /app/node_modules/.bin:$PATH
 COPY Headlines.WebUI/package.json /app/package.json
-RUN npm install --silent
-RUN npm install vue-router@4 --silent
-RUN npm install bootstrap@5.2.3 jquery @popperjs/core --silent
-RUN npm install animejs --silent
-RUN npm install moment --silent
-RUN npm install diff --silent
-RUN npm install axios --silent
-RUN npm install vue-cookies --silent
-RUN npm install vuex@next --silent
-RUN npm install @fortawesome/fontawesome-svg-core --silent
-RUN npm install @fortawesome/free-solid-svg-icons --silent
-RUN npm install @fortawesome/vue-fontawesome@latest-3 --silent
+RUN npm install
+#RUN npm install vue-router@4 --silent
+#RUN npm install bootstrap@5.2.3 jquery @popperjs/core --silent
+#RUN npm install animejs --silent
+#RUN npm install moment --silent
+#RUN npm install diff --silent
+#RUN npm install axios --silent
+#RUN npm install vue-cookies --silent
+#RUN npm install vuex@next --silent
+#RUN npm install @fortawesome/fontawesome-svg-core --silent
+#RUN npm install @fortawesome/free-solid-svg-icons --silent
+#RUN npm install @fortawesome/vue-fontawesome@latest-3 --silent
 
 COPY ./Headlines.WebUI/ /app
 

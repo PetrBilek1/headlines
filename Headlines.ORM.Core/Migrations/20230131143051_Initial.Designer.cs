@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Headlines.ORM.Core.Migrations
 {
     [DbContext(typeof(HeadlinesDbContext))]
-    [Migration("20221119165409_AddedArticleRenamedArticleSource")]
-    partial class AddedArticleRenamedArticleSource
+    [Migration("20230131143051_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0")
+                .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -35,10 +35,14 @@ namespace Headlines.ORM.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("CurrentTitle")
-                        .IsRequired()
                         .HasMaxLength(1024)
                         .HasColumnType("nvarchar(1024)")
                         .HasColumnName("CURRENT_TITLE");
+
+                    b.Property<string>("Link")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)")
+                        .HasColumnName("LINK");
 
                     b.Property<DateTime?>("Published")
                         .HasColumnType("datetime2")
@@ -49,7 +53,6 @@ namespace Headlines.ORM.Core.Migrations
                         .HasColumnName("SOURCE_ID");
 
                     b.Property<string>("UrlId")
-                        .IsRequired()
                         .HasMaxLength(1024)
                         .HasColumnType("nvarchar(1024)")
                         .HasColumnName("URL_ID");
@@ -57,6 +60,8 @@ namespace Headlines.ORM.Core.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SourceId");
+
+                    b.HasIndex("UrlId");
 
                     b.ToTable("ARTICLE", (string)null);
                 });
@@ -71,20 +76,89 @@ namespace Headlines.ORM.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)")
                         .HasColumnName("NAME");
 
                     b.Property<string>("RssUrl")
-                        .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)")
                         .HasColumnName("RSS_URL");
 
+                    b.Property<int>("UrlIdSource")
+                        .HasColumnType("int")
+                        .HasColumnName("URL_ID_SOURCE");
+
                     b.HasKey("Id");
 
                     b.ToTable("ARTICLE_SOURCE", (string)null);
+                });
+
+            modelBuilder.Entity("Headlines.ORM.Core.Entities.HeadlineChange", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("ArticleId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("ARTICLE_ID");
+
+                    b.Property<DateTime>("Detected")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DETECTED");
+
+                    b.Property<string>("TitleAfter")
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnName("TITLE_AFTER");
+
+                    b.Property<string>("TitleBefore")
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)")
+                        .HasColumnName("TITLE_BEFORE");
+
+                    b.Property<long>("UpvoteCount")
+                        .HasColumnType("bigint")
+                        .HasColumnName("UPVOTE_COUNT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.HasIndex("Detected");
+
+                    b.HasIndex("UpvoteCount");
+
+                    b.ToTable("HEADLINE_CHANGE", (string)null);
+                });
+
+            modelBuilder.Entity("Headlines.ORM.Core.Entities.UserUpvotes", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Json")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("JSON");
+
+                    b.Property<string>("UserToken")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("USER_TOKEN");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserToken");
+
+                    b.ToTable("USER_UPVOTES", (string)null);
                 });
 
             modelBuilder.Entity("Headlines.ORM.Core.Entities.Article", b =>
@@ -96,6 +170,17 @@ namespace Headlines.ORM.Core.Migrations
                         .IsRequired();
 
                     b.Navigation("Source");
+                });
+
+            modelBuilder.Entity("Headlines.ORM.Core.Entities.HeadlineChange", b =>
+                {
+                    b.HasOne("Headlines.ORM.Core.Entities.Article", "Article")
+                        .WithMany()
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Article");
                 });
 #pragma warning restore 612, 618
         }
