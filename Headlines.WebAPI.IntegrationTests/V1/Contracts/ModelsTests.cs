@@ -54,6 +54,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
             TestExtensions.AssertProperties<ArticleModel>(new()
             {
                 ("Id", typeof(long), new string[] { _jsonPropertyAttribute }),
+                ("SourceId", typeof(long), new string[] { _jsonPropertyAttribute }),
                 ("Published", typeof(DateTime?), new string[] { _jsonPropertyAttribute }),
                 ("UrlId", typeof(string), new string[] { _jsonPropertyAttribute }),
                 ("CurrentTitle", typeof(string), new string[] { _jsonPropertyAttribute }),

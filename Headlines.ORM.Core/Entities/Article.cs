@@ -30,6 +30,7 @@ namespace Headlines.ORM.Core.Entities
             builder.Property(x => x.CurrentTitle).HasColumnName("CURRENT_TITLE").HasMaxLength(1024);
             builder.Property(x => x.Link).HasColumnName("LINK").HasMaxLength(512);
 
+            builder.HasIndex(x => x.Published);
             builder.HasIndex(x => x.UrlId);
 
             builder.HasOne(x => x.Source).WithMany().HasForeignKey(x => x.SourceId);

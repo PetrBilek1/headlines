@@ -19,6 +19,7 @@ namespace Headlines.WebAPI.Contracts.V1
             return new ArticleModel
             {
                 Id = article.Id,
+                SourceId = article.SourceId,
                 Published = article.Published,
                 UrlId = article.UrlId,
                 CurrentTitle = article.CurrentTitle,

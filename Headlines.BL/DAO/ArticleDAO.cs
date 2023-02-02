@@ -39,7 +39,11 @@ namespace Headlines.BL.DAO
 
         private IQueryable<Article> GetByFiltersSkipTakeQueryable(int? skip, int? take, string? currentTitlePrompt, long[]? articleSources, DateTime? from, DateTime? to)
         {
-            IQueryable<Article> query = DbContext.Set<Article>().AsQueryable();
+            IQueryable<Article> query = DbContext.Set<Article>()
+                .OrderByDescending(x => x.Published)
+                .Where(x => !from.HasValue || x.Published >= from)
+                .Where(x => !to.HasValue || x.Published <= to);
+
 
             if (!string.IsNullOrEmpty(currentTitlePrompt))
             {
@@ -51,16 +55,6 @@ namespace Headlines.BL.DAO
                 query = query.Where(x => articleSources.Contains(x.SourceId));
             }
 
-            if (from.HasValue)
-            {
-                query = query.Where(x => x.Published >= from);
-            }
-
-            if (to.HasValue)
-            {
-                query = query.Where(x => x.Published <= to);
-            }
-
             if (skip.HasValue)
             {
                 query = query.Skip(skip.Value);
@@ -69,10 +63,9 @@ namespace Headlines.BL.DAO
             if (take.HasValue)
             {
                 query = query.Take(take.Value);
-
             }
 
-            return query.OrderByDescending(x => x.Published);
+            return query;
         }
     }
 }

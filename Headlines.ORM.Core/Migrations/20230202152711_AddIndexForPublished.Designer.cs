@@ -4,6 +4,7 @@ using Headlines.ORM.Core.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Headlines.ORM.Core.Migrations
 {
     [DbContext(typeof(HeadlinesDbContext))]
-    partial class HeadlinesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230202152711_AddIndexForPublished")]
+    partial class AddIndexForPublished
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
