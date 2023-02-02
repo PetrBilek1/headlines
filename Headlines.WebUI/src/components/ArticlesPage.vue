@@ -37,11 +37,21 @@
         </div>       
     </section>
     <section class="spacer layer1"></section>
+    <section class="section-second">
+        <ArticlesTable v-on:fetcharticles="fetchArticlePage"
+                       :articles="articlePage"
+                       :articlesCount="articlesCount"
+                       :articleSources="articleSources"
+                       :recordsPerPage="articlesPerPage">
+        </ArticlesTable>
+    </section>
 </template>
 
 <script>
 import axios from 'axios'
 import endpoints from './../api/endpoints.js'
+import ArticlesTable from './ArticlesTable.vue'
+
 
 export default {
     name: 'ArticlesPage',
@@ -52,11 +62,12 @@ export default {
             searchPrompt: "",
             articlesPerPage: 10,
             selectedPage: 0,
-            articlePage: []
+            articlePage: [],
+            articlesCount: 0
         }
     },
     components: {
-        
+        ArticlesTable
     },
     computed: {
         
@@ -70,6 +81,19 @@ export default {
                     response.data.articleSources.forEach(x => this.articleSources.push({source: x, isSelected: true}))
 
                     this.setAllSourcesSelected()
+                })
+        },
+        fetchArticlePage(page) {
+            axios
+                .post(endpoints.Articles.GetSkipTake(), {
+                    skip: page * this.articlesPerPage,
+                    take: this.articlesPerPage,
+                    searchPrompt: this.searchPrompt,
+                    articleSources: this.getSelectedSourcesArray()
+                })
+                .then(response => {
+                    this.articlePage = response.data.articles
+                    this.articlesCount = response.data.matchesFiltersCount
                 })
         },
         toggleSelectArticleSource(id) {
@@ -98,26 +122,17 @@ export default {
                 }
             })
 
-            return selected
-        },
-        fetchArticlePage(page) {
-            axios
-                .post(endpoints.Articles.GetSkipTake(), {
-                    skip: page * this.articlesPerPage,
-                    take: this.articlesPerPage,
-                    searchPrompt: this.searchPrompt,
-                    articleSources: this.getSelectedSourcesArray()
-                })
-                .then(response => {
-                    console.log(response.data)
-                })
-        }
+            return this.articleSources.length <= 0
+                ? null
+                : selected
+        },       
     },
     created() {
         
     },
     mounted() {
         this.fetchArticleSources()
+        this.fetchArticlePage(0)
     }
 }
 </script>
@@ -132,6 +147,16 @@ export default {
         height: 100%;
         padding: 30px 5vw 0 5vw;
         background-color: #26A6A6;
+    }
+
+    .section-second {
+        padding: 0 5vw 0 5vw;
+    }
+
+    @media screen and (max-width: 960px) {
+        .section-second {
+            padding: 0;
+        }
     }
 
     .spacer {
