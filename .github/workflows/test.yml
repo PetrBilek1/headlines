@@ -24,7 +24,7 @@ jobs:
         run: dotnet restore Headlines.sln
         
       - name: "🔍 run tests"
-        run: dotnet test Headlines.sln --filter FullyQualifiedName\!~IntegrationTests
+        run: dotnet test Headlines.sln --filter FullyQualifiedName\!~Integration
         
   integration-test:
     name: Integration Test .NET
@@ -53,4 +53,4 @@ jobs:
         run: dotnet restore Headlines.sln
         
       - name: "🔍 run tests"
-        run: dotnet test Headlines.sln --filter FullyQualifiedName\~IntegrationTests
+        run: dotnet test Headlines.sln --filter FullyQualifiedName\~Integration
