@@ -13,7 +13,12 @@
                     <th scope="row" class="source-col single-line-text">{{ getSourceName(article.sourceId) }}</th>
                     <td>{{ article.currentTitle }}</td>
                     <td class="published-col">{{ getLocalTimeString(article.published) }}</td>
-                    <td><a :href="article.link"><fai :icon="['fas', 'link']"></fai></a></td>
+                    <td>
+                        <a :href="article.link"><fai :icon="['fas', 'link']"></fai></a>
+                        <router-link :to="{ name: 'Article', params: { id: article.id } }">
+                            <fai :icon="['fas', 'circle-info']"></fai>
+                        </router-link>
+                    </td>
                 </tr>
             </tbody>            
         </table>
