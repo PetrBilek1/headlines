@@ -160,7 +160,7 @@ namespace Headlines.BL.Tests.Facades
             _uowProviderMock.Setup(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking))
                 .Returns(_uowMock.Object);
             _uowMock.Setup(x => x.Dispose());
-            _headlineChangeDaoMock.Setup(x => x.GetCountAsync())
+            _headlineChangeDaoMock.Setup(x => x.GetCountAsync(It.IsAny<long?>()))
                 .ReturnsAsync(_data.HeadlineChanges.Count);
 
             //Act
@@ -172,6 +172,28 @@ namespace Headlines.BL.Tests.Facades
             _uowMock.Verify(x => x.CommitAsync(), Times.Never);
 
             result.Should().Be(_data.HeadlineChanges.Count);
+        }
+
+        [Fact]
+        public async Task GetHeadlineChangesByArticleIdOrderByDetectedDescendingAsync_Simple()
+        {
+            //Arrange
+            _uowProviderMock.Setup(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking))
+                .Returns(_uowMock.Object);
+            _uowMock.Setup(x => x.Dispose());
+            _headlineChangeDaoMock.Setup(x => x.GetByArticleIdOrderByDetectedDescendingAsync(It.IsAny<long>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_data.HeadlineChanges);
+
+            //Act
+            List<HeadlineChangeDTO> result = await _sut.GetHeadlineChangesByArticleIdOrderByDetectedDescendingAsync(1, 10, 10);
+
+            //Assert
+            _uowProviderMock.Verify(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking), Times.Once);
+            _uowMock.Verify(x => x.Dispose(), Times.Once);
+            _uowMock.Verify(x => x.CommitAsync(), Times.Never);
+
+            result.Should().NotBeNull();
+            result.Should().HaveCount(_data.HeadlineChanges.Count);
         }
 
         [Theory]
