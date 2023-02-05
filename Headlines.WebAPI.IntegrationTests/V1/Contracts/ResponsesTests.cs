@@ -106,5 +106,15 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
                 ("MatchesFiltersCount", typeof(long), new string[] { _jsonPropertyAttribute })
             });
         }
+
+        [Fact]
+        public void Articles_GetByIdResponse()
+        {
+            //Assert
+            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.Articles.GetByIdResponse>(new()
+            {
+                ("Article", typeof(ArticleModel), new string[] { _jsonPropertyAttribute })
+            });
+        }
     }
 }
