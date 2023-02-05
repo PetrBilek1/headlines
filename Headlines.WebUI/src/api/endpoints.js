@@ -38,6 +38,9 @@ export default {
         }
     },
     Articles: {
+        GetById(id) {
+            return getApiAddress() + "/v1/Articles/GetById?id=" + id
+        },
         GetSkipTake() {
             return getApiAddress() + "/v1/Articles/GetSkipTake"
         }

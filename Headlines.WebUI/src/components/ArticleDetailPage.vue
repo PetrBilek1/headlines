@@ -25,6 +25,14 @@ export default {
 
     },
     methods: {
+        fetchArticleById(articleId) {
+            axios
+                .get(endpoints.Articles.GetById(articleId))
+                .then(response => {
+                    this.article = response.data.article
+                    console.log(response.data)
+                })
+        },
         fetchHeadlineChangePageByArticleId(articleId, page) {
             axios
                 .get(endpoints.HeadlineChanges.GetByArticleIdSkipTake(articleId, page * this.headlineChangesPerPage, this.headlineChangesPerPage))
@@ -39,6 +47,7 @@ export default {
 
     },
     mounted() {
+        this.fetchArticleById(this.$route.params.id)
         this.fetchHeadlineChangePageByArticleId(this.$route.params.id, 0)
     }
 }
