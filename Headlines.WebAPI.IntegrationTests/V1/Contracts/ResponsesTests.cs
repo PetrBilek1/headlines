@@ -76,6 +76,17 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         }
 
         [Fact]
+        public void HeadlineChanges_GetByArticleIdSkipTakeResponse()
+        {
+            //Assert
+            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.HeadlineChanges.GetByArticleIdSkipTakeResponse>(new()
+            {
+                ("HeadlineChanges", typeof(List<HeadlineChangeModel>), new string[] { _jsonPropertyAttribute }),
+                ("TotalCount", typeof(long), new string[] { _jsonPropertyAttribute })
+            });
+        }
+
+        [Fact]
         public void UserUpvotes_GetResponse()
         {
             //Assert

@@ -10,6 +10,7 @@ using PBilek.Infrastructure.DatetimeProvider;
 using Moq;
 using Microsoft.Extensions.DependencyInjection;
 
+[assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 namespace Headlines.WebAPI.Tests.Integration
 {
     public sealed class WebAPIFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
