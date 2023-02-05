@@ -3,6 +3,7 @@ using Headlines.DTO.Entities;
 using Headlines.WebAPI.Contracts.V1;
 using Headlines.WebAPI.Contracts.V1.Requests.Articles;
 using Headlines.WebAPI.Contracts.V1.Responses.Articles;
+using Headlines.WebAPI.Resources.V1;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Headlines.WebAPI.Controllers.v1
@@ -22,6 +23,22 @@ namespace Headlines.WebAPI.Controllers.v1
         {
             _mapper = new MapperV1();
             _articleFacade = articleFacade;
+        }
+
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetById(long? id, CancellationToken cancellationToken)
+        {
+            if (!id.HasValue)
+                return BadRequest(Messages.M0003);
+
+            ArticleDTO article = await _articleFacade.GetArticleByIdAsync(id.Value, cancellationToken);
+            if (article == null)
+                return NotFound();
+
+            return Ok(new GetByIdResponse
+            {
+                Article = _mapper.MapArticle(article),
+            });
         }
 
         [HttpPost("GetSkipTake")]

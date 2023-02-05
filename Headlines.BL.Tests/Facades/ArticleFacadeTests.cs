@@ -28,6 +28,29 @@ namespace Headlines.BL.Tests.Facades
         }
 
         [Fact]
+        public async Task GetArticleByIdAsync_Simple()
+        {
+            //Arrange
+            _uowProviderMock.Setup(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking))
+                .Returns(_uowMock.Object);
+
+            _uowMock.Setup(x => x.Dispose());
+
+            _articleDaoMock.Setup(x => x.GetByIdAsync(_data.Article1.Id, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_data.Article1);
+
+            //Act
+            ArticleDTO result = await _sut.GetArticleByIdAsync(_data.Article1.Id, default);
+
+            //Assert
+            result.Should().NotBeNull();
+
+            _uowProviderMock.Verify(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking), Times.Once());
+            _uowMock.Verify(x => x.CommitAsync(), Times.Never);
+            _uowMock.Verify(x => x.Dispose(), Times.Once);
+        }
+
+        [Fact]
         public async Task GetArticlesByUrlIdsAsync_Simple()
         {
             //Arrange
