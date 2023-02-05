@@ -7,7 +7,8 @@ namespace Headlines.BL.DAO
     {
         Task<List<HeadlineChange>> GetOrderByUpvotesCountIncludeArticleAsync(int take, CancellationToken cancellationToken);
         Task<List<HeadlineChange>> GetOrderByDetectedDescendingIncludeArticleAsync(int skip, int take, CancellationToken cancellationToken);
-        Task<long> GetCountAsync();
+        Task<long> GetCountAsync(long? articleId = null);
+        Task<List<HeadlineChange>> GetByArticleIdOrderByDetectedDescendingAsync(long articleId, int skip, int take, CancellationToken cancellationToken);
         Task<List<HeadlineChange>> GetAllAsync(CancellationToken cancellationToken);
     }
 }
