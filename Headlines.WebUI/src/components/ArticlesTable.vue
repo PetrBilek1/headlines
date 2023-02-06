@@ -15,6 +15,7 @@
                     <td class="published-col">{{ getLocalTimeString(article.published) }}</td>
                     <td>
                         <a :href="article.link"><fai :icon="['fas', 'link']"></fai></a>
+                        &nbsp;
                         <router-link :to="{ name: 'Article', params: { id: article.id } }">
                             <fai :icon="['fas', 'circle-info']"></fai>
                         </router-link>

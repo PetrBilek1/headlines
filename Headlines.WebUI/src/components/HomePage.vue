@@ -83,6 +83,7 @@ export default {
                 .get(endpoints.HeadlineChanges.GetSkipTake(page * this.recordsPerPage, this.recordsPerPage))
                 .then(response => {
                     this.shownHeadlineChanges = response.data.headlineChanges
+                    this.currentPage = page
                 })
             this.fetchHeadlineChangeCount()
         },
