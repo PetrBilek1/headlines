@@ -11,14 +11,17 @@
             <h1 class="ml7">
                 <span class="color-yellow text-wrapper">
                     <span class="letters">Nejlepší změny titulků</span>
+                    &nbsp;
+                    <fai v-if="stopAnimating && topHeadlineChanges.length == 0" :icon="['fas', 'spinner']" :style="{ color: 'white' }" spin></fai>
                 </span>
             </h1>
-            <div class="masked hide-scrollbar" style="height: 85%;">
+            <div class="masked hide-scrollbar" style="height: 85%;">                
                 <TopHeadlinesTable v-on:upvoted="upvoted"
                                    :headlineChanges="topHeadlineChanges"
                                    :startAnimDelay="topHeadlineChangesStartAnimDelay"
                                    :userToken="userData.userToken"
-                                   :userUpvotes="userUpvotes" />
+                                   :userUpvotes="userUpvotes"
+                                   :animateonmount="!stopAnimating" />
             </div>
         </div>
     </section>
@@ -50,6 +53,7 @@ export default {
     data() {
         return {
             showGreetingOnMount: false,
+            stopAnimating: false,
             topHeadlineChangesStartAnimDelay: 500,
             topHeadlineChanges: [],
             shownHeadlineChanges: [],
@@ -153,11 +157,19 @@ export default {
         this.fetchHeadlineChangePage(0)
     },
     mounted() {
+        var homePageStore = this.$store.state.homePage
+        this.stopAnimating = homePageStore.stopAnimating
+        if (homePageStore.stopAnimating)
+            return
+
         //hours
         var seenAgo = (new Date().getTime() - new Date(this.$store.state.userData.lastSeen).getTime()) / 1000 / 60 / 60
 
         this.showGreetingOnMount = seenAgo > 3
         this.resolveAnimations(this.showGreetingOnMount)
+        homePageStore.stopAnimating = true
+
+        this.$store.commit("setHomePage", homePageStore)
     }
 }
 </script>

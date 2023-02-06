@@ -1,7 +1,7 @@
 <template>
     <section class="section-first">
-        <h1 class="color-yellow mb-3 mb-lg-5">
-            <b>ČLÁNKY</b>
+        <h1 class="color-yellow text-wrapper mb-3 mb-lg-5">
+            <b>Články</b>
         </h1>
         <div class="d-flex filters-width">
             <div>

@@ -7,6 +7,12 @@ const store = createStore({
         return {
             userData: null,
             userUpvotes: [],
+            homePage: {
+                stopAnimating: false
+            },
+            articlesPage: {
+
+            }
         }
     },
     getters: {
@@ -15,11 +21,17 @@ const store = createStore({
         },
         userUpvotes(state) {
             return state.userUpvotes
+        },
+        homePage(state) {
+            return state.homePage
         }
     },
     mutations: {
         setUserUpvotes(state, userUpvotes) {
             state.userUpvotes = userUpvotes
+        },
+        setHomePage(state, homePage) {
+            state.homePage = homePage
         }
     },
     actions: {
