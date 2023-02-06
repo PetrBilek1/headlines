@@ -18,7 +18,8 @@
                                   :headlineChangeCount="headlineChangesCount"
                                   :recordsPerPage="headlineChangesPerPage"
                                   :userToken="userData.userToken"
-                                  :userUpvotes="userUpvotes" />
+                                  :userUpvotes="userUpvotes"
+                                  :showarticledetaillink="false"/>
         </div>
     </section>
 </template>
