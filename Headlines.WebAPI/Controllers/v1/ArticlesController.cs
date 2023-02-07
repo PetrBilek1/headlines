@@ -31,7 +31,7 @@ namespace Headlines.WebAPI.Controllers.v1
             if (!id.HasValue)
                 return BadRequest(Messages.M0003);
 
-            ArticleDTO article = await _articleFacade.GetArticleByIdAsync(id.Value, cancellationToken);
+            ArticleDTO article = await _articleFacade.GetArticleByIdIncludeSourceAsync(id.Value, cancellationToken);
             if (article == null)
                 return NotFound();
 

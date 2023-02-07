@@ -23,7 +23,10 @@ namespace Headlines.WebAPI.Contracts.V1
                 Published = article.Published,
                 UrlId = article.UrlId,
                 CurrentTitle = article.CurrentTitle,
-                Link = article.Link
+                Link = article.Link,
+                Source = article.Source == null
+                    ? null 
+                    : MapArticleSource(article.Source)
             };
         }
 

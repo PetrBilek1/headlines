@@ -28,7 +28,7 @@ namespace Headlines.BL.Tests.Facades
         }
 
         [Fact]
-        public async Task GetArticleByIdAsync_Simple()
+        public async Task GetArticleByIdIncludeSourceAsync_Simple()
         {
             //Arrange
             _uowProviderMock.Setup(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking))
@@ -36,11 +36,11 @@ namespace Headlines.BL.Tests.Facades
 
             _uowMock.Setup(x => x.Dispose());
 
-            _articleDaoMock.Setup(x => x.GetByIdAsync(_data.Article1.Id, It.IsAny<CancellationToken>()))
+            _articleDaoMock.Setup(x => x.GetByIdAsync(_data.Article1.Id, It.IsAny<CancellationToken>(), x => x.Source))
                 .ReturnsAsync(_data.Article1);
 
             //Act
-            ArticleDTO result = await _sut.GetArticleByIdAsync(_data.Article1.Id, default);
+            ArticleDTO result = await _sut.GetArticleByIdIncludeSourceAsync(_data.Article1.Id, default);
 
             //Assert
             result.Should().NotBeNull();

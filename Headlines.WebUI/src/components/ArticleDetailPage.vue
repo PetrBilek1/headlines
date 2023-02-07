@@ -1,8 +1,16 @@
 <template>
-    <section class="section-first">
-        <h3 class="color-yellow" v-if="article">
-            <b><i>{{ article.currentTitle }}</i></b>
-        </h3>
+    <section class="section-first">        
+        <header class="color-yellow" v-if="article">
+            <span class="color-white w-100 mb-3" style="text-align: left; font-size: 24px;" v-if="article">
+                <b>{{ article.source.name }}</b>
+            </span>
+            <br>
+            <span class="cursor-pointer" style="font-size: 32px;" @click="redirect(article.link)"><b><i>{{ article.currentTitle }}</i></b></span>
+            <br>
+            <div class="color-white w-100 mt-3" style="text-align: right; font-size: 18px;" v-if="article">
+                <b>Publikováno {{ getLocalTimeString(article.published) }}</b>
+            </div>
+        </header>
         <fai v-if="!article" :icon="['fas', 'spinner']" size="3x" :style="{ color: 'white' }" spin></fai>
     </section>
     <section class="spacer layer1"></section>
@@ -26,6 +34,7 @@
 
 <script>
 import axios from 'axios'
+import moment from 'moment'
 import endpoints from './../api/endpoints.js'
 import HeadlineChangesTable from './HeadlineChangesTable.vue'
 
@@ -70,6 +79,17 @@ export default {
             this.$store.commit('setUserUpvotes', data)
 
             await this.fetchHeadlineChangePage(this.currentPage)
+        },
+        getLocalTimeString(dateTimeUTC) {
+            const date = new Date(dateTimeUTC + '+00:00')
+
+            return moment(date).format("HH:mm DD.MM.YYYY")
+        },
+        redirect(url) {
+            if (url.length <= 0)
+                return
+
+            window.open(url)
         }
     },
     created() {

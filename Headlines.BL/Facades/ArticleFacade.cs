@@ -20,11 +20,11 @@ namespace Headlines.BL.Facades
             _mapper = mapper;
         }
 
-        public async Task<ArticleDTO> GetArticleByIdAsync(long id, CancellationToken cancellationToken = default)
+        public async Task<ArticleDTO> GetArticleByIdIncludeSourceAsync(long id, CancellationToken cancellationToken = default)
         {
             using var _ = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
-            Article article = await _articleDAO.GetByIdAsync(id, cancellationToken);
+            Article article = await _articleDAO.GetByIdAsync(id, cancellationToken, x => x.Source);
 
             return _mapper.Map<ArticleDTO>(article);
         }

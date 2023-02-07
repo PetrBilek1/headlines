@@ -17,5 +17,7 @@ namespace Headlines.WebAPI.Contracts.V1.Models
         public string CurrentTitle { get; set; }
         [JsonProperty("link")]
         public string Link { get; set; }
+        [JsonProperty("source")]
+        public ArticleSourceModel Source { get; set; }
     }
 }
