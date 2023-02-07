@@ -71,6 +71,10 @@ export default {
         recordsPerPage: {
             default: 10,
             type: Number
+        },
+        startPage: {
+            default: 0,
+            type: Number
         }
     },
     emits: ['fetcharticles'],
@@ -123,6 +127,9 @@ export default {
 
             return moment(date).format("HH:mm DD.MM.YYYY")
         },
+    },
+    mounted() {
+        this.currentPage = this.startPage
     },
     beforeUpdate() {
         this.pagination = this.calculatePagination(this.currentPage, this.getLastPage())

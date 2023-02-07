@@ -11,7 +11,9 @@ const store = createStore({
                 stopAnimating: false
             },
             articlesPage: {
-
+                selectedPage: 0,
+                searchPrompt: "",
+                selectedSources: null
             }
         }
     },
@@ -24,6 +26,9 @@ const store = createStore({
         },
         homePage(state) {
             return state.homePage
+        },
+        articlesPage(state) {
+            return state.articlesPage
         }
     },
     mutations: {
@@ -32,6 +37,9 @@ const store = createStore({
         },
         setHomePage(state, homePage) {
             state.homePage = homePage
+        },
+        setArticlesPage(state, articlesPage) {
+            state.articlesPage = articlesPage
         }
     },
     actions: {
