@@ -124,7 +124,7 @@ namespace Headlines.RSSProcessingMicroService.Tests.Services
             result.UpdatedArticles[0].Id.Should().Be(data.Article?.Id);
             result.UpdatedArticles[0].SourceId.Should().Be(data.Article?.SourceId);
 
-            result.UpdatedArticles[0].Published.Should().Be(data.FeedItem?.Published);
+            result.UpdatedArticles[0].Published.Should().Be(data.Article?.Published);
             result.UpdatedArticles[0].CurrentTitle.Should().Be(data.FeedItem?.Title);
             result.UpdatedArticles[0].Link.Should().Be(data.FeedItem?.Link);
 
