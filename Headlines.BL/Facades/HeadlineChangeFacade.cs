@@ -73,13 +73,22 @@ namespace Headlines.BL.Facades
             return _mapper.Map<List<HeadlineChangeDTO>>(changes);
         }
 
-        public async Task<long> GetHeadlineChangeCountAsync()
+        public async Task<long> GetHeadlineChangeCountAsync(long? articleId = null)
         {
             using var _ = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
-            long count = await _headlineChangeDAO.GetCountAsync();
+            long count = await _headlineChangeDAO.GetCountAsync(articleId);
 
             return count;
+        }
+
+        public async Task<List<HeadlineChangeDTO>> GetHeadlineChangesByArticleIdOrderByDetectedDescendingAsync(long articleId, int skip, int take, CancellationToken cancellationToken = default)
+        {
+            using var _ = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
+
+            List<HeadlineChange> changes = await _headlineChangeDAO.GetByArticleIdOrderByDetectedDescendingAsync(articleId, skip, take, cancellationToken);
+
+            return _mapper.Map<List<HeadlineChangeDTO>>(changes);
         }
 
         public async Task<HeadlineChangeDTO> AddUpvotesToHeadlineChangeAsync(long id, int amount)

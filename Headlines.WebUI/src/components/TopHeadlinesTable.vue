@@ -6,7 +6,7 @@
                            v-bind:order="i + 1"
                            v-on:upvoted="upvoted"
                            :mountedanimdelay="startAnimDelay + i * 45"
-                           :animateonmount="true"
+                           :animateonmount="animateonmount"
                            :usertoken="userToken"
                            :userupvotes="userUpvotes">
         </HeadlineChangeRow>
@@ -37,6 +37,10 @@ export default {
         userUpvotes: {
             default() { return [] },
             type: Array
+        },
+        animateonmount: {
+            default: true,
+            type: Boolean
         }
     },
     emits: ['upvoted'],

@@ -59,6 +59,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
                 ("UrlId", typeof(string), new string[] { _jsonPropertyAttribute }),
                 ("CurrentTitle", typeof(string), new string[] { _jsonPropertyAttribute }),
                 ("Link", typeof(string), new string[] { _jsonPropertyAttribute }),
+                ("Source", typeof(ArticleSourceModel), new string[] { _jsonPropertyAttribute }),
             });
         }
 

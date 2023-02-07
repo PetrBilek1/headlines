@@ -2,7 +2,6 @@
 using Headlines.DTO.Entities;
 using Headlines.WebAPI.Contracts.V1.Models;
 using Headlines.WebAPI.Contracts.V1.Requests.Articles;
-using Headlines.WebAPI.Contracts.V1.Requests.HeadlineChanges;
 using Headlines.WebAPI.Contracts.V1.Responses.Articles;
 using Headlines.WebAPI.Controllers.v1;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
@@ -11,7 +10,6 @@ using Xunit;
 
 namespace Headlines.WebAPI.Tests.Integration.V1.Articles
 {
-    [Collection(SerialLine.One)]
     public sealed class GetSkipTakeTests : IClassFixture<WebAPIFactory>
     {
         private readonly HttpClient _client;

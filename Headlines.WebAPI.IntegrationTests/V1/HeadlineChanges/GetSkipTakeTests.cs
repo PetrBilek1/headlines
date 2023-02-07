@@ -9,7 +9,6 @@ using Xunit;
 
 namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
 {
-    [Collection(SerialLine.One)]
     public sealed class GetSkipTakeTests : IClassFixture<WebAPIFactory>
     {
         private readonly HttpClient _client;

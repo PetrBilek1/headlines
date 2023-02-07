@@ -1,7 +1,7 @@
 <template>
     <section class="section-first">
-        <h1 class="color-yellow mb-3 mb-lg-5">
-            <b>ČLÁNKY</b>
+        <h1 class="color-yellow text-wrapper mb-3 mb-lg-5">
+            <b>Články</b>
         </h1>
         <div class="d-flex filters-width">
             <div>
@@ -42,7 +42,8 @@
                        :articles="articlePage"
                        :articlesCount="articlesCount"
                        :articleSources="articleSources"
-                       :recordsPerPage="articlesPerPage">
+                       :recordsPerPage="articlesPerPage"
+                       :startPage="startPage">
         </ArticlesTable>
     </section>
 </template>
@@ -62,6 +63,7 @@ export default {
             searchPrompt: "",
             articlesPerPage: 10,
             selectedPage: 0,
+            startPage: 0,
             articlePage: [],
             articlesCount: 0
         }
@@ -73,28 +75,27 @@ export default {
         
     },
     methods: {
-        fetchArticleSources() {
-            axios
-                .get(endpoints.ArticleSources.GetAll())
-                .then(response => {
-                    this.articleSources = []
-                    response.data.articleSources.forEach(x => this.articleSources.push({source: x, isSelected: true}))
+        async fetchArticleSources() {
+            var response = await axios.get(endpoints.ArticleSources.GetAll())
 
-                    this.setAllSourcesSelected()
-                })
+            this.articleSources = []
+            response.data.articleSources.forEach(x => this.articleSources.push({ source: x, isSelected: true }))
+
+            this.setAllSourcesSelected()
         },
-        fetchArticlePage(page) {
-            axios
-                .post(endpoints.Articles.GetSkipTake(), {
+        async fetchArticlePage(page) {
+            var response = await axios.post(endpoints.Articles.GetSkipTake(), {
                     skip: page * this.articlesPerPage,
                     take: this.articlesPerPage,
                     searchPrompt: this.searchPrompt,
                     articleSources: this.getSelectedSourcesArray()
-                })
-                .then(response => {
-                    this.articlePage = response.data.articles
-                    this.articlesCount = response.data.matchesFiltersCount
-                })
+            })
+
+            this.articlePage = response.data.articles
+            this.articlesCount = response.data.matchesFiltersCount
+            this.selectedPage = page
+
+            this.setArticlesPageState()
         },
         toggleSelectArticleSource(id) {
             var sourcePair = this.articleSources.find(x => x.source.id === id)
@@ -125,14 +126,46 @@ export default {
             return this.articleSources.length <= 0
                 ? null
                 : selected
-        },       
+        },
+        setArticlesPageState() {
+            var articlesPageState = this.$store.state.articlesPage
+
+            var selectedSources = []
+            this.articleSources.forEach(x => {
+                if (!x.isSelected)
+                    return
+
+                selectedSources.push(x.source.id)
+            })
+
+            articlesPageState.selectedPage = this.selectedPage
+            articlesPageState.searchPrompt = this.searchPrompt
+            articlesPageState.selectedSources = selectedSources
+
+            this.$store.commit("setArticlesPage", articlesPageState)
+        }
     },
     created() {
         
     },
-    mounted() {
-        this.fetchArticleSources()
-        this.fetchArticlePage(0)
+    async beforeMount() {
+        var articlesPageState = this.$store.state.articlesPage
+
+        this.selectedPage = articlesPageState.selectedPage
+        this.startPage = this.selectedPage
+        this.searchPrompt = articlesPageState.searchPrompt
+
+        await this.fetchArticleSources()       
+
+        if (articlesPageState.selectedSources != null) {
+            this.articleSources.forEach(x => {
+                x.isSelected = articlesPageState.selectedSources.includes(x.source.id)
+            })
+
+            this.setAllSourcesSelected()
+        }       
+
+        await this.fetchArticlePage(this.selectedPage)
     }
 }
 </script>

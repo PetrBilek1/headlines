@@ -7,7 +7,8 @@
                            backgroundcolor="#79D9CF" 
                            :borderwidth="1" 
                            :usertoken="userToken"
-                           :userupvotes="userUpvotes">
+                           :userupvotes="userUpvotes"
+                           :showarticledetaillink="showarticledetaillink">
         </HeadlineChangeRow>
 
         <nav aria-label="pagination" class="mt-5">
@@ -62,6 +63,10 @@ export default {
         userUpvotes: {
             default() { return [] },
             type: Array
+        },
+        showarticledetaillink: {
+            default: true,
+            type: Boolean
         }
     },
     emits: ['upvoted', 'fetchheadlinechanges'],

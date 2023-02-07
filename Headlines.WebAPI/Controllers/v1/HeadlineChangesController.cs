@@ -70,6 +70,27 @@ namespace Headlines.WebAPI.Controllers.V1
             });
         }
 
+        [HttpGet("GetByArticleIdSkipTake")]
+        public async Task<IActionResult> GetByArticleIdSkipTake(long? articleId, int? skip, int? take, CancellationToken cancellationToken)
+        {
+            if (!articleId.HasValue)
+                return BadRequest(Messages.M0003);
+
+            if (!skip.HasValue || !take.HasValue)
+                return BadRequest(Messages.M0001);
+
+            take = Math.Min(take.Value, MaxTake);
+
+            List<HeadlineChangeDTO> headlineChanges = await _headlineChangeFacade.GetHeadlineChangesByArticleIdOrderByDetectedDescendingAsync(articleId.Value, skip.Value, take.Value, cancellationToken);
+            long count = await _headlineChangeFacade.GetHeadlineChangeCountAsync(articleId);
+
+            return Ok(new GetByArticleIdSkipTakeResponse
+            {
+                HeadlineChanges = headlineChanges.Select(_mapper.MapHeadlineChange).ToList(),
+                TotalCount = count
+            });
+        }
+
         [HttpPost("Upvote")]
         public async Task<IActionResult> Upvote([FromBody] UpvoteRequest request, CancellationToken cancellationToken)
         {

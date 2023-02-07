@@ -77,5 +77,14 @@ namespace Headlines.WebAPI.Resources.V1 {
                 return ResourceManager.GetString("M0002", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Article Id must be specified..
+        /// </summary>
+        internal static string M0003 {
+            get {
+                return ResourceManager.GetString("M0003", resourceCulture);
+            }
+        }
     }
 }

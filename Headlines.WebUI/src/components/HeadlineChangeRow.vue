@@ -20,7 +20,12 @@
                 </div>
             </div>
             <div class="col-lg-1 text-center mt-2 mt-lg-0">
-                <fai :icon="['fas', change.article.link.length > 0 ? 'link' : 'link-slash']" :class="['cursor-pointer']" v-on:click="redirect(change.article.link)"></fai>&nbsp;&nbsp;
+                <fai :icon="['fas', change.article.link.length > 0 ? 'link' : 'link-slash']" :class="['cursor-pointer']" v-on:click="redirect(change.article.link)"></fai>
+                &nbsp;
+                <router-link v-if="showarticledetaillink" :to="{ name: 'Article', params: { id: change.article.id } }" style="color: #333333">                    
+                    <fai :icon="['fas', 'newspaper']" :class="['cursor-pointer']"></fai>
+                </router-link>
+                &nbsp;
                 <span class="cursor-pointer" :style="[isUpvoted() == true ? 'color: #0A3640' : 'color: #888888', 'white-space: nowrap']" v-on:click.stop="upvote(change.id)">
                     <b><fai :icon="['fas', 'thumbs-up']"></fai>&nbsp;{{ change.upvoteCount }}</b>
                 </span>
@@ -78,9 +83,13 @@ export default {
             default: null,
             type: String
         },
-       userupvotes: {
+        userupvotes: {
             default() { return [] },
             type: Array
+        },
+        showarticledetaillink: {
+            default: true,
+            type: Boolean
         }
     },
     methods: {
@@ -166,8 +175,8 @@ export default {
         redirect(url) {
             if (url.length <= 0)
                 return
-
-            window.location.href = url
+            
+            window.open(url)
         }
     },
     emits: ['upvoted'],

@@ -32,10 +32,21 @@ namespace Headlines.BL.DAO
                 .ToListAsync(cancellationToken);
         }
 
-        public Task<long> GetCountAsync()
+        public Task<long> GetCountAsync(long? articleId = null)
         {
             return DbContext.Set<HeadlineChange>()
+                .Where(x => !articleId.HasValue || x.ArticleId == articleId)
                 .LongCountAsync();
+        }
+
+        public Task<List<HeadlineChange>> GetByArticleIdOrderByDetectedDescendingAsync(long articleId, int skip, int take, CancellationToken cancellationToken)
+        {
+            return DbContext.Set<HeadlineChange>()
+                .OrderByDescending(x => x.Detected)
+                .Where(x => x.ArticleId == articleId)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync(cancellationToken);
         }
 
         public Task<List<HeadlineChange>> GetAllAsync(CancellationToken cancellationToken)

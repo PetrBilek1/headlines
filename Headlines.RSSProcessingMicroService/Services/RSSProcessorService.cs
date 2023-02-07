@@ -78,7 +78,7 @@ namespace Headlines.RSSProcessingMicroService.Services
             group.Article = new ArticleDTO()
             {
                 SourceId = group.ArticleSource!.Id,
-                Published = group.FeedItem!.Published,
+                Published = group.FeedItem!.Published ?? _dateTimeProvider.Now,
                 UrlId = FeedItemUtils.GetUrlId(group.FeedItem, group.ArticleSource),
                 CurrentTitle = group.FeedItem.Title,
                 Link = group.FeedItem.Link

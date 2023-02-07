@@ -20,6 +20,9 @@ export default {
         GetCount() {
             return getApiAddress() + "/v1/HeadlineChanges/GetCount"
         },
+        GetByArticleIdSkipTake(articleId, skip, take) {
+            return getApiAddress() + "/v1/HeadlineChanges/GetByArticleIdSkipTake?articleId=" + articleId + "&skip=" + skip + "&take=" + take
+        },
         Upvote() {
             return getApiAddress() + "/v1/HeadlineChanges/Upvote"
         }
@@ -35,6 +38,9 @@ export default {
         }
     },
     Articles: {
+        GetById(id) {
+            return getApiAddress() + "/v1/Articles/GetById?id=" + id
+        },
         GetSkipTake() {
             return getApiAddress() + "/v1/Articles/GetSkipTake"
         }

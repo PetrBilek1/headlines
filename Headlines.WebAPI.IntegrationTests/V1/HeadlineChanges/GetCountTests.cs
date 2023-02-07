@@ -5,7 +5,6 @@ using Xunit;
 
 namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
 {
-    [Collection(SerialLine.Two)]
     public sealed class GetCountTests : IClassFixture<WebAPIFactory>
     {
         private readonly HttpClient _client;
