@@ -48,8 +48,9 @@ namespace Headlines.WebAPI.Tests.Integration
             await DatabaseProvisioner.InitializeAsync();
         }
 
-        public new async Task DisposeAsync()
+        public new Task DisposeAsync()
         {
+            return Task.CompletedTask;
         }
     }
 }

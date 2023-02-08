@@ -29,7 +29,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task GetTopUpvoted_ShouldReturnCorrectCount(int count, int take)
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(count));
 
             //Act
@@ -47,7 +47,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task GetTopUpvoted_ShouldReturnCorrectOrder()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(HeadlineChangesController.MaxTake));
 
             //Act
@@ -65,7 +65,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task GetTopUpvoted_WhenTakeNotSpecified_ShouldReturnDefaultCount()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(HeadlineChangesController.MaxTake));
 
             //Act
@@ -83,7 +83,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task GetTopUpvoted_ShouldReturnCorrectMapping()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var data = await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(HeadlineChangesController.DefaultTake));
 
             //Act

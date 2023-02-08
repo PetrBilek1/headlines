@@ -231,7 +231,7 @@ namespace Headlines.BL.Tests.Facades
                 .Returns(_uowMock.Object);
             _uowMock.Setup(x => x.Dispose());
             _headlineChangeDaoMock.Setup(x => x.GetByIdAsync(1))
-                .Returns(Task.FromResult<HeadlineChange>(null));
+                .Returns(Task.FromResult<HeadlineChange>(null!));
 
             //Act
             Func<Task> act = async () => await _sut.AddUpvotesToHeadlineChangeAsync(1, 1);
@@ -274,7 +274,7 @@ namespace Headlines.BL.Tests.Facades
                 .Returns(_uowMock.Object);
             _uowMock.Setup(x => x.Dispose());
             _headlineChangeDaoMock.Setup(x => x.GetByIdAsync(_data.HeadlineChange1.Id))
-                .Returns(Task.FromResult<HeadlineChange>(null));
+                .Returns(Task.FromResult<HeadlineChange>(null!));
 
             //Act
             Func<Task> act = async () => await _sut.DeleteHeadlineChangeAsync(new HeadlineChangeDTO { Id = _data.HeadlineChange1.Id });

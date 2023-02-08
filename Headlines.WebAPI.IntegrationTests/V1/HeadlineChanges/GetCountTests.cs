@@ -23,7 +23,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task GetCount_ShouldReturnCount(int count)
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(count));
 
             //Act

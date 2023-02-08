@@ -28,7 +28,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task Upvote_WhenNotUpvoted_ShouldUpvote()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var userToken = Guid.NewGuid().ToString();
             var headlineChange = (await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(1))).First();
 
@@ -51,7 +51,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task Upvote_WhenAlreadyUpvoted_ShouldNotUpvote()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var userToken = Guid.NewGuid().ToString();
             var headlineChange = (await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(1))).First();
             var originalUpvoteDate = new DateTime(2020, 10, 10);
@@ -90,7 +90,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task Upvote_WhenNotUpvoted_ShouldEditDatabase()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var userToken = Guid.NewGuid().ToString();
             var headlineChange = (await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(1))).First();
 
@@ -130,7 +130,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task Upvote_ShouldReturnCorrectMapping()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var userToken = Guid.NewGuid().ToString();
             var headlineChange = (await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(1))).First();
 
@@ -157,7 +157,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task Upvote_ShouldReturnCorrectContract()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var userToken = Guid.NewGuid().ToString();
             var headlineChange = (await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(1))).First();
 
