@@ -31,7 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Headlines.WebAPI", "Headlin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Headlines.WebAPI.Tests.Integration", "Headlines.WebAPI.IntegrationTests\Headlines.WebAPI.Tests.Integration.csproj", "{F7B02E1D-E483-416F-9C1A-62E00574B2E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Headlines.WebAPI.Contracts", "Headlines.WebAPI.Contracts\Headlines.WebAPI.Contracts.csproj", "{FD840DD0-54D8-4F24-A78B-9D7A3F742196}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Headlines.WebAPI.Contracts", "Headlines.WebAPI.Contracts\Headlines.WebAPI.Contracts.csproj", "{FD840DD0-54D8-4F24-A78B-9D7A3F742196}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Headlines.ScrapeMicroService", "Headlines.ScrapeMicroService\Headlines.ScrapeMicroService.csproj", "{D054EF7E-8EF1-4757-AB65-55AB2E2D02BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +99,10 @@ Global
 		{FD840DD0-54D8-4F24-A78B-9D7A3F742196}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD840DD0-54D8-4F24-A78B-9D7A3F742196}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD840DD0-54D8-4F24-A78B-9D7A3F742196}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D054EF7E-8EF1-4757-AB65-55AB2E2D02BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D054EF7E-8EF1-4757-AB65-55AB2E2D02BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D054EF7E-8EF1-4757-AB65-55AB2E2D02BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D054EF7E-8EF1-4757-AB65-55AB2E2D02BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
