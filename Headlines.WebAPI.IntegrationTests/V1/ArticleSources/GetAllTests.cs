@@ -21,7 +21,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.ArticleSources
         public async Task GetAll_ShouldReturnArticleSources()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             await populator.InsertArticleSourcesAsync(DataGenerator.GenerateArticleSources(10));
 
             //Act
@@ -39,7 +39,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.ArticleSources
         public async Task GetAll_ShouldReturnCorrectMapping()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var data = await populator.InsertArticleSourcesAsync(DataGenerator.GenerateArticleSources(10));
 
             //Act
@@ -64,7 +64,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.ArticleSources
         public async Task GetAll_ShouldReturnCorrectContract()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var data = await populator.InsertArticleSourcesAsync(DataGenerator.GenerateArticleSources(10));
 
             //Act

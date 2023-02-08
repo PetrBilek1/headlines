@@ -30,7 +30,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task GetSkipTake_WhenSkipIsZero_ShouldReturnCorrectCount(int count, int take)
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(count));
 
             //Act
@@ -53,7 +53,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task GetSkipTake_WhenSkipIsLargerThanZero_ShouldReturnCorrectCount(int count, int skip, int take)
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(count));
 
             //Act
@@ -71,7 +71,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task GetSkipTake_ShouldReturnCorrectOrder()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(100));
 
             //Act
@@ -89,7 +89,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task GetSkipTake_WhenSkipTakeNotSpecified_ShouldReturnException()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(100));
 
             //Act
@@ -105,7 +105,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task GetSkipTake_Simple_ShouldReturnCorrectMapping()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var data = await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(HeadlineChangesController.DefaultTake));
 
             //Act
@@ -143,7 +143,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task GetSkipTake_ShouldReturnCorrectContract()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(HeadlineChangesController.DefaultTake));
 
             //Act

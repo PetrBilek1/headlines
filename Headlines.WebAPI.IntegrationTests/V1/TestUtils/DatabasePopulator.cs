@@ -29,9 +29,13 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
             _mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
         }
 
-        public static DatabasePopulator Create(IServiceProvider serviceProvider)
+        public static async Task<DatabasePopulator> CreateAsync(IServiceProvider serviceProvider)
         {
-            return new DatabasePopulator(serviceProvider);
+            var populator = new DatabasePopulator(serviceProvider);
+
+            await populator.ClearDatabaseAsync();
+
+            return populator;
         }
 
         public async ValueTask DisposeAsync()

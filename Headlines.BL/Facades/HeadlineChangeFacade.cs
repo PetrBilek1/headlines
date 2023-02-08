@@ -48,7 +48,7 @@ namespace Headlines.BL.Facades
             if (headlineChange == null)
                 throw new Exception($"HeadlineChange with Id '{headlineChangeDTO.Id}' does not exist.");
 
-            _headlineChangeDAO.Delete(headlineChange);
+            _headlineChangeDAO.Delete(headlineChange.Id);
 
             await uow.CommitAsync();
 

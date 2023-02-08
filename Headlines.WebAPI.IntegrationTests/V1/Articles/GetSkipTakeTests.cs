@@ -30,7 +30,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
         public async Task GetSkipTake_WhenNoFilters_ShouldReturnArticlesAndCount(int skip, int take, int count)
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             await populator.InsertArticlesAsync(DataGenerator.GenerateArticles(count));
 
             //Act
@@ -75,7 +75,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             }
             matchingArticles = matchingArticles.OrderByDescending(x => x.Published).ToList();
 
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             articles = await populator.InsertArticlesAsync(articles);
             for (int i = 0; i < articles.Count(); i++)
             {
@@ -127,7 +127,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
         public async Task GetSkipTake_WhenArticleSourceFilter_ShouldReturnMatchingArticlesAndCount(int skip, int take, int count)
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var data = await populator.InsertArticlesAsync(DataGenerator.GenerateArticles(count));
             var articleSourceIds = data.Select(x => x.SourceId).ToList();
 
@@ -163,10 +163,32 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
         }
 
         [Fact]
+        public async Task GetSkipTake_WhenNoArticleSourcesInFilter_ShouldReturnEmptyResponse()
+        {
+            //Act
+            var response = await _client.PostAsJsonAsync("/v1/Articles/GetSkipTake", new GetSkipTakeRequest()
+            {
+                Skip = 0,
+                Take = 10,
+                SearchPrompt = null,
+                ArticleSources = new long[] {}
+            });
+            var content = await response.Content.ReadAsAsync<GetSkipTakeResponse>();
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            content.Should().NotBeNull();
+
+            content.Articles.Should().NotBeNull();
+            content.Articles.Should().BeEmpty();
+            content.MatchesFiltersCount.Should().Be(0);
+        }
+
+        [Fact]
         public async Task GetSkipTake_ShouldReturnCorrectContract()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var userToken = Guid.NewGuid().ToString();
             var headlineChange = (await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(1))).First();
 

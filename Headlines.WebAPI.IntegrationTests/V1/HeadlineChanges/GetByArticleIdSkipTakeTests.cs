@@ -29,7 +29,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
             List<HeadlineChangeDTO> data = DataGenerator.GenerateHeadlineChanges(count).ToList();
             ArticleDTO matchingArticle = data.First().Article;
 
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             matchingArticle = (await populator.InsertArticlesAsync(new List<ArticleDTO> { matchingArticle })).First();
 
             for (int i = 0; i < matchingCount; i++) 
@@ -74,7 +74,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         public async Task GetByArticleIdSkipTake_ShouldReturnCorrectContract()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var headlineChange = (await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(1))).First();
 
             //Act

@@ -46,7 +46,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
         public async Task GetById_Simple()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var data = await populator.InsertArticlesAsync(DataGenerator.GenerateArticles(2));
 
             //Act
@@ -63,7 +63,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
         public async Task GetById_ShouldReturnCorrectContract()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var data = await populator.InsertArticlesAsync(DataGenerator.GenerateArticles(1));
 
             //Act

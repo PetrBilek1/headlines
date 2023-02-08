@@ -25,7 +25,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.UserUpvotes
         public async Task Get_WhenUserTokenSpecified_ShouldReturnUserUpvotes()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var userToken = Guid.NewGuid().ToString();
             var headlineChange = (await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(1))).First();
             var userUpvotes = await populator.InsertUserUpvotesAsync(new UserUpvotesDTO()
@@ -55,6 +55,29 @@ namespace Headlines.WebAPI.Tests.Integration.V1.UserUpvotes
         }
 
         [Fact]
+        public async Task Get_WhenUpvotesOfUserDontExist_ShouldCreateEmptyUserUpvotes()
+        {
+            //Arrange
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
+            var userToken = Guid.NewGuid().ToString();
+
+            //Act
+            var response = await _client.GetAsync($"/v1/UserUpvotes/Get?userToken={userToken}");
+            var content = await response.Content.ReadAsAsync<GetResponse>();
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            content.Should().NotBeNull();
+            content.Upvotes.Should().NotBeNull();
+            content.Upvotes.Should().HaveCount(0);
+
+            var dbUpvotes = await populator.GetAllUserUpvotesAsync();
+            dbUpvotes.Should().NotBeNull();
+            dbUpvotes.Should().HaveCount(1);
+            dbUpvotes.First().UserToken.Should().Be(userToken);
+        }
+
+        [Fact]
         public async Task Get_WhenUserTokenNotSpecified_ShouldReturnBadRequest()
         {
             //Act
@@ -68,7 +91,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.UserUpvotes
         public async Task Get_ShouldReturnCorrectMapping()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
 
             var userToken = Guid.NewGuid().ToString();
             var targetId = 1;
@@ -108,7 +131,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.UserUpvotes
         public async Task Get_ShouldReturnCorrectContract()
         {
             //Arrange
-            await using var populator = DatabasePopulator.Create(_serviceProvider);
+            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             var userToken = Guid.NewGuid().ToString();
             var headlineChange = (await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(1))).First();
             var userUpvotes = await populator.InsertUserUpvotesAsync(new UserUpvotesDTO()
