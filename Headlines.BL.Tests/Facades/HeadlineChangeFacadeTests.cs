@@ -223,6 +223,70 @@ namespace Headlines.BL.Tests.Facades
             result.UpvoteCount.Should().Be(originalUpvoteCount + amount);
         }
 
+        [Fact]
+        public async Task AddUpvotesToHeadlineChangeAsync_WhenHeadlineChangeDoesNotExist_ThrowsException()
+        {
+            //Arrange
+            _uowProviderMock.Setup(x => x.CreateUnitOfWork())
+                .Returns(_uowMock.Object);
+            _uowMock.Setup(x => x.Dispose());
+            _headlineChangeDaoMock.Setup(x => x.GetByIdAsync(1))
+                .Returns(Task.FromResult<HeadlineChange>(null));
+
+            //Act
+            Func<Task> act = async () => await _sut.AddUpvotesToHeadlineChangeAsync(1, 1);
+
+            //Assert
+            await act.Should().ThrowAsync<Exception>().WithMessage($"HeadlineChange with Id '{1}' not found.");
+
+            _uowMock.Verify(x => x.Dispose(), Times.Once);
+            _uowMock.Verify(x => x.CommitAsync(), Times.Never);
+        }
+
+        [Fact]
+        public async Task DeleteHeadlineChangeAsync_ShouldDeleteHeadlineChange()
+        {
+            //Arrange
+            _uowProviderMock.Setup(x => x.CreateUnitOfWork())
+                .Returns(_uowMock.Object);
+            _uowMock.Setup(x => x.Dispose());
+            _uowMock.Setup(x => x.CommitAsync())
+                .Returns(Task.CompletedTask);
+            _headlineChangeDaoMock.Setup(x => x.GetByIdAsync(_data.HeadlineChange1.Id))
+                .ReturnsAsync(_data.HeadlineChange1);
+            _headlineChangeDaoMock.Setup(x => x.Delete(_data.HeadlineChange1.Id));
+
+            //Act
+            HeadlineChangeDTO result = await _sut.DeleteHeadlineChangeAsync(new HeadlineChangeDTO { Id = _data.HeadlineChange1.Id });
+
+            //Assert
+            _uowProviderMock.Verify(x => x.CreateUnitOfWork(), Times.Once);
+            _uowMock.Verify(x => x.Dispose(), Times.Once);
+            _uowMock.Verify(x => x.CommitAsync(), Times.Once);
+            _headlineChangeDaoMock.Verify(x => x.Delete(_data.HeadlineChange1.Id), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteHeadlineChangeAsync_WhenHeadlineChangeDoesNotExist_ShouldThrowException()
+        {
+            //Arrange
+            _uowProviderMock.Setup(x => x.CreateUnitOfWork())
+                .Returns(_uowMock.Object);
+            _uowMock.Setup(x => x.Dispose());
+            _headlineChangeDaoMock.Setup(x => x.GetByIdAsync(_data.HeadlineChange1.Id))
+                .Returns(Task.FromResult<HeadlineChange>(null));
+
+            //Act
+            Func<Task> act = async () => await _sut.DeleteHeadlineChangeAsync(new HeadlineChangeDTO { Id = _data.HeadlineChange1.Id });
+
+            //Assert
+            await act.Should().ThrowAsync<Exception>().WithMessage($"HeadlineChange with Id '{_data.HeadlineChange1.Id}' does not exist.");
+
+            _uowMock.Verify(x => x.Dispose(), Times.Once);
+            _uowMock.Verify(x => x.CommitAsync(), Times.Never);
+            _headlineChangeDaoMock.Verify(x => x.Delete(It.IsAny<long>()), Times.Never);
+        }
+
         private sealed class TestData
         {
             public List<HeadlineChange> HeadlineChanges => new() { HeadlineChange1, HeadlineChange2 };
