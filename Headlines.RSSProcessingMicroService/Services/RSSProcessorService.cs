@@ -56,7 +56,6 @@ namespace Headlines.RSSProcessingMicroService.Services
 
             feedItem.Article.CurrentTitle = feedItem.FeedItem.Title;
             feedItem.Article.Link = feedItem.FeedItem.Link;
-            feedItem.Article.Published = feedItem.FeedItem.Published;
         }
 
         private void AddArticleToResult(ProcessingResultDTO result, ArticleDTO article, bool wasCreated)

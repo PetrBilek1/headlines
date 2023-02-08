@@ -4,6 +4,7 @@ using Headlines.ORM.Core.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Headlines.ORM.Core.Migrations
 {
     [DbContext(typeof(HeadlinesDbContext))]
-    partial class HeadlinesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230207141114_AddUpdatedToArticle")]
+    partial class AddUpdatedToArticle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,14 +33,6 @@ namespace Headlines.ORM.Core.Migrations
                         .HasColumnName("ID");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime?>("Changed")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CHANGED");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CREATED");
 
                     b.Property<string>("CurrentTitle")
                         .HasMaxLength(1024)
@@ -56,6 +51,10 @@ namespace Headlines.ORM.Core.Migrations
                     b.Property<long>("SourceId")
                         .HasColumnType("bigint")
                         .HasColumnName("SOURCE_ID");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("UPDATED");
 
                     b.Property<string>("UrlId")
                         .HasMaxLength(1024)
