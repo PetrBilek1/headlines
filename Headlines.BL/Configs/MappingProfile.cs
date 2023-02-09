@@ -13,6 +13,8 @@ namespace Headlines.BL.Configs
 
             CreateMap<HeadlineChange, HeadlineChangeDTO>();
 
+            CreateMap<ScrapeJob, ScrapeJobDTO>();
+
             CreateMap<UserUpvotes, UserUpvotesDTO>();
         }
     }
