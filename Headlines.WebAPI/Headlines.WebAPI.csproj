@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Headlines.BL\Headlines.BL.csproj" />
-    <ProjectReference Include="..\Headlines.DependencyResolution\Headlines.DependencyResolution.csproj" />
     <ProjectReference Include="..\Headlines.WebAPI.Contracts\Headlines.WebAPI.Contracts.csproj" />
   </ItemGroup>
 

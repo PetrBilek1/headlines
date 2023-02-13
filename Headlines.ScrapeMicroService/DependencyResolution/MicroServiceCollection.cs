@@ -1,5 +1,6 @@
 ﻿using Headlines.BL.Facades;
 using NetCore.AutoRegisterDi;
+using PBilek.Infrastructure.DatetimeProvider;
 using System.Reflection;
 
 namespace Headlines.ScrapeMicroService.DependencyResolution
@@ -8,6 +9,8 @@ namespace Headlines.ScrapeMicroService.DependencyResolution
     {
         public static IServiceCollection AddMicroServiceDependencyGroup(this IServiceCollection services)
         {
+            services.AddTransient<IDateTimeProvider, DefaultDateTimeProvider>();
+
             Assembly?[] assembliesToScan = new[]
             {
                 Assembly.GetAssembly(typeof(IArticleSourceFacade)),

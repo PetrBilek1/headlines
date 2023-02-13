@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Headlines.DependencyResolution;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using PBilek.Infrastructure.DatetimeProvider;
 using Moq;
 using Microsoft.Extensions.DependencyInjection;
+using PBilek.ORM.EntityFrameworkCore.SQL.DependencyResolution;
+using Headlines.ORM.Core.Context;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 namespace Headlines.WebAPI.Tests.Integration
@@ -20,8 +21,8 @@ namespace Headlines.WebAPI.Tests.Integration
         {            
             builder.ConfigureTestServices(services =>
             {   
-                services.RemoveORMDependencyGroup();
-                services.AddORMDependencyGroup(DatabaseProvisioner.GetConnectionString(Guid.NewGuid()));
+                services.RemoveORMDependencyGroup<HeadlinesDbContext>();
+                services.AddORMDependencyGroup<HeadlinesDbContext>(DatabaseProvisioner.GetConnectionString(Guid.NewGuid()));
 
                 if (_dateTimeProviderMock != null)
                 {

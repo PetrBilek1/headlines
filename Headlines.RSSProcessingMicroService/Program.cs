@@ -1,5 +1,6 @@
-using Headlines.DependencyResolution;
+using Headlines.ORM.Core.Context;
 using Headlines.RSSProcessingMicroService.DependencyResolution;
+using PBilek.ORM.EntityFrameworkCore.SQL.DependencyResolution;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +10,7 @@ builder.Services.AddHealthChecks();
 string? connectionStringTemplate = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services
-    .AddBasicDependencyGroup()
-    .AddORMDependencyGroup(GetConnectionString(connectionStringTemplate!))
+    .AddORMDependencyGroup<HeadlinesDbContext>(GetConnectionString(connectionStringTemplate!))
     .AddMicroServiceDependencyGroup()
     .AddMappingDependencyGroup();
 

@@ -1,10 +1,10 @@
-using Headlines.DependencyResolution;
 using Headlines.ORM.Core.Context;
 using Headlines.WebAPI.Configs;
 using Headlines.WebAPI.DependencyResolution;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
+using PBilek.ORM.EntityFrameworkCore.SQL.DependencyResolution;
 
 var builder = WebApplication.CreateBuilder(args);
 var corsPolicyName = "corsPolicyName";
@@ -42,8 +42,7 @@ builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
 string connectionStringTemplate = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
 
-builder.Services.AddBasicDependencyGroup();
-builder.Services.AddORMDependencyGroup(GetConnectionString(connectionStringTemplate));
+builder.Services.AddORMDependencyGroup<HeadlinesDbContext>(GetConnectionString(connectionStringTemplate));
 builder.Services.AddWebAPIDependencyGroup();
 builder.Services.AddMappingDependencyGroup();
 builder.Services.AddRateLimiterDependencyGroup();

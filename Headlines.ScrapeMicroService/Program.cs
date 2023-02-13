@@ -1,5 +1,6 @@
-using Headlines.DependencyResolution;
+using Headlines.ORM.Core.Context;
 using Headlines.ScrapeMicroService.DependencyResolution;
+using PBilek.ORM.EntityFrameworkCore.SQL.DependencyResolution;
 
 namespace Headlines.ScrapeMicroService
 {
@@ -14,8 +15,7 @@ namespace Headlines.ScrapeMicroService
             string? connectionStringTemplate = builder.Configuration.GetConnectionString("DefaultConnection");
 
             builder.Services
-                .AddBasicDependencyGroup()
-                .AddORMDependencyGroup(GetConnectionString(connectionStringTemplate!))
+                .AddORMDependencyGroup<HeadlinesDbContext>(GetConnectionString(connectionStringTemplate!))
                 .AddMicroServiceDependencyGroup()
                 .AddMappingDependencyGroup();
 
