@@ -21,7 +21,7 @@ namespace Headlines.ScrapeMicroService.DependencyResolution
                 .Where(x => x.Name.EndsWith("Facade") || x.Name.EndsWith("DAO"))
                 .AsPublicImplementedInterfaces(ServiceLifetime.Transient);
 
-            services.AddHostedService<ServiceWorker>();
+            //services.AddHostedService<ServiceWorker>();
 
             return services;
         }

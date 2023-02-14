@@ -1,3 +1,4 @@
+using Headlines.BL.MessageBroker;
 using Headlines.ORM.Core.Context;
 using Headlines.ScrapeMicroService.DependencyResolution;
 using PBilek.ORM.EntityFrameworkCore.SQL.DependencyResolution;
@@ -17,20 +18,18 @@ namespace Headlines.ScrapeMicroService
             builder.Services
                 .AddORMDependencyGroup<HeadlinesDbContext>(GetConnectionString(connectionStringTemplate!))
                 .AddMicroServiceDependencyGroup()
-                .AddMappingDependencyGroup();
+                .AddMappingDependencyGroup()
+                .AddMessageQueueDependencyGroup(GetMessageBrokerSettings());
 
             var app = builder.Build();
 
             app.MapHealthChecks("/health");
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -46,6 +45,16 @@ namespace Headlines.ScrapeMicroService
             template = template.Replace("{DB_INITIAL_CATALOG}", Environment.GetEnvironmentVariable("DB_INITIAL_CATALOG"));
 
             return template;
+        }
+
+        private static MessageBrokerSettings GetMessageBrokerSettings()
+        {
+            return new MessageBrokerSettings
+            {
+                Host = Environment.GetEnvironmentVariable("MQ_HOST") ?? string.Empty,
+                Username = Environment.GetEnvironmentVariable("MQ_USERNAME") ?? string.Empty,
+                Password = Environment.GetEnvironmentVariable("MQ_PASSWORD") ?? string.Empty
+            };
         }
     }
 }

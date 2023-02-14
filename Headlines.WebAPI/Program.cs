@@ -1,3 +1,4 @@
+using Headlines.BL.MessageBroker;
 using Headlines.ORM.Core.Context;
 using Headlines.WebAPI.Configs;
 using Headlines.WebAPI.DependencyResolution;
@@ -44,6 +45,7 @@ string connectionStringTemplate = builder.Configuration.GetConnectionString("Def
 
 builder.Services.AddORMDependencyGroup<HeadlinesDbContext>(GetConnectionString(connectionStringTemplate));
 builder.Services.AddWebAPIDependencyGroup();
+builder.Services.AddMessageQueueDependencyGroup(GetMessageBrokerSettings());
 builder.Services.AddMappingDependencyGroup();
 builder.Services.AddRateLimiterDependencyGroup();
 
@@ -85,6 +87,16 @@ string GetConnectionString(string template)
     template = template.Replace("{DB_INITIAL_CATALOG}", Environment.GetEnvironmentVariable("DB_INITIAL_CATALOG"));
 
     return template;
+}
+
+MessageBrokerSettings GetMessageBrokerSettings()
+{
+    return new MessageBrokerSettings
+    {
+        Host = Environment.GetEnvironmentVariable("MQ_HOST") ?? string.Empty,
+        Username = Environment.GetEnvironmentVariable("MQ_USERNAME") ?? string.Empty,
+        Password = Environment.GetEnvironmentVariable("MQ_PASSWORD") ?? string.Empty
+    };
 }
 
 IEnumerable<string> GetCorsOrigins()

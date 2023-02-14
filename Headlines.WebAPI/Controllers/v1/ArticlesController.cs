@@ -1,4 +1,6 @@
-﻿using Headlines.BL.Facades;
+﻿using Headlines.BL.Abstractions.EventBus;
+using Headlines.BL.Events;
+using Headlines.BL.Facades;
 using Headlines.DTO.Entities;
 using Headlines.WebAPI.Contracts.V1;
 using Headlines.WebAPI.Contracts.V1.Requests.Articles;
@@ -15,14 +17,16 @@ namespace Headlines.WebAPI.Controllers.v1
     {
         private readonly MapperV1 _mapper;
         private readonly IArticleFacade _articleFacade;
+        private readonly IEventBus _eventBus;
 
         public const int MaxTake = 50;
         public const int DefaultTake = 10;
 
-        public ArticlesController(IArticleFacade articleFacade)
+        public ArticlesController(IArticleFacade articleFacade, IEventBus eventBus)
         {
             _mapper = new MapperV1();
             _articleFacade = articleFacade;
+            _eventBus = eventBus;
         }
 
         [HttpGet("GetById")]
@@ -65,6 +69,22 @@ namespace Headlines.WebAPI.Controllers.v1
                 Articles = articles.Select(_mapper.MapArticle).ToList(),
                 MatchesFiltersCount = count
             });
+        }
+
+        [HttpPost("RequestDetailScrape")]
+        public async Task<IActionResult> RequestDetailScrape([FromBody] RequestDetailScrapeRequest request, CancellationToken cancellationToken)
+        {
+            ArticleDTO article = await _articleFacade.GetArticleByIdIncludeSourceAsync(request.ArticleId);
+            if (article == null)
+                return NotFound(Messages.M0004);
+
+            await _eventBus.PublishAsync(new ArticleDetailScrapeRequestedEvent
+            {
+                ArticleId = article.Id,
+            },
+            cancellationToken);
+
+            return Ok();
         }
     }
 }

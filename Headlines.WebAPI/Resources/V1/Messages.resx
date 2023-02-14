@@ -126,4 +126,7 @@
   <data name="M0003" xml:space="preserve">
     <value>Article Id must be specified.</value>
   </data>
+  <data name="M0004" xml:space="preserve">
+    <value>Article does not exist.</value>
+  </data>
 </root>

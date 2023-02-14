@@ -20,6 +20,21 @@ services:
       - headlines.network.internal
     volumes:
       - mssql-data:/var/opt/mssql  
+  
+  headlines.mq:
+    container_name: headlines.mq
+    hostname: ${MQ_HOST}
+    image: rabbitmq:3.11.7-management
+    networks:
+      - headlines.network.internal
+    ports:
+      - 8004:15672
+    volumes:
+      - ./.containers/queue/data/:/var/lib/rabbitmq
+      - ./.containers/queue/log/:/var/log/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${MQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${MQ_PASSWORD}
       
   headlines.webapi:
     container_name: headlines.webapi
@@ -28,6 +43,7 @@ services:
       dockerfile: Headlines.WebAPI/Dockerfile 
     depends_on:
       - headlines.db
+      - headlines.mq
     networks:
       - headlines.network.internal
     ports:
@@ -41,6 +57,10 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_DATA_SOURCE=${DB_DATA_SOURCE}
       - DB_INITIAL_CATALOG=${DB_INITIAL_CATALOG}
+      #MESSAGE QUEUE
+      - MQ_HOST=amqp://${MQ_HOST}:5672
+      - MQ_USERNAME=${MQ_USERNAME}
+      - MQ_PASSWORD=${MQ_PASSWORD}
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
@@ -80,3 +100,29 @@ services:
       - DB_INITIAL_CATALOG=${DB_INITIAL_CATALOG}
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  headlines.scrape:
+    container_name: headlines.scrape
+    image: ${DOCKER_REGISTRY-}headlinesscrapemicroservice
+    build:
+      context: .
+      dockerfile: Headlines.ScrapeMicroService/Dockerfile
+    ports:
+      - 8084:80
+    networks:
+      - headlines.network.internal
+    depends_on:
+      - headlines.db
+      - headlines.mq
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      #DATABASE
+      - DB_LOGIN=${DB_LOGIN}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATA_SOURCE=${DB_DATA_SOURCE}
+      - DB_INITIAL_CATALOG=${DB_INITIAL_CATALOG}
+      #MESSAGE QUEUE
+      - MQ_HOST=amqp://${MQ_HOST}:5672
+      - MQ_USERNAME=${MQ_USERNAME}
+      - MQ_PASSWORD=${MQ_PASSWORD}

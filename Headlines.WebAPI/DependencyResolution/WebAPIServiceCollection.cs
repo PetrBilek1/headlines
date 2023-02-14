@@ -1,4 +1,5 @@
-﻿using Headlines.BL.Facades;
+﻿using Headlines.BL.Configs;
+using Headlines.BL.Facades;
 using NetCore.AutoRegisterDi;
 using PBilek.Infrastructure.DatetimeProvider;
 using System.Reflection;
@@ -9,7 +10,7 @@ namespace Headlines.WebAPI.DependencyResolution
     {
         public static IServiceCollection AddWebAPIDependencyGroup(this IServiceCollection services)
         {
-            services.AddTransient<IDateTimeProvider, DefaultDateTimeProvider>();
+            services.AddSingleton<IDateTimeProvider, DefaultDateTimeProvider>();
 
             Assembly?[] assembliesToScan = new[]
             {
