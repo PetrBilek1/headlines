@@ -1,4 +1,4 @@
-﻿namespace Headlines.BL.MessageBroker
+﻿namespace Headlines.BL.Implementations.MessageBroker
 {
     public sealed class MessageBrokerSettings
     {

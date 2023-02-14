@@ -1,5 +1,5 @@
 ﻿using Headlines.BL.Abstractions.EventBus;
-using Headlines.BL.MessageBroker;
+using Headlines.BL.Implementations.MessageBroker;
 using MassTransit;
 
 namespace Headlines.WebAPI.DependencyResolution

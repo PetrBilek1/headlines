@@ -1,7 +1,7 @@
 ﻿using Headlines.BL.Abstractions.EventBus;
 using MassTransit;
 
-namespace Headlines.BL.MessageBroker
+namespace Headlines.BL.Implementations.MessageBroker
 {
     public sealed class EventBus : IEventBus
     {

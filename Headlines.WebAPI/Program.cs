@@ -1,4 +1,4 @@
-using Headlines.BL.MessageBroker;
+using Headlines.BL.Implementations.MessageBroker;
 using Headlines.ORM.Core.Context;
 using Headlines.WebAPI.Configs;
 using Headlines.WebAPI.DependencyResolution;

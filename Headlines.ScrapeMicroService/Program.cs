@@ -1,4 +1,4 @@
-using Headlines.BL.MessageBroker;
+using Headlines.BL.Implementations.MessageBroker;
 using Headlines.ORM.Core.Context;
 using Headlines.ScrapeMicroService.DependencyResolution;
 using PBilek.ORM.EntityFrameworkCore.SQL.DependencyResolution;

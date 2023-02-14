@@ -1,4 +1,6 @@
-﻿using Headlines.BL.Facades;
+﻿using Headlines.BL.Abstractions.ArticleScraping;
+using Headlines.BL.Facades;
+using Headlines.BL.Implementations.ArticleScraper;
 using NetCore.AutoRegisterDi;
 using PBilek.Infrastructure.DatetimeProvider;
 using System.Reflection;
@@ -11,6 +13,8 @@ namespace Headlines.ScrapeMicroService.DependencyResolution
         {
             services.AddTransient<IDateTimeProvider, DefaultDateTimeProvider>();
 
+            services.AddSingleton<IArticleScraperProvider, ArticleScraperProvider>();
+
             Assembly?[] assembliesToScan = new[]
             {
                 Assembly.GetAssembly(typeof(IArticleSourceFacade)),
@@ -20,8 +24,6 @@ namespace Headlines.ScrapeMicroService.DependencyResolution
                 .RegisterAssemblyPublicNonGenericClasses(assembliesToScan)
                 .Where(x => x.Name.EndsWith("Facade") || x.Name.EndsWith("DAO"))
                 .AsPublicImplementedInterfaces(ServiceLifetime.Transient);
-
-            //services.AddHostedService<ServiceWorker>();
 
             return services;
         }
