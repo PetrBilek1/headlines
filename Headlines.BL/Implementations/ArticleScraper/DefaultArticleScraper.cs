@@ -10,12 +10,11 @@ namespace Headlines.BL.Implementations.ArticleScraper
             try
             {
                 HtmlWeb web = new();
-                HtmlDocument document = web.Load(url);
+                HtmlDocument document = await web.LoadFromWebAsync(url);
 
-                string title = document.DocumentNode.SelectSingleNode("//h1").InnerText.Trim();
-                string author = document.DocumentNode.SelectSingleNode("//div[@class='author']").InnerText.Trim();
-                string content = string.Join("\n", document.DocumentNode.SelectNodes("//div[@class='article-body']//p")
-                                            .Select(p => p.InnerText.Trim()));
+                string title = document.DocumentNode.SelectSingleNode("//h1")?.InnerText.Trim() ?? string.Empty;
+                string author = document.DocumentNode.SelectSingleNode("//div[@class='author']")?.InnerText.Trim() ?? string.Empty;
+                string content = string.Join("\n", document.DocumentNode.SelectNodes("//div[@class='article-body']//p").Select(p => p.InnerText.Trim()));
 
                 return new ArticleScrapeResult
                 {

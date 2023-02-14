@@ -21,15 +21,24 @@ namespace Headlines.ScrapeMicroService.Consumers
 
         public async Task Consume(ConsumeContext<ArticleDetailScrapeRequestedEvent> context)
         {
-            _logger.LogInformation("Received request to scrape article with Id '{articleId}'", context.Message.ArticleId);
+            _logger.LogInformation("Received request to scrape article with Id '{articleId}'.", context.Message.ArticleId);
 
             try
             {
                 ArticleDTO article = await _articleFacade.GetArticleByIdIncludeSourceAsync(context.Message.ArticleId);
-            }
-            finally
-            {
+                ArgumentNullException.ThrowIfNull(article.Source.ScraperType);
 
+                IArticleScraper scraper = _scraperProvider.Provide(article.Source.ScraperType.Value);
+                ArticleScrapeResult result = await scraper.ScrapeArticleAsync(article.Link);
+
+                if (!result.IsSuccess)
+                {
+                    _logger.LogWarning("Scraping of article Id '{articleId} was not successful.'", article.Id);
+                }
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e, "There was and exception when trying to scrape article with Id '{articleId}'.", context.Message.ArticleId);
             }
         }
     }

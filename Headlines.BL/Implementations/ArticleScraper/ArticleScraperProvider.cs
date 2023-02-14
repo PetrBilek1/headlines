@@ -10,6 +10,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
             return scraperType switch
             {
                 ArticleScraperType.Default => new DefaultArticleScraper(),
+                ArticleScraperType.HospodarskeNoviny => new HospodarskeNovinyScraper(),
                 _ => throw new NotImplementedException(),
             };
         }

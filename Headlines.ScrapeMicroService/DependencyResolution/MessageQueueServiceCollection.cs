@@ -15,6 +15,8 @@ namespace Headlines.ScrapeMicroService.DependencyResolution
             {
                 busConfigurator.SetKebabCaseEndpointNameFormatter();
 
+                busConfigurator.AddConsumer<ArticleDetailScrapeRequestedEventConsumer>();
+
                 busConfigurator.UsingRabbitMq((context, configurator) =>
                 {
                     MessageBrokerSettings settings = context.GetRequiredService<MessageBrokerSettings>();
