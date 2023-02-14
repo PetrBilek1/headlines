@@ -39,7 +39,7 @@ namespace Headlines.ORM.Core.Entities
             builder.HasIndex(x => x.UrlId);
 
             builder.HasOne(x => x.Source).WithMany().HasForeignKey(x => x.SourceId);
-            builder.HasMany(x => x.Details).WithOne();
+            builder.HasMany(x => x.Details).WithMany();
         }
     }
 }
