@@ -29,7 +29,7 @@ namespace Headlines.ScrapeMicroService.DependencyResolution
                     {
                         x.Lazy = true;
                         x.PrefetchCount = 20;
-                        x.Consumer<ArticleDetailScrapeRequestedEventConsumer>();
+                        x.Consumer<ArticleDetailScrapeRequestedEventConsumer>(context);
                     });
                 });
             });
