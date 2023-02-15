@@ -61,6 +61,10 @@ services:
       - MQ_HOST=amqp://${MQ_HOST}:5672
       - MQ_USERNAME=${MQ_USERNAME}
       - MQ_PASSWORD=${MQ_PASSWORD}
+      #OBJECT STORAGE
+      - OS_URL=${OS_URL}
+      - OS_ACCESS_KEY=${OS_ACCESS_KEY}
+      - OS_SECRET_KEY=${OS_SECRET_KEY}
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
@@ -98,6 +102,10 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_DATA_SOURCE=${DB_DATA_SOURCE}
       - DB_INITIAL_CATALOG=${DB_INITIAL_CATALOG}
+      #OBJECT STORAGE
+      - OS_URL=${OS_URL}
+      - OS_ACCESS_KEY=${OS_ACCESS_KEY}
+      - OS_SECRET_KEY=${OS_SECRET_KEY}
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
@@ -126,3 +134,7 @@ services:
       - MQ_HOST=amqp://${MQ_HOST}:5672
       - MQ_USERNAME=${MQ_USERNAME}
       - MQ_PASSWORD=${MQ_PASSWORD}
+      #OBJECT STORAGE
+      - OS_URL=${OS_URL}
+      - OS_ACCESS_KEY=${OS_ACCESS_KEY}
+      - OS_SECRET_KEY=${OS_SECRET_KEY}

@@ -1,5 +1,6 @@
 using Headlines.ORM.Core.Context;
 using Headlines.RSSProcessingMicroService.DependencyResolution;
+using PBilek.ObjectStorageService;
 using PBilek.ORM.EntityFrameworkCore.SQL.DependencyResolution;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,10 +10,9 @@ builder.Services.AddHealthChecks();
 
 string? connectionStringTemplate = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services
-    .AddORMDependencyGroup<HeadlinesDbContext>(GetConnectionString(connectionStringTemplate!))
-    .AddMicroServiceDependencyGroup()
-    .AddMappingDependencyGroup();
+builder.Services.AddORMDependencyGroup<HeadlinesDbContext>(GetConnectionString(connectionStringTemplate!));
+builder.Services.AddMicroServiceDependencyGroup(GetObjectStorageConfiguration());
+builder.Services.AddMappingDependencyGroup();
 
 var app = builder.Build();
 
@@ -41,4 +41,14 @@ string GetConnectionString(string template)
     template = template.Replace("{DB_INITIAL_CATALOG}", Environment.GetEnvironmentVariable("DB_INITIAL_CATALOG"));
 
     return template;
+}
+
+ObjectStorageConfiguration GetObjectStorageConfiguration()
+{
+    return new ObjectStorageConfiguration
+    {
+        ServiceUrl = Environment.GetEnvironmentVariable("OS_URL") ?? string.Empty,
+        AccessKey = Environment.GetEnvironmentVariable("OS_ACCESS_KEY") ?? string.Empty,
+        SecretKey = Environment.GetEnvironmentVariable("OS_SECRET_KEY") ?? string.Empty,
+    };
 }

@@ -5,6 +5,7 @@ using Headlines.WebAPI.DependencyResolution;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
+using PBilek.ObjectStorageService;
 using PBilek.ORM.EntityFrameworkCore.SQL.DependencyResolution;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +46,7 @@ string connectionStringTemplate = builder.Configuration.GetConnectionString("Def
 
 builder.Services.AddORMDependencyGroup<HeadlinesDbContext>(GetConnectionString(connectionStringTemplate));
 builder.Services.AddWebAPIDependencyGroup();
+builder.Services.AddObjectStorageDependencyGroup(GetObjectStorageConfiguration());
 builder.Services.AddMessageQueueDependencyGroup(GetMessageBrokerSettings());
 builder.Services.AddMappingDependencyGroup();
 builder.Services.AddRateLimiterDependencyGroup();
@@ -96,6 +98,16 @@ MessageBrokerSettings GetMessageBrokerSettings()
         Host = Environment.GetEnvironmentVariable("MQ_HOST") ?? string.Empty,
         Username = Environment.GetEnvironmentVariable("MQ_USERNAME") ?? string.Empty,
         Password = Environment.GetEnvironmentVariable("MQ_PASSWORD") ?? string.Empty
+    };
+}
+
+ObjectStorageConfiguration GetObjectStorageConfiguration()
+{
+    return new ObjectStorageConfiguration
+    {
+        ServiceUrl = Environment.GetEnvironmentVariable("OS_URL") ?? string.Empty,
+        AccessKey = Environment.GetEnvironmentVariable("OS_ACCESS_KEY") ?? string.Empty,
+        SecretKey = Environment.GetEnvironmentVariable("OS_SECRET_KEY") ?? string.Empty,
     };
 }
 

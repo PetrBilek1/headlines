@@ -1,5 +1,4 @@
-﻿using Headlines.BL.Configs;
-using Headlines.BL.Facades;
+﻿using Headlines.BL.Facades;
 using NetCore.AutoRegisterDi;
 using PBilek.Infrastructure.DatetimeProvider;
 using System.Reflection;
