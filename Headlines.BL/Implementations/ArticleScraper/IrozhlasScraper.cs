@@ -16,7 +16,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
                 var title = GetTitle(document.DocumentNode);
 
-                HtmlNode authorNode = document.DocumentNode.SelectSingleNode("//p[contains(concat(' ', @class, ' '), ' meta ')]/strong[text()]");
+                HtmlNode authorNode = document.DocumentNode.SelectSingleNode("//p[contains(concat(' ', @class, ' '), ' meta ')]/strong");
                 var author = GetAuthor(authorNode);
 
                 HtmlNode contentNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' b-detail ')]");
@@ -50,7 +50,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         private string GetContent(HtmlNode node)
         {
-            return string.Join('\n', node.SelectNodes(".//p[not(contains(@class, 'meta')) and not (ancestor::a or ancestor::figure or ancestor::div[contains(concat(' ', @class, ' '), ' embed ')])]")?.Select(x => x.InnerText) ?? new List<string>());
+            return string.Join('\n', node.SelectNodes(".//p[not(contains(@class, 'meta')) and not (ancestor::a or ancestor::figure or ancestor::div[contains(concat(' ', @class, ' '), ' embed ')] or ancestor::div[contains(concat(' ', @class, ' '), ' b-tweet ')])]")?.Select(x => x.InnerText) ?? new List<string>());
         }
     }
 }

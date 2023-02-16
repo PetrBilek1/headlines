@@ -21,9 +21,30 @@ namespace Headlines.BL.Implementations.ArticleScraper.Utils
 
         internal static HtmlDocument Sanitize(this HtmlDocument inputDocument)
         {
-            var sanitizer = new HtmlSanitizer();
-            sanitizer.AllowedAttributes.Add("class");
-            sanitizer.AllowedAttributes.Add("id");
+            var sanitizer = new HtmlSanitizer(new HtmlSanitizerOptions
+            {
+                AllowedTags =
+                {
+                    "a",
+                    "article",
+                    "b",
+                    "div",
+                    "h1",
+                    "header",
+                    "li",
+                    "main",
+                    "p",
+                    "span",
+                    "strong",
+                    "ul"
+                },
+                AllowedAttributes =
+                {
+                    "class",
+                    "id",
+                    "itemprop"
+                }
+            });
 
             var html = sanitizer.Sanitize(inputDocument.DocumentNode.OuterHtml);
 
