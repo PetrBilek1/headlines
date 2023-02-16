@@ -1,4 +1,5 @@
 ﻿using Headlines.BL.Abstractions.ArticleScraping;
+using Headlines.BL.Implementations.ArticleScraper.Utils;
 using HtmlAgilityPack;
 
 namespace Headlines.BL.Implementations.ArticleScraper
@@ -9,7 +10,10 @@ namespace Headlines.BL.Implementations.ArticleScraper
         {
             try
             {
-                HtmlDocument document = await (new HtmlWeb().LoadFromWebAsync(url));
+                HtmlDocument document = (await ScraperTools.LoadDocumentFromWebAsync(url))
+                    .ReplaceNewLineTags()
+                    .Sanitize();
+
                 var title = GetTitle(document.DocumentNode);
 
                 HtmlNode authorNode = document.DocumentNode.SelectSingleNode("//div[contains(concat(' ', @class, ' '), ' authors ')]/a[text()]");
@@ -18,7 +22,9 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 HtmlNode contentNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' article-body-part ') and contains(concat(' ', @class, ' '), ' free-part ')]");
                 var isPaywalled = IsPaywalled(contentNode);
                 var content = GetContent(contentNode);
-                var tags = GetTags(contentNode);
+
+                HtmlNode tagsNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' tags ')]");
+                var tags = GetTags(tagsNode);
 
                 return new ArticleScrapeResult
                 {

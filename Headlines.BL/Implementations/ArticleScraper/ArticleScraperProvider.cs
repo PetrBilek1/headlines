@@ -11,6 +11,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
             {
                 ArticleScraperType.Default => new DefaultArticleScraper(),
                 ArticleScraperType.HospodarskeNoviny => new HospodarskeNovinyScraper(),
+                ArticleScraperType.Irozhlas => new IrozhlasScraper(),
                 _ => throw new NotImplementedException(),
             };
         }
