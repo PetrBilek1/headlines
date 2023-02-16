@@ -16,6 +16,7 @@ namespace Headlines.ScrapeMicroService.DependencyResolution
                 busConfigurator.SetKebabCaseEndpointNameFormatter();
 
                 busConfigurator.AddConsumer<ArticleDetailScrapeRequestedEventConsumer>();
+                busConfigurator.AddConsumer<ArticleDetailUploadRequestedEventConsumer>();
 
                 busConfigurator.UsingRabbitMq((context, configurator) =>
                 {
@@ -27,11 +28,18 @@ namespace Headlines.ScrapeMicroService.DependencyResolution
                         h.Password(settings.Password);
                     });
 
-                    configurator.ReceiveEndpoint("article-scrape-service", x =>
+                    configurator.ReceiveEndpoint(MessageBrokerEndpoints.ArticleDetailScrapeRequestedEvent, x =>
                     {
                         x.Lazy = true;
                         x.PrefetchCount = 20;
                         x.Consumer<ArticleDetailScrapeRequestedEventConsumer>(context);
+                    });
+
+                    configurator.ReceiveEndpoint(MessageBrokerEndpoints.ArticleDetailUploadRequestedEvent, x =>
+                    {
+                        x.Lazy = true;
+                        x.PrefetchCount = 20;
+                        x.Consumer<ArticleDetailUploadRequestedEventConsumer>(context);
                     });
                 });
             });

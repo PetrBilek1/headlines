@@ -10,18 +10,14 @@ namespace Headlines.ScrapeMicroService.Consumers
 {
     public sealed class ArticleDetailScrapeRequestedEventConsumer : IConsumer<ArticleDetailScrapeRequestedEvent>
     {
-        private const string BucketName = "headlines";
-
         private readonly IArticleFacade _articleFacade;
         private readonly IArticleScraperProvider _scraperProvider;
-        private readonly IObjectStorageWrapper _objectStorage;
         private readonly ILogger<ArticleDetailScrapeRequestedEventConsumer> _logger;
 
-        public ArticleDetailScrapeRequestedEventConsumer(IArticleFacade articleFacade, IArticleScraperProvider scraperProvider, IObjectStorageWrapper objectStorage, ILogger<ArticleDetailScrapeRequestedEventConsumer> logger)
+        public ArticleDetailScrapeRequestedEventConsumer(IArticleFacade articleFacade, IArticleScraperProvider scraperProvider, ILogger<ArticleDetailScrapeRequestedEventConsumer> logger)
         {
             _articleFacade = articleFacade;
             _scraperProvider = scraperProvider;
-            _objectStorage = objectStorage;
             _logger = logger;
         }
 
@@ -43,17 +39,18 @@ namespace Headlines.ScrapeMicroService.Consumers
                     return;
                 }
 
-                ObjectDataDTO objectData = await _objectStorage.UploadObjectAsync(new ArticleDetailDTO
+                await context.Publish(new ArticleDetailUploadRequestedEvent
                 {
-                    IsPaywalled = result.IsPaywalled,
-                    Title = result.Title,
-                    Author = result.Author,
-                    Content = result.Content,
-                    Tags = result.Tags,
-                },
-                BucketName);
-
-                await _articleFacade.InsertArticleDetailByArticleIdAsync(article.Id, objectData);
+                    ArticleId = context.Message.ArticleId,
+                    Detail = new ArticleDetailDTO
+                    {
+                        IsPaywalled = result.IsPaywalled,
+                        Title = result.Title,
+                        Author = result.Author,
+                        Content = result.Content,
+                        Tags = result.Tags,
+                    }
+                });
             }
             catch(Exception e)
             {
