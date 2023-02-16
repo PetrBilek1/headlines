@@ -6,7 +6,7 @@
         public bool IsPaywalled { get; init; }
         public string Title { get; init; } = string.Empty;
         public string Author { get; init; } = string.Empty;
-        public string Content { get; init; } = string.Empty;
+        public List<string> Paragraphs { get; init; } = new List<string>();
         public List<string> Tags { get; init; } = new();
     }
 }

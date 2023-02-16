@@ -6,11 +6,18 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class IdnesScraper : IArticleScraper
     {
+        private readonly IHtmlDocumentLoader _documentLoader;
+
+        public IdnesScraper(IHtmlDocumentLoader documentLoader)
+        {
+            _documentLoader = documentLoader;
+        }
+
         public async Task<ArticleScrapeResult> ScrapeArticleAsync(string url)
         {
             try
-            {
-                HtmlDocument document = (await ScraperTools.LoadDocumentFromWebAsync(url))
+            {               
+                HtmlDocument document = (await _documentLoader.LoadFromUrlAsync(url))
                     .ReplaceNewLineTags()
                     .Sanitize();
 
@@ -19,9 +26,11 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 HtmlNode authorNode = document.DocumentNode.SelectSingleNode("//div[contains(concat(' ', @class, ' '), ' authors ')]");
                 var author = GetAuthor(authorNode);
 
-                HtmlNode contentNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @itemprop, ' '), ' articleBody ')]");
+                HtmlNode contentNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @itemprop, ' '), ' articleBody ') ]");
                 var isPaywalled = IsPaywalled(contentNode);
-                var content = GetContent(contentNode);
+                var paragraphs = new List<string> { GetOpener(document.DocumentNode) };
+
+                paragraphs.AddRange(GetParagraphs(contentNode));
 
                 HtmlNode tagsNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' art-tags ')]");
                 var tags = GetTags(tagsNode);
@@ -32,7 +41,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                     IsPaywalled = isPaywalled,
                     Title = title,
                     Author = author,
-                    Content = content,
+                    Paragraphs = paragraphs,
                     Tags = tags
                 };
             }
@@ -57,9 +66,14 @@ namespace Headlines.BL.Implementations.ArticleScraper
             return false;
         }
 
-        private string GetContent(HtmlNode node)
+        private string GetOpener(HtmlNode node)
         {
-            return string.Join('\n', node.SelectNodes(".//p")?.Select(x => x.InnerText) ?? new List<string>());
+            return node.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' opener ')]")?.InnerText.Trim() ?? string.Empty;
+        }
+
+        private List<string> GetParagraphs(HtmlNode node)
+        {
+            return node.SelectNodes(".//*[self::p or self::h3]")?.Select(x => x.InnerText).ToList() ?? new List<string>();
         }
 
         private List<string> GetTags(HtmlNode node)

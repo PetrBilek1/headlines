@@ -5,8 +5,6 @@ namespace Headlines.BL.Implementations.ArticleScraper.Utils
 {
     internal static class ScraperTools
     {
-        internal static async Task<HtmlDocument> LoadDocumentFromWebAsync(string url) => await (new HtmlWeb().LoadFromWebAsync(url));
-
         internal static HtmlDocument ReplaceNewLineTags(this HtmlDocument inputDocument, string replaceWith = "\n")
         {
             var html = inputDocument.DocumentNode.OuterHtml
@@ -30,6 +28,7 @@ namespace Headlines.BL.Implementations.ArticleScraper.Utils
                     "b",
                     "div",
                     "h1",
+                    "h3",
                     "header",
                     "li",
                     "main",
@@ -46,7 +45,9 @@ namespace Headlines.BL.Implementations.ArticleScraper.Utils
                 }
             });
 
-            var html = sanitizer.Sanitize(inputDocument.DocumentNode.OuterHtml);
+            var html = sanitizer
+                .Sanitize(inputDocument.DocumentNode.OuterHtml)
+                .Replace("&nbsp;", " ");
 
             var outputDocument = new HtmlDocument();
             outputDocument.LoadHtml(html);         

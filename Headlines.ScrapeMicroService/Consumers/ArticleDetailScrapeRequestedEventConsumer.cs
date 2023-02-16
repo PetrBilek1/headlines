@@ -1,5 +1,4 @@
 ﻿using Headlines.BL.Abstractions.ArticleScraping;
-using Headlines.BL.Abstractions.ObjectStorageWrapper;
 using Headlines.BL.Events;
 using Headlines.BL.Facades;
 using Headlines.DTO.Custom;
@@ -47,7 +46,7 @@ namespace Headlines.ScrapeMicroService.Consumers
                         IsPaywalled = result.IsPaywalled,
                         Title = result.Title,
                         Author = result.Author,
-                        Content = result.Content,
+                        Paragraphs = result.Paragraphs,
                         Tags = result.Tags,
                     }
                 });

@@ -6,11 +6,18 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class IrozhlasScraper : IArticleScraper
     {
+        private readonly IHtmlDocumentLoader _documentLoader;
+
+        public IrozhlasScraper(IHtmlDocumentLoader documentLoader)
+        {
+            _documentLoader = documentLoader;
+        }
+
         public async Task<ArticleScrapeResult> ScrapeArticleAsync(string url)
         {
             try
             {
-                HtmlDocument document = (await ScraperTools.LoadDocumentFromWebAsync(url))
+                HtmlDocument document = (await _documentLoader.LoadFromUrlAsync(url))
                     .ReplaceNewLineTags()
                     .Sanitize();
 
@@ -20,7 +27,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 var author = GetAuthor(authorNode);
 
                 HtmlNode contentNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' b-detail ')]");
-                var content = GetContent(contentNode);
+                var paragraphs = GetParagraphs(contentNode);
 
                 return new ArticleScrapeResult
                 {
@@ -28,7 +35,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                     IsPaywalled = false,
                     Title = title,
                     Author = author,
-                    Content = content,
+                    Paragraphs = paragraphs,
                     Tags = new List<string>()
                 };
             }
@@ -48,9 +55,10 @@ namespace Headlines.BL.Implementations.ArticleScraper
             return node?.InnerText.Trim() ?? string.Empty;
         }
 
-        private string GetContent(HtmlNode node)
+        private List<string> GetParagraphs(HtmlNode node)
         {
-            return string.Join('\n', node.SelectNodes(".//p[not(contains(@class, 'meta')) and not (ancestor::a or ancestor::figure or ancestor::div[contains(concat(' ', @class, ' '), ' embed ')] or ancestor::div[contains(concat(' ', @class, ' '), ' b-tweet ')])]")?.Select(x => x.InnerText) ?? new List<string>());
+            return node.SelectNodes(".//p[not(contains(@class, 'meta')) and not (ancestor::a or ancestor::figure or ancestor::div[contains(concat(' ', @class, ' '), ' embed ')] or ancestor::div[contains(concat(' ', @class, ' '), ' b-tweet ')])]")
+                ?.Select(x => x.InnerText).ToList() ?? new List<string>();
         }
     }
 }

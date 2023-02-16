@@ -34,7 +34,7 @@ namespace Headlines.ScrapeMicroService.Consumers
                     IsPaywalled = context.Message.Detail.IsPaywalled,
                     Title = context.Message.Detail.Title,
                     Author = context.Message.Detail.Author,
-                    Content = context.Message.Detail.Content,
+                    Paragraphs = context.Message.Detail.Paragraphs,
                     Tags = context.Message.Detail.Tags,
                 },
                 BucketName);

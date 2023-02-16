@@ -6,11 +6,18 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class HospodarskeNovinyScraper : IArticleScraper
     {
+        private readonly IHtmlDocumentLoader _documentLoader;
+
+        public HospodarskeNovinyScraper(IHtmlDocumentLoader documentLoader)
+        {
+            _documentLoader = documentLoader;
+        }
+
         public async Task<ArticleScrapeResult> ScrapeArticleAsync(string url)
         {
             try
-            {
-                HtmlDocument document = (await ScraperTools.LoadDocumentFromWebAsync(url))
+            {               
+                HtmlDocument document = (await _documentLoader.LoadFromUrlAsync(url))
                     .ReplaceNewLineTags()
                     .Sanitize();
 
@@ -21,7 +28,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
                 HtmlNode contentNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' article-body-part ') and contains(concat(' ', @class, ' '), ' free-part ')]");
                 var isPaywalled = IsPaywalled(contentNode);
-                var content = GetContent(contentNode);
+                var paragraphs = GetParagraphs(contentNode);
 
                 HtmlNode tagsNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' tags ')]");
                 var tags = GetTags(tagsNode);
@@ -32,7 +39,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                     IsPaywalled = isPaywalled,
                     Title = title,
                     Author = author,
-                    Content = content,
+                    Paragraphs = paragraphs,
                     Tags = tags
                 };
             }
@@ -57,9 +64,9 @@ namespace Headlines.BL.Implementations.ArticleScraper
             return node.SelectNodes(".//div[contains(concat(' ', @class, ' '), ' paywall ')]")?.Any() == true;
         }
 
-        private string GetContent(HtmlNode node)
+        private List<string> GetParagraphs(HtmlNode node)
         {
-            return string.Join('\n', node.SelectNodes(".//p")?.Select(x => x.InnerText) ?? new List<string>());
+            return node.SelectNodes(".//p")?.Select(x => x.InnerText).ToList() ?? new List<string>();
         }
 
         private List<string> GetTags(HtmlNode node)
