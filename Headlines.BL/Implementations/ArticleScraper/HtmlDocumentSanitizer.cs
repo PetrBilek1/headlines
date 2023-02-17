@@ -38,6 +38,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                     "b",
                     "div",
                     "h1",
+                    "h2",
                     "h3",
                     "header",
                     "li",

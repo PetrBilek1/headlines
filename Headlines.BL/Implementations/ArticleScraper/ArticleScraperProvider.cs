@@ -23,6 +23,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 ArticleScraperType.Aktualne => new AktualneScraper(_htmlDocumentLoader),
                 ArticleScraperType.Novinky => new NovinkyScraper(_htmlDocumentLoader),
                 ArticleScraperType.CeskeNoviny => new CeskeNovinyScraper(_htmlDocumentLoader),
+                ArticleScraperType.Blesk => new BleskScraper(_htmlDocumentLoader),
                 _ => throw new NotImplementedException(),
             };
         }

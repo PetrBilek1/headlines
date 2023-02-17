@@ -9,7 +9,7 @@ namespace Headlines.ScrapeMicroService.Consumers
 {
     public sealed class ArticleDetailUploadRequestedEventConsumer : IConsumer<ArticleDetailUploadRequestedEvent>
     {
-        private const string BucketName = "headlines";
+        private const string BucketName = "headlines-staging";
 
         private readonly IArticleFacade _articleFacade;
         private readonly IObjectStorageWrapper _objectStorage;

@@ -9,5 +9,6 @@
         Aktualne = 40,
         Novinky = 50,
         CeskeNoviny = 60,
+        Blesk = 70,
     }
 }
