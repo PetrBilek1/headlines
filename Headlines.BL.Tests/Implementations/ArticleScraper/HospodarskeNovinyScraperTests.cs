@@ -7,10 +7,6 @@ namespace Headlines.BL.Tests.Implementations.ArticleScraper
 {
     public sealed class HospodarskeNovinyScraperTests : ScraperTestBase<HospodarskeNovinyScraper>
     {
-        public HospodarskeNovinyScraperTests()
-        {
-        }
-
         [Theory]
         [InlineData("001")]
         [InlineData("002")]

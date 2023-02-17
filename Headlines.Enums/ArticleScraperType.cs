@@ -6,5 +6,7 @@
         HospodarskeNoviny = 10,
         Irozhlas = 20,
         Idnes = 30,
+        Aktualne = 40,
+
     }
 }
