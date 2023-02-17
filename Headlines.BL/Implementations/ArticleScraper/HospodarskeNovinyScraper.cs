@@ -1,25 +1,19 @@
 ﻿using Headlines.BL.Abstractions.ArticleScraping;
-using Headlines.BL.Implementations.ArticleScraper.Utils;
 using HtmlAgilityPack;
 
 namespace Headlines.BL.Implementations.ArticleScraper
 {
-    public sealed class HospodarskeNovinyScraper : IArticleScraper
+    public sealed class HospodarskeNovinyScraper : ArticleScraperBase
     {
-        private readonly IHtmlDocumentLoader _documentLoader;
-
-        public HospodarskeNovinyScraper(IHtmlDocumentLoader documentLoader)
+        public HospodarskeNovinyScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {
-            _documentLoader = documentLoader;
         }
 
-        public async Task<ArticleScrapeResult> ScrapeArticleAsync(string url)
+        public override async Task<ArticleScrapeResult> ScrapeArticleAsync(string url)
         {
             try
-            {               
-                HtmlDocument document = (await _documentLoader.LoadFromUrlAsync(url))
-                    .ReplaceNewLineTags()
-                    .Sanitize();
+            {
+                HtmlDocument document = await _documentLoader.LoadFromUrlAsync(url);
 
                 var title = GetTitle(document.DocumentNode);
 

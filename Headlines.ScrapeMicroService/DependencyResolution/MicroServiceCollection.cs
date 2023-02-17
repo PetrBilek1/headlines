@@ -13,7 +13,9 @@ namespace Headlines.ScrapeMicroService.DependencyResolution
         {
             services.AddTransient<IDateTimeProvider, DefaultDateTimeProvider>();
 
+            services.AddSingleton<IHtmlDocumentSanitizer, HtmlDocumentSanitizer>();
             services.AddSingleton<IHtmlDocumentLoader, HtmlDocumentLoader>();
+
             services.AddSingleton<IArticleScraperProvider, ArticleScraperProvider>();
 
             Assembly?[] assembliesToScan = new[]

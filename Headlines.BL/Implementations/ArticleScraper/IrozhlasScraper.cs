@@ -1,25 +1,19 @@
 ﻿using Headlines.BL.Abstractions.ArticleScraping;
-using Headlines.BL.Implementations.ArticleScraper.Utils;
 using HtmlAgilityPack;
 
 namespace Headlines.BL.Implementations.ArticleScraper
 {
-    public sealed class IrozhlasScraper : IArticleScraper
+    public sealed class IrozhlasScraper : ArticleScraperBase
     {
-        private readonly IHtmlDocumentLoader _documentLoader;
-
-        public IrozhlasScraper(IHtmlDocumentLoader documentLoader)
+        public IrozhlasScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {
-            _documentLoader = documentLoader;
         }
 
-        public async Task<ArticleScrapeResult> ScrapeArticleAsync(string url)
+        public override async Task<ArticleScrapeResult> ScrapeArticleAsync(string url)
         {
             try
             {
-                HtmlDocument document = (await _documentLoader.LoadFromUrlAsync(url))
-                    .ReplaceNewLineTags()
-                    .Sanitize();
+                HtmlDocument document = await _documentLoader.LoadFromUrlAsync(url);
 
                 var title = GetTitle(document.DocumentNode);
 
@@ -57,8 +51,11 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         private List<string> GetParagraphs(HtmlNode node)
         {
-            return node.SelectNodes(".//p[not(contains(@class, 'meta')) and not (ancestor::a or ancestor::figure or ancestor::div[contains(concat(' ', @class, ' '), ' embed ')] or ancestor::div[contains(concat(' ', @class, ' '), ' b-tweet ')])]")
-                ?.Select(x => x.InnerText).ToList() ?? new List<string>();
+            return node.SelectNodes(".//*[(self::p or self::div) and not(contains(@class, 'meta')) and not (ancestor::a or ancestor::figure or ancestor::div[contains(concat(' ', @class, ' '), ' embed ')] or ancestor::div[contains(concat(' ', @class, ' '), ' b-tweet ')])]")?
+                .Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
+                .Select(x => x.InnerText.Trim())
+                .ToList() 
+                ?? new List<string>();
         }
     }
 }

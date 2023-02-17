@@ -5,20 +5,15 @@ using Xunit;
 
 namespace Headlines.BL.Tests.Implementations.ArticleScraper
 {
-    public sealed class IdnesScraperTests : ScraperTestBase<IdnesScraper>
+    public sealed class IrozhlasScraperTests : ScraperTestBase<IrozhlasScraper>
     {
-        public IdnesScraperTests()
-        {
-        }
-
         [Theory]
         [InlineData("001")]
-        [InlineData("002")]
         public async Task ScrapeArticleAsync(string index)
         {
             //Arrange
-            var html = await ScraperDataLoader.GetHtmlAsync("Idnes", index);
-            var expected = await ScraperDataLoader.GetExpectedAsync("Idnes", index);
+            var html = await ScraperDataLoader.GetHtmlAsync("Irozhlas", index);
+            var expected = await ScraperDataLoader.GetExpectedAsync("Irozhlas", index);
             SetupDocumentLoader(html);
 
             //Act

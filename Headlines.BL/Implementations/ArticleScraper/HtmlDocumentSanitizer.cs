@@ -1,11 +1,21 @@
 ﻿using Ganss.Xss;
+using Headlines.BL.Abstractions.ArticleScraping;
 using HtmlAgilityPack;
 
-namespace Headlines.BL.Implementations.ArticleScraper.Utils
+namespace Headlines.BL.Implementations.ArticleScraper
 {
-    internal static class ScraperTools
+    public sealed class HtmlDocumentSanitizer : IHtmlDocumentSanitizer
     {
-        internal static HtmlDocument ReplaceNewLineTags(this HtmlDocument inputDocument, string replaceWith = "\n")
+        public HtmlDocument Sanitize(HtmlDocument document)
+        {
+            var outputDocument = ReplaceNewLineTags(document);
+
+            outputDocument = RemoveProhibitedNodes(outputDocument);
+
+            return outputDocument;
+        }
+
+        private HtmlDocument ReplaceNewLineTags(HtmlDocument inputDocument, string replaceWith = "\n")
         {
             var html = inputDocument.DocumentNode.OuterHtml
                 .Replace("<br>", replaceWith)
@@ -17,7 +27,7 @@ namespace Headlines.BL.Implementations.ArticleScraper.Utils
             return outputDocument;
         }
 
-        internal static HtmlDocument Sanitize(this HtmlDocument inputDocument)
+        private HtmlDocument RemoveProhibitedNodes(HtmlDocument inputDocument)
         {
             var sanitizer = new HtmlSanitizer(new HtmlSanitizerOptions
             {
@@ -50,7 +60,7 @@ namespace Headlines.BL.Implementations.ArticleScraper.Utils
                 .Replace("&nbsp;", " ");
 
             var outputDocument = new HtmlDocument();
-            outputDocument.LoadHtml(html);         
+            outputDocument.LoadHtml(html);
 
             return outputDocument;
         }

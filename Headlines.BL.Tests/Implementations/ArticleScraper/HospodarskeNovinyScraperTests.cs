@@ -1,22 +1,14 @@
 ﻿using FluentAssertions;
-using Headlines.BL.Abstractions.ArticleScraping;
 using Headlines.BL.Implementations.ArticleScraper;
 using Headlines.BL.Tests.Resources.ScraperTestData;
-using HtmlAgilityPack;
-using Moq;
 using Xunit;
 
 namespace Headlines.BL.Tests.Implementations.ArticleScraper
 {
-    public sealed class HospodarskeNovinyScraperTests
+    public sealed class HospodarskeNovinyScraperTests : ScraperTestBase<HospodarskeNovinyScraper>
     {
-        private readonly HospodarskeNovinyScraper _sut;
-
-        private readonly Mock<IHtmlDocumentLoader> _documentLoaderMock = new Mock<IHtmlDocumentLoader>(MockBehavior.Strict);
-
         public HospodarskeNovinyScraperTests()
         {
-            _sut = new HospodarskeNovinyScraper(_documentLoaderMock.Object);
         }
 
         [Theory]
@@ -50,15 +42,6 @@ namespace Headlines.BL.Tests.Implementations.ArticleScraper
             {
                 result.Tags[i].Should().Be(expected.Tags[i]);
             }
-        }
-
-        private void SetupDocumentLoader(string html)
-        {
-            var document = new HtmlDocument();
-            document.LoadHtml(html);
-
-            _documentLoaderMock.Setup(x => x.LoadFromUrlAsync(It.IsAny<string>()))
-                .ReturnsAsync(document);
         }
     }
 }
