@@ -21,6 +21,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 ArticleScraperType.Irozhlas => new IrozhlasScraper(_htmlDocumentLoader),
                 ArticleScraperType.Idnes => new IdnesScraper(_htmlDocumentLoader),
                 ArticleScraperType.Aktualne => new AktualneScraper(_htmlDocumentLoader),
+                ArticleScraperType.Novinky => new NovinkyScraper(_htmlDocumentLoader),
                 _ => throw new NotImplementedException(),
             };
         }

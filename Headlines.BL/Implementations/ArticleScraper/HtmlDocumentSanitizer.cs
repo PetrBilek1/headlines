@@ -43,6 +43,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                     "li",
                     "main",
                     "p",
+                    "section",
                     "span",
                     "strong",
                     "ul"
@@ -50,6 +51,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 AllowedAttributes =
                 {
                     "class",
+                    "data-dot",
                     "id",
                     "itemprop"
                 }
