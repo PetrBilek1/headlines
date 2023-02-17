@@ -21,6 +21,7 @@ namespace Headlines.BL.Tests.Implementations.ArticleScraper
 
         [Theory]
         [InlineData("001")]
+        [InlineData("002")]
         public async Task ScrapeArticleAsync(string index)
         {
             //Arrange

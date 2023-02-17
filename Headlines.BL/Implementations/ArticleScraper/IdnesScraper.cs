@@ -26,9 +26,11 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 HtmlNode authorNode = document.DocumentNode.SelectSingleNode("//div[contains(concat(' ', @class, ' '), ' authors ')]");
                 var author = GetAuthor(authorNode);
 
-                HtmlNode contentNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @itemprop, ' '), ' articleBody ') ]");
-                var isPaywalled = IsPaywalled(contentNode);
+                HtmlNode contentNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @itemprop, ' '), ' articleBody ')]");
                 var paragraphs = new List<string> { GetOpener(document.DocumentNode) };
+
+                HtmlNode? paywallNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @id, ' '), ' paywall ') ]");
+                var isPaywalled = paywallNode != null;
 
                 paragraphs.AddRange(GetParagraphs(contentNode));
 
@@ -58,12 +60,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         private string GetAuthor(HtmlNode node)
         {
-            return string.Join(", ", node.SelectNodes(".//span[contains(concat(' ', @itemprop, ' '), ' author ')]")?.Select(x => x.InnerText) ?? new List<string>());
-        }
-
-        private bool IsPaywalled(HtmlNode node)
-        {
-            return false;
+            return string.Join(", ", node.SelectNodes(".//span[contains(concat(' ', @itemprop, ' '), ' author ')]")?.Select(x => x.InnerText.Trim()) ?? new List<string>());
         }
 
         private string GetOpener(HtmlNode node)
@@ -73,7 +70,11 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         private List<string> GetParagraphs(HtmlNode node)
         {
-            return node.SelectNodes(".//*[self::p or self::h3]")?.Select(x => x.InnerText).ToList() ?? new List<string>();
+            return node.SelectNodes(".//*[self::p or self::h3]")?
+                .Where(x => !string.IsNullOrEmpty(x.InnerText))
+                .Select(x => x.InnerText.Trim())
+                .ToList() 
+                ?? new List<string>();
         }
 
         private List<string> GetTags(HtmlNode node)
