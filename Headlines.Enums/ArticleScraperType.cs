@@ -8,5 +8,6 @@
         Idnes = 30,
         Aktualne = 40,
         Novinky = 50,
+        CeskeNoviny = 60,
     }
 }
