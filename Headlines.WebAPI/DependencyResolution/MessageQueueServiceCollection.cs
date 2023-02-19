@@ -14,9 +14,15 @@ namespace Headlines.WebAPI.DependencyResolution
             {
                 busConfigurator.SetKebabCaseEndpointNameFormatter();
 
+                if (string.IsNullOrEmpty(messageBrokerSettings.Host))
+                {
+                    busConfigurator.UsingInMemory();
+                    return;
+                }
+
                 busConfigurator.UsingRabbitMq((context, configurator) =>
                 {
-                    MessageBrokerSettings settings = context.GetRequiredService<MessageBrokerSettings>();
+                    MessageBrokerSettings settings = context.GetRequiredService<MessageBrokerSettings>();                    
 
                     configurator.Host(new Uri(settings.Host), h =>
                     {

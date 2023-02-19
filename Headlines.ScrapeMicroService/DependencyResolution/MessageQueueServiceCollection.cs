@@ -19,6 +19,12 @@ namespace Headlines.ScrapeMicroService.DependencyResolution
                 busConfigurator.AddConsumer<ArticleDetailScrapeRequestedEventConsumer>();
                 busConfigurator.AddConsumer<ArticleDetailUploadRequestedEventConsumer>();
 
+                if (string.IsNullOrEmpty(messageBrokerSettings.Host))
+                {
+                    busConfigurator.UsingInMemory();
+                    return;
+                }
+
                 busConfigurator.UsingRabbitMq((context, configurator) =>
                 {
                     MessageBrokerSettings settings = context.GetRequiredService<MessageBrokerSettings>();

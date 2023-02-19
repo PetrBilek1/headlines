@@ -16,6 +16,12 @@ namespace Headlines.RSSProcessingMicroService.DependencyResolution
 
                 busConfigurator.AddDelayedMessageScheduler();
 
+                if (string.IsNullOrEmpty(messageBrokerSettings.Host))
+                {
+                    busConfigurator.UsingInMemory();
+                    return;
+                }
+
                 busConfigurator.UsingRabbitMq((context, configurator) =>
                 {
                     MessageBrokerSettings settings = context.GetRequiredService<MessageBrokerSettings>();
