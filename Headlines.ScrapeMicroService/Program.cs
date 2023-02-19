@@ -13,6 +13,7 @@ namespace Headlines.ScrapeMicroService
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddHealthChecks();
+            builder.Services.AddHttpClient();
 
             string? connectionStringTemplate = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddORMDependencyGroup<HeadlinesDbContext>(GetConnectionString(connectionStringTemplate!));

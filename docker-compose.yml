@@ -5,6 +5,8 @@ networks:
 
 volumes:
   mssql-data:
+  rabbitmq-data:
+  rabbitmq-log:
 
 services:
   headlines.db:
@@ -24,14 +26,14 @@ services:
   headlines.mq:
     container_name: headlines.mq
     hostname: ${MQ_HOST}
-    image: rabbitmq:3.11.7-management
+    image: ghcr.io/petrbilek1/rabbitmq-dm:3.11.9
     networks:
       - headlines.network.internal
     ports:
       - 8004:15672
     volumes:
-      - ./.containers/queue/data/:/var/lib/rabbitmq
-      - ./.containers/queue/log/:/var/log/rabbitmq
+      - rabbitmq-data:/var/lib/rabbitmq
+      - rabbitmq-log:/var/log/rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: ${MQ_USERNAME}
       RABBITMQ_DEFAULT_PASS: ${MQ_PASSWORD}
@@ -102,6 +104,10 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_DATA_SOURCE=${DB_DATA_SOURCE}
       - DB_INITIAL_CATALOG=${DB_INITIAL_CATALOG}
+      #MESSAGE QUEUE
+      - MQ_HOST=amqp://${MQ_HOST}:5672
+      - MQ_USERNAME=${MQ_USERNAME}
+      - MQ_PASSWORD=${MQ_PASSWORD}
       #OBJECT STORAGE
       - OS_URL=${OS_URL}
       - OS_ACCESS_KEY=${OS_ACCESS_KEY}

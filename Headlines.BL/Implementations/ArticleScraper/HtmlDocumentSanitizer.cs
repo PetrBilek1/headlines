@@ -37,6 +37,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                     "article",
                     "b",
                     "div",
+                    "em",
                     "h1",
                     "h2",
                     "h3",
@@ -53,6 +54,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 {
                     "class",
                     "data-dot",
+                    "data-id",
                     "id",
                     "itemprop"
                 }

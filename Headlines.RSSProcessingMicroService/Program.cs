@@ -1,3 +1,4 @@
+using Headlines.BL.Implementations.MessageBroker;
 using Headlines.ORM.Core.Context;
 using Headlines.RSSProcessingMicroService.DependencyResolution;
 using PBilek.ObjectStorageService;
@@ -11,6 +12,7 @@ builder.Services.AddHealthChecks();
 string? connectionStringTemplate = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddORMDependencyGroup<HeadlinesDbContext>(GetConnectionString(connectionStringTemplate!));
+builder.Services.AddMessageQueueDependencyGroup(GetMessageBrokerSettings());
 builder.Services.AddMicroServiceDependencyGroup(GetObjectStorageConfiguration());
 builder.Services.AddMappingDependencyGroup();
 
@@ -41,6 +43,16 @@ string GetConnectionString(string template)
     template = template.Replace("{DB_INITIAL_CATALOG}", Environment.GetEnvironmentVariable("DB_INITIAL_CATALOG"));
 
     return template;
+}
+
+MessageBrokerSettings GetMessageBrokerSettings()
+{
+    return new MessageBrokerSettings
+    {
+        Host = Environment.GetEnvironmentVariable("MQ_HOST") ?? string.Empty,
+        Username = Environment.GetEnvironmentVariable("MQ_USERNAME") ?? string.Empty,
+        Password = Environment.GetEnvironmentVariable("MQ_PASSWORD") ?? string.Empty
+    };
 }
 
 ObjectStorageConfiguration GetObjectStorageConfiguration()

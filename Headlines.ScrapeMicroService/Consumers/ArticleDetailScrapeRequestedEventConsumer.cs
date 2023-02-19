@@ -9,6 +9,8 @@ namespace Headlines.ScrapeMicroService.Consumers
 {
     public sealed class ArticleDetailScrapeRequestedEventConsumer : IConsumer<ArticleDetailScrapeRequestedEvent>
     {
+        private const int RetryCount = 1;
+
         private readonly IArticleFacade _articleFacade;
         private readonly IArticleScraperProvider _scraperProvider;
         private readonly ILogger<ArticleDetailScrapeRequestedEventConsumer> _logger;
@@ -34,7 +36,7 @@ namespace Headlines.ScrapeMicroService.Consumers
 
                 if (!result.IsSuccess)
                 {
-                    _logger.LogWarning("Scraping of article Id '{articleId} was not successful.'", article.Id);
+                    await ScrapeUnsuccessfulAsync(context, article);
                     return;
                 }
 
@@ -51,10 +53,27 @@ namespace Headlines.ScrapeMicroService.Consumers
                     }
                 });
             }
-            catch(Exception e)
+            catch (ArgumentNullException)
             {
-                _logger.LogError(e, "There was and exception when trying to scrape article with Id '{articleId}'.", context.Message.ArticleId);
+                _logger.LogInformation("There was attempt to scrape article with Id '{articleId}' which's source has no Scraper assigned.", context.Message.ArticleId);
             }
+        }
+
+        private async Task ScrapeUnsuccessfulAsync(ConsumeContext<ArticleDetailScrapeRequestedEvent> context, ArticleDTO article)
+        {
+            _logger.LogWarning("Scraping of article Id '{articleId} source Name '{sourceName}' was not successful.'", article.Id, article.Source.Name);
+
+            if (context.Message.Retried >= RetryCount)
+            {
+                _logger.LogError("Scraping of article with Id '{articleId}' was not successful '{retries}'.", context.Message.ArticleId, RetryCount);
+                throw new ConsumerException($"Scraping of article with Id '{context.Message.ArticleId}' source Name '{article.Source.Name}' was not successful '{context.Message.Retried + 1}' times.");
+            }
+
+            await context.SchedulePublish(TimeSpan.FromSeconds(5 * context.Message.Retried), new ArticleDetailScrapeRequestedEvent
+            {
+                ArticleId = context.Message.ArticleId,
+                Retried = context.Message.Retried + 1,
+            });
         }
     }
 }

@@ -1,9 +1,8 @@
 ﻿using Headlines.BL.Abstractions.EventBus;
 using Headlines.BL.Implementations.MessageBroker;
-using Headlines.ScrapeMicroService.Consumers;
 using MassTransit;
 
-namespace Headlines.ScrapeMicroService.DependencyResolution
+namespace Headlines.RSSProcessingMicroService.DependencyResolution
 {
     public static class MessageQueueServiceCollection
     {
@@ -16,8 +15,6 @@ namespace Headlines.ScrapeMicroService.DependencyResolution
                 busConfigurator.SetKebabCaseEndpointNameFormatter();
 
                 busConfigurator.AddDelayedMessageScheduler();
-                busConfigurator.AddConsumer<ArticleDetailScrapeRequestedEventConsumer>();
-                busConfigurator.AddConsumer<ArticleDetailUploadRequestedEventConsumer>();
 
                 busConfigurator.UsingRabbitMq((context, configurator) =>
                 {
@@ -30,20 +27,6 @@ namespace Headlines.ScrapeMicroService.DependencyResolution
                     });
 
                     configurator.UseDelayedMessageScheduler();
-
-                    configurator.ReceiveEndpoint(MessageBrokerEndpoints.ArticleDetailScrapeRequestedEvent, x =>
-                    {
-                        x.Lazy = true;
-                        x.PrefetchCount = 20;
-                        x.Consumer<ArticleDetailScrapeRequestedEventConsumer>(context);
-                    });
-
-                    configurator.ReceiveEndpoint(MessageBrokerEndpoints.ArticleDetailUploadRequestedEvent, x =>
-                    {
-                        x.Lazy = true;
-                        x.PrefetchCount = 20;
-                        x.Consumer<ArticleDetailUploadRequestedEventConsumer>(context);
-                    });
                 });
             });
 

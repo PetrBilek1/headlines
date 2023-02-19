@@ -24,8 +24,13 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 var opener = openerNode?.InnerText.Trim() ?? string.Empty;
 
                 HtmlNode contentNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' article__content ')]");
+                contentNode ??= document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' article ')]/div[contains(concat(' ', @id, ' '), ' root ')]");
 
-                var paragraphs = new List<string> { opener };
+                var paragraphs = new List<string>();
+                if (!string.IsNullOrWhiteSpace(opener))
+                {
+                    paragraphs.Add(opener);
+                }
                 paragraphs.AddRange(GetParagraphs(contentNode));
 
                 HtmlNode tagsNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' taglist ')]");
@@ -54,12 +59,16 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         private string GetAuthor(HtmlNode node)
         {
-            return node.SelectSingleNode(".//*[contains(concat(' ', @class, ' '), ' author__name ')]") ?.InnerText.Trim() ?? string.Empty;
+            return node?.SelectSingleNode(".//*[contains(concat(' ', @class, ' '), ' author__name ')]")?.InnerText.Trim() ?? string.Empty;
         }
 
         private List<string> GetParagraphs(HtmlNode node)
         {
-            return node.SelectNodes(".//p")?.Select(x => x.InnerText.Trim()).ToList() ?? new List<string>();
+            return node.SelectNodes(".//p")?
+                .Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
+                .Select(x => x.InnerText.Trim())
+                .ToList() 
+                ?? new List<string>();
         }
 
         private List<string> GetTags(HtmlNode node)

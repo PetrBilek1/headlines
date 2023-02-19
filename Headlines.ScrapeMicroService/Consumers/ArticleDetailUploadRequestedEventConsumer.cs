@@ -1,4 +1,5 @@
-﻿using Headlines.BL.Abstractions.ObjectStorageWrapper;
+﻿using Amazon.S3;
+using Headlines.BL.Abstractions.ObjectStorageWrapper;
 using Headlines.BL.Events;
 using Headlines.BL.Facades;
 using Headlines.DTO.Custom;
@@ -43,7 +44,15 @@ namespace Headlines.ScrapeMicroService.Consumers
             }
             catch(Exception e)
             {
+                if (e.GetType() == typeof(AmazonS3Exception) && (e as AmazonS3Exception)?.ErrorCode == "TooManyRequests")
+                {
+                    _logger.LogWarning(e, "There was TooManyRequests exception when trying to upload article detail of article with Id '{articleId}'. Retrying.", context.Message.ArticleId);
+                    await context.SchedulePublish(TimeSpan.FromSeconds(1), context.Message);
+                    return;
+                }
+
                 _logger.LogError(e, "There was and exception when trying to upload article detail of article with Id '{articleId}'.", context.Message.ArticleId);
+                throw;
             }
         }
     }

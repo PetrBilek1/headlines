@@ -1,6 +1,4 @@
-﻿using Headlines.BL.Abstractions.ObjectStorageWrapper;
-using Headlines.BL.Facades;
-using Headlines.BL.Implementations.ObjectStorageWrapper;
+﻿using Headlines.BL.Facades;
 using Headlines.RSSProcessingMicroService.Services;
 using NetCore.AutoRegisterDi;
 using PBilek.Infrastructure.DatetimeProvider;
