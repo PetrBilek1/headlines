@@ -13,6 +13,8 @@ namespace Headlines.ScrapeMicroService.DependencyResolution
         {
             services.AddTransient<IDateTimeProvider, DefaultDateTimeProvider>();
 
+            services.AddHttpClient();
+
             services.AddSingleton<IHtmlDocumentSanitizer, HtmlDocumentSanitizer>();
             services.AddSingleton<IHtmlDocumentLoader, HtmlDocumentLoader>();
 
