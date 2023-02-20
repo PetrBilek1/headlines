@@ -10,5 +10,7 @@
         Novinky = 50,
         CeskeNoviny = 60,
         Blesk = 70,
+        Denikcz = 80,
+
     }
 }

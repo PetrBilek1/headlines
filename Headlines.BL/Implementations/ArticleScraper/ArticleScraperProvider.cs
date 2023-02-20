@@ -24,6 +24,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 ArticleScraperType.Novinky => new NovinkyScraper(_htmlDocumentLoader),
                 ArticleScraperType.CeskeNoviny => new CeskeNovinyScraper(_htmlDocumentLoader),
                 ArticleScraperType.Blesk => new BleskScraper(_htmlDocumentLoader),
+                ArticleScraperType.Denikcz => new DenikczScraper(_htmlDocumentLoader),
                 _ => throw new NotImplementedException(),
             };
         }
