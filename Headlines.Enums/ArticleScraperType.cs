@@ -11,6 +11,7 @@
         CeskeNoviny = 60,
         Blesk = 70,
         Denikcz = 80,
+        SeznamZpravy = 90,
 
     }
 }

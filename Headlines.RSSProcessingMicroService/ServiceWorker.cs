@@ -59,7 +59,7 @@ namespace Headlines.RSSProcessingMicroService
             IEventBus eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
 
             var random = new Random();
-            var shuffledArticles = articles.OrderBy(x => random.Next());
+            var shuffledArticles = articles.OrderBy(x => random.Next()).ToList();
 
             foreach (var article in shuffledArticles)
             {

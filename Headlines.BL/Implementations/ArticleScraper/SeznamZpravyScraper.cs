@@ -1,12 +1,11 @@
 ﻿using Headlines.BL.Abstractions.ArticleScraping;
 using HtmlAgilityPack;
-using System.Text.RegularExpressions;
 
 namespace Headlines.BL.Implementations.ArticleScraper
 {
-    public sealed class DenikczScraper : ArticleScraperBase
+    public sealed class SeznamZpravyScraper : ArticleScraperBase
     {
-        public DenikczScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
+        public SeznamZpravyScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {
         }
 
@@ -18,16 +17,18 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
                 var title = GetTitle(document.DocumentNode);
 
-                HtmlNode authorNode = document.DocumentNode.SelectSingleNode("//span[contains(concat(' ', @class, ' '), ' article-info__author-name ')]");
-                authorNode ??= document.DocumentNode.SelectSingleNode("//a[contains(concat(' ', @class, ' '), ' article-info__author ')]");
+                HtmlNode authorNode = document.DocumentNode.SelectSingleNode("//div[contains(concat(' ', @data-dot, ' '), ' ogm-article-author ') or contains(concat(' ', @data-dot, ' '), ' ogm-author-box ')]");
                 var author = GetAuthor(authorNode);
 
-                var paragraphs = new List<string> { GetOpener(document.DocumentNode) };
+                HtmlNode openerNode = document.DocumentNode.SelectSingleNode(".//p[contains(concat(' ', @data-dot, ' '), ' ogm-article-perex ')]");
+                var opener = openerNode?.InnerText.Trim() ?? string.Empty;
 
-                HtmlNode contentNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' article-text ')]");
+                HtmlNode contentNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @data-dot, ' '), ' ogm-article-content ')]");
+
+                var paragraphs = new List<string> { opener };
                 paragraphs.AddRange(GetParagraphs(contentNode));
 
-                HtmlNode tagsNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' article-tags ')]");
+                HtmlNode tagsNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @data-dot, ' '), ' ogm-related-tags ')]");
                 var tags = GetTags(tagsNode);
 
                 return new ArticleScrapeResult
@@ -48,25 +49,18 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         private string GetTitle(HtmlNode node)
         {
-            return node.SelectSingleNode(".//h1[contains(concat(' ', @class, ' '), ' article-title ')]")?.InnerText.Trim() ?? string.Empty;
+            return node.SelectSingleNode("//h1")?.InnerText.Trim() ?? string.Empty;
         }
 
         private string GetAuthor(HtmlNode node)
         {
-            return Regex.Replace(node.InnerText.Replace("\n", "").Trim() ?? string.Empty, @"\s+", " ");
-        }
-
-        private string GetOpener(HtmlNode node)
-        {
-            return node.SelectSingleNode(".//p[contains(concat(' ', @class, ' '), ' article-perex ')]")?
-                .InnerText
-                .Trim()
-                ?? string.Empty;
+            return node.SelectSingleNode("//*[contains(concat(' ', @data-dot, ' '), ' ogm-author-box__name ') or contains(concat(' ', @data-dot, ' '), ' mol-author-names ')]")
+                .InnerText.Trim() ?? string.Empty;
         }
 
         private List<string> GetParagraphs(HtmlNode node)
         {
-            return node.SelectNodes(".//*[(self::p or self::h2) and text()]")?
+            return node.SelectNodes(".//div[contains(concat(' ', @data-dot, ' '), ' mol-paragraph ')]//p")?
                 .Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
                 .Select(x => x.InnerText.Trim())
                 .ToList()
@@ -75,8 +69,8 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         private List<string> GetTags(HtmlNode node)
         {
-            return node.SelectNodes(".//a[text()]")?
-                .Select(x => x.InnerText.Replace(",", "").Trim())                
+            return node.SelectNodes(".//div")?
+                .Select(x => x.InnerText.Trim())
                 .ToList()
                 ?? new List<string>();
         }

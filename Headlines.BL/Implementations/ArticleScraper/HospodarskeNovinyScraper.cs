@@ -65,7 +65,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         private List<string> GetTags(HtmlNode node)
         {
-            return node.SelectNodes(".//li[contains(@id, 'tag')]")?
+            return node?.SelectNodes(".//li[contains(@id, 'tag')]")?
                 .Select(x => x.InnerText.Trim())
                 .ToList()
                 ?? new List<string>();
