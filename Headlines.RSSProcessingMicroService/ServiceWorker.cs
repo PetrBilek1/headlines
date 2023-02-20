@@ -58,7 +58,10 @@ namespace Headlines.RSSProcessingMicroService
         {
             IEventBus eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
 
-            foreach (var article in articles)
+            var random = new Random();
+            var shuffledArticles = articles.OrderBy(x => random.Next());
+
+            foreach (var article in shuffledArticles)
             {
                 await eventBus.PublishAsync(new ArticleDetailScrapeRequestedEvent
                 {
