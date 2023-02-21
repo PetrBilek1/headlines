@@ -9,65 +9,42 @@ namespace Headlines.BL.Implementations.ArticleScraper
         {
         }
 
-        public override async Task<ArticleScrapeResult> ScrapeArticleAsync(string url)
-        {
-            try
-            {
-                HtmlDocument document = await _documentLoader.LoadFromUrlAsync(url);
+        protected override bool IsPaywalled(HtmlDocument document) => false;
 
-                var title = GetTitle(document.DocumentNode);
+        protected override string GetTitle(HtmlDocument document)
+            => document.DocumentNode
+                .SelectSingleNode("//h1")
+                ?.InnerText
+                .Trim() 
+            ?? string.Empty;
 
-                HtmlNode authorNode = document.DocumentNode.SelectSingleNode("//div[contains(concat(' ', @data-dot, ' '), ' ogm-article-author ')]");
-                var author = GetAuthor(authorNode);
+        protected override string GetAuthor(HtmlDocument document)
+            => document.DocumentNode
+                .SelectSingleNode("//div[contains(concat(' ', @data-dot, ' '), ' ogm-article-author ')]//a[text()]")
+                ?.InnerText
+                .Trim() 
+            ?? string.Empty;
 
-                HtmlNode openerNode = document.DocumentNode.SelectSingleNode(".//*[contains(concat(' ', @data-dot, ' '), ' ogm-article-perex ')]");
-                var opener = openerNode?.InnerText.Trim() ?? string.Empty;
+        protected override string GetPerex(HtmlDocument document) 
+            => document.DocumentNode
+                .SelectSingleNode(".//*[contains(concat(' ', @data-dot, ' '), ' ogm-article-perex ')]")
+                ?.InnerText
+                .Trim() 
+            ?? string.Empty;
 
-                HtmlNode contentNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @data-dot, ' '), ' ogm-article-content ')]");
+        protected override List<string> GetParagraphs(HtmlDocument document)
+            => document.DocumentNode
+                .SelectSingleNode(".//div[contains(concat(' ', @data-dot, ' '), ' ogm-article-content ')]")
+                .SelectNodes(".//*[contains(concat(' ', @data-dot, ' '), ' mol-paragraph ')]")
+                ?.Select(x => x.InnerText.Trim())
+                .ToList() 
+            ?? new List<string>();
 
-                var paragraphs = new List<string> { opener };
-                paragraphs.AddRange(GetParagraphs(contentNode));
-
-                HtmlNode tagsNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @data-dot, ' '), ' ogm-related-tags ')]");
-                var tags = GetTags(tagsNode);
-
-                return new ArticleScrapeResult
-                {
-                    IsSuccess = true,
-                    IsPaywalled = false,
-                    Title = title,
-                    Author = author,
-                    Paragraphs = paragraphs,
-                    Tags = tags
-                };
-            }
-            catch
-            {
-                return new ArticleScrapeResult { IsSuccess = false };
-            }
-        }
-
-        private string GetTitle(HtmlNode node)
-        {
-            return node.SelectSingleNode("//h1")?.InnerText.Trim() ?? string.Empty;
-        }
-
-        private string GetAuthor(HtmlNode node)
-        {
-            return node.SelectSingleNode(".//a[text()]")?.InnerText.Trim() ?? string.Empty;
-        }
-
-        private List<string> GetParagraphs(HtmlNode node)
-        {
-            return node.SelectNodes(".//*[contains(concat(' ', @data-dot, ' '), ' mol-paragraph ')]")?.Select(x => x.InnerText.Trim()).ToList() ?? new List<string>();
-        }
-
-        private List<string> GetTags(HtmlNode node)
-        {
-            return node.SelectNodes(".//a[text()]")?
-                .Select(x => x.InnerText.Trim())
+        protected override List<string> GetTags(HtmlDocument document)
+            => document.DocumentNode
+                .SelectNodes(".//div[contains(concat(' ', @data-dot, ' '), ' ogm-related-tags ')]//a[text()]")
+                ?.Select(x => x.InnerText.Trim())
                 .ToList()
-                ?? new List<string>();
-        }
+            ?? new List<string>();
     }
 }

@@ -9,53 +9,33 @@ namespace Headlines.BL.Implementations.ArticleScraper
         {
         }
 
-        public override async Task<ArticleScrapeResult> ScrapeArticleAsync(string url)
-        {
-            try
-            {
-                HtmlDocument document = await _documentLoader.LoadFromUrlAsync(url);
+        protected override bool IsPaywalled(HtmlDocument document) => false;
 
-                var title = GetTitle(document.DocumentNode);
+        protected override string GetTitle(HtmlDocument document)
+            => document.DocumentNode
+                .SelectSingleNode("//h1[contains(@id, 'article-news-full')]")
+                ?.InnerText
+                .Trim()
+            ?? string.Empty;
 
-                HtmlNode authorNode = document.DocumentNode.SelectSingleNode("//p[contains(concat(' ', @class, ' '), ' meta ')]/strong");
-                var author = GetAuthor(authorNode);
+        protected override string GetAuthor(HtmlDocument document)
+            => document.DocumentNode
+                .SelectSingleNode("//p[contains(concat(' ', @class, ' '), ' meta ')]/strong")
+                ?.InnerText
+                .Trim()
+            ?? string.Empty;
 
-                HtmlNode contentNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' b-detail ')]");
-                var paragraphs = GetParagraphs(contentNode);
+        protected override string GetPerex(HtmlDocument document) => string.Empty;
 
-                return new ArticleScrapeResult
-                {
-                    IsSuccess = true,
-                    IsPaywalled = false,
-                    Title = title,
-                    Author = author,
-                    Paragraphs = paragraphs,
-                    Tags = new List<string>()
-                };
-            }
-            catch
-            {
-                return new ArticleScrapeResult { IsSuccess = false };
-            }
-        }
-
-        private string GetTitle(HtmlNode node)
-        {
-            return node.SelectSingleNode("//h1[contains(@id, 'article-news-full')]")?.InnerText.Trim() ?? string.Empty;
-        }
-
-        private string GetAuthor(HtmlNode node)
-        {
-            return node?.InnerText.Trim() ?? string.Empty;
-        }
-
-        private List<string> GetParagraphs(HtmlNode node)
-        {
-            return node.SelectNodes(".//*[(self::p or self::div) and not(contains(@class, 'meta')) and not (ancestor::a or ancestor::figure or ancestor::div[contains(concat(' ', @class, ' '), ' embed ')] or ancestor::div[contains(concat(' ', @class, ' '), ' b-tweet ')])]")?
-                .Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
+        protected override List<string> GetParagraphs(HtmlDocument document)
+            => document.DocumentNode
+                .SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' b-detail ')]")
+                .SelectNodes(".//*[(self::p or self::div) and not(contains(@class, 'meta')) and not (ancestor::a or ancestor::figure or ancestor::div[contains(concat(' ', @class, ' '), ' embed ')] or ancestor::div[contains(concat(' ', @class, ' '), ' b-tweet ')])]")
+                ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
                 .Select(x => x.InnerText.Trim())
-                .ToList() 
-                ?? new List<string>();
-        }
+                .ToList()
+            ?? new List<string>();
+
+        protected override List<string> GetTags(HtmlDocument document) => new List<string>();
     }
 }

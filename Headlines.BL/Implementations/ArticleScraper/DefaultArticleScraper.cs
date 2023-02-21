@@ -1,5 +1,4 @@
 ﻿using Headlines.BL.Abstractions.ArticleScraping;
-using HtmlAgilityPack;
 
 namespace Headlines.BL.Implementations.ArticleScraper
 {

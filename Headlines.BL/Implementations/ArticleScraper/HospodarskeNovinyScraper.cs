@@ -9,66 +9,38 @@ namespace Headlines.BL.Implementations.ArticleScraper
         {
         }
 
-        public override async Task<ArticleScrapeResult> ScrapeArticleAsync(string url)
-        {
-            try
-            {
-                HtmlDocument document = await _documentLoader.LoadFromUrlAsync(url);
+        protected override bool IsPaywalled(HtmlDocument document)
+            => document.DocumentNode.SelectNodes(".//div[contains(concat(' ', @class, ' '), ' paywall ')]")
+                ?.Any() == true;
 
-                var title = GetTitle(document.DocumentNode);
+        protected override string GetTitle(HtmlDocument document)
+            => document.DocumentNode
+                .SelectSingleNode("//h1")
+                ?.InnerText
+                .Trim()
+            ?? string.Empty;
 
-                HtmlNode authorNode = document.DocumentNode.SelectSingleNode("//div[contains(concat(' ', @class, ' '), ' authors ')]/a[text()]");
-                var author = GetAuthor(authorNode);
+        protected override string GetAuthor(HtmlDocument document)
+            => document.DocumentNode
+                .SelectSingleNode("//div[contains(concat(' ', @class, ' '), ' authors ')]/a[text()]")
+                ?.InnerText
+                .Trim()
+            ?? string.Empty;
 
-                HtmlNode contentNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' article-body-part ') and contains(concat(' ', @class, ' '), ' free-part ')]");
-                var isPaywalled = IsPaywalled(contentNode);
-                var paragraphs = GetParagraphs(contentNode);
+        protected override string GetPerex(HtmlDocument document) => string.Empty;
 
-                HtmlNode tagsNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' tags ')]");
-                var tags = GetTags(tagsNode);
-
-                return new ArticleScrapeResult
-                {
-                    IsSuccess = true,
-                    IsPaywalled = isPaywalled,
-                    Title = title,
-                    Author = author,
-                    Paragraphs = paragraphs,
-                    Tags = tags
-                };
-            }
-            catch
-            {
-                return new ArticleScrapeResult { IsSuccess = false };
-            }
-        }
-
-        private string GetTitle(HtmlNode node)
-        {
-            return node.SelectSingleNode("//h1")?.InnerText.Trim() ?? string.Empty;
-        }
-
-        private string GetAuthor(HtmlNode node)
-        {
-            return node?.InnerText.Trim() ?? string.Empty;
-        }
-
-        private bool IsPaywalled(HtmlNode node)
-        {
-            return node.SelectNodes(".//div[contains(concat(' ', @class, ' '), ' paywall ')]")?.Any() == true;
-        }
-
-        private List<string> GetParagraphs(HtmlNode node)
-        {
-            return node.SelectNodes(".//p")?.Select(x => x.InnerText).ToList() ?? new List<string>();
-        }
-
-        private List<string> GetTags(HtmlNode node)
-        {
-            return node?.SelectNodes(".//li[contains(@id, 'tag')]")?
-                .Select(x => x.InnerText.Trim())
+        protected override List<string> GetParagraphs(HtmlDocument document)
+            => document.DocumentNode
+                .SelectNodes(".//div[contains(concat(' ', @class, ' '), ' article-body-part ') and contains(concat(' ', @class, ' '), ' free-part ')]//p")
+                ?.Select(x => x.InnerText)
                 .ToList()
-                ?? new List<string>();
-        }               
+            ?? new List<string>();
+
+        protected override List<string> GetTags(HtmlDocument document)
+            => document.DocumentNode
+                .SelectNodes(".//div[contains(concat(' ', @class, ' '), ' tags ')]//li[contains(@id, 'tag')]")
+                ?.Select(x => x.InnerText.Trim())
+                .ToList()
+            ?? new List<string>();
     }
 }
