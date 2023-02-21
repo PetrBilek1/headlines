@@ -13,5 +13,6 @@
         Denikcz = 80,
         SeznamZpravy = 90,
         Lidovky = 100,
+        DenikReferendum = 110,
     }
 }
