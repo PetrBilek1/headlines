@@ -12,6 +12,6 @@
         Blesk = 70,
         Denikcz = 80,
         SeznamZpravy = 90,
-
+        Lidovky = 100,
     }
 }
