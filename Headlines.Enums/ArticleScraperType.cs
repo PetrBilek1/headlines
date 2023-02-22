@@ -14,5 +14,6 @@
         SeznamZpravy = 90,
         Lidovky = 100,
         DenikReferendum = 110,
+        A2larm = 120,
     }
 }
