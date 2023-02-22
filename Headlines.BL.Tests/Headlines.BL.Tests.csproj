@@ -233,6 +233,18 @@
 	  <None Update="Resources\ScraperTestData\Novinky\002.html">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="Resources\ScraperTestData\ParlamentniListy\001.expected">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Resources\ScraperTestData\ParlamentniListy\001.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Resources\ScraperTestData\ParlamentniListy\002.expected">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Resources\ScraperTestData\ParlamentniListy\002.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="Resources\ScraperTestData\SeznamZpravy\001.expected">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
@@ -245,6 +257,10 @@
 	  <None Update="Resources\ScraperTestData\SeznamZpravy\002.html">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Resources\ScraperTestData\ParlamentniListy\" />
 	</ItemGroup>
 
 </Project>

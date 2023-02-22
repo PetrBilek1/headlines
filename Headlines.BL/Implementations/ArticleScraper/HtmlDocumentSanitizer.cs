@@ -44,6 +44,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                     "h2",
                     "h3",
                     "header",
+                    "i",
                     "li",
                     "main",
                     "nav",

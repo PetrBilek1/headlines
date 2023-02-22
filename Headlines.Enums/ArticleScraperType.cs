@@ -17,5 +17,6 @@
         A2larm = 120,
         DenikN = 130,
         E15 = 140,
+        ParlamentniListy = 150,
     }
 }
