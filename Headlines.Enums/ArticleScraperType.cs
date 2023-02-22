@@ -16,5 +16,6 @@
         DenikReferendum = 110,
         A2larm = 120,
         DenikN = 130,
+        E15 = 140,
     }
 }
