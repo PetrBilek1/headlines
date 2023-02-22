@@ -15,5 +15,6 @@
         Lidovky = 100,
         DenikReferendum = 110,
         A2larm = 120,
+        DenikN = 130,
     }
 }
