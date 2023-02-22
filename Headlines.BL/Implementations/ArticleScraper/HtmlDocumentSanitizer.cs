@@ -36,6 +36,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                     "a",
                     "article",
                     "b",
+                    "blockquote",
                     "div",
                     "em",
                     "h1",

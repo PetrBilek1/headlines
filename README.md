@@ -10,6 +10,7 @@
  - **ASPNET Core**
  - **Entity Framework Core**
  - **Microsoft SQL**
+ - **RabbitMQ** MassTransit
 
 **Testing:**
  - [XUnit](https://github.com/xunit/xunit)

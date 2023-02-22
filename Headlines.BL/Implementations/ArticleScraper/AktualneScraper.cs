@@ -20,23 +20,23 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         protected override string GetAuthor(HtmlDocument document)
             => document.DocumentNode
-                .SelectSingleNode("//div[contains(concat(' ', @class, ' '), ' author ')]//*[contains(concat(' ', @class, ' '), ' author__name ')]")
+                .SelectSingleNode($"//div[{ContainsExact("class", "author")}]//*[{ContainsExact("class", "author__name")}]")
                 ?.InnerText
                 .Trim()
             ?? string.Empty;
 
         protected override string GetPerex(HtmlDocument document)
             => document.DocumentNode
-                .SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' article__perex ')]")
+                .SelectSingleNode($".//div[{ContainsExact("class", "article__perex")}]")
                 ?.InnerText
                 .Trim() 
             ?? string.Empty;
 
         protected override List<string> GetParagraphs(HtmlDocument document)
         {
-            var contentNode = document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' article__content ')]");
+            var contentNode = document.DocumentNode.SelectSingleNode($".//div[{ContainsExact("class", "article__content")}]");
             
-            contentNode ??= document.DocumentNode.SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' article ')]/div[contains(concat(' ', @id, ' '), ' root ')]");
+            contentNode ??= document.DocumentNode.SelectSingleNode($".//div[{ContainsExact("class", "article")}]/div[{ContainsExact("id", "root")}]");
 
             return contentNode.SelectNodes(".//p")
                 ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
@@ -47,7 +47,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         protected override List<string> GetTags(HtmlDocument document)
             => document.DocumentNode
-                .SelectNodes(".//div[contains(concat(' ', @class, ' '), ' taglist ')]//a[text()]")
+                .SelectNodes($".//div[{ContainsExact("class", "taglist")}]//a[text()]")
                 ?.Select(x => x.InnerText.Trim())
                 .ToList()
             ?? new List<string>();

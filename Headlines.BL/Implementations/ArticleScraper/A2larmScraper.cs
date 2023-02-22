@@ -1,11 +1,12 @@
 ﻿using Headlines.BL.Abstractions.ArticleScraping;
 using HtmlAgilityPack;
+using System.Text.RegularExpressions;
 
 namespace Headlines.BL.Implementations.ArticleScraper
 {
-    public sealed class DenikReferendumScraper : ArticleScraperBase
+    public sealed class A2larmScraper : ArticleScraperBase
     {
-        public DenikReferendumScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
+        public A2larmScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {
         }
 
@@ -13,7 +14,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         protected override string GetTitle(HtmlDocument document)
             => document.DocumentNode
-                .SelectSingleNode($"//div[{ContainsExact("class", "header")}]//h2")
+                .SelectSingleNode($"//*[{ContainsExact("itemprop", "headline")}]")
                 ?.InnerText
                 .Trim()
             ?? string.Empty;
@@ -22,27 +23,34 @@ namespace Headlines.BL.Implementations.ArticleScraper
             => string.Join(
                 ", ",
                 document.DocumentNode
-                    .SelectNodes($".//*[{ContainsExact("class", "articleDetailAuthorName")}]")
+                    .SelectNodes($"//*[{ContainsExact("class", "post-author-name")}]")
                     ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
                     .Select(x => x.InnerText.Trim())
+                    .ToList()
                 ?? new List<string>()
                 );
 
         protected override string GetPerex(HtmlDocument document)
             => document.DocumentNode
-                .SelectSingleNode($"//*[{ContainsExact("class", "perex")}]")
+                .SelectSingleNode($"//h2[{ContainsExact("class", "post-subtitle")}]")
                 ?.InnerText
                 .Trim()
             ?? string.Empty;
 
         protected override List<string> GetParagraphs(HtmlDocument document)
             => document.DocumentNode
-                .SelectNodes($"//div[{ContainsExact("class", "text")}]/*[self::p or self::h3]")
+                .SelectNodes($"//div[{ContainsExact("class", "entry-content")}]/*[self::p or self::h3 or self::blockquote]")
+                ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
+                .Select(x => Regex.Replace(x.InnerText.Trim(), @"\s+", " "))
+                .ToList()
+            ?? new List<string>();
+
+        protected override List<string> GetTags(HtmlDocument document)
+            => document.DocumentNode
+                .SelectNodes($"//div[{ContainsExact("class", "post-header-title")}]//span[{ContainsExact("class", "term-badge")}]")
                 ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
                 .Select(x => x.InnerText.Trim())
                 .ToList()
             ?? new List<string>();
-
-        protected override List<string> GetTags(HtmlDocument document) => new List<string>();        
     }
 }

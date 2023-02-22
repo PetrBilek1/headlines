@@ -20,7 +20,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         protected override string GetAuthor(HtmlDocument document)
             => document.DocumentNode
-                .SelectSingleNode("//p[contains(concat(' ', @class, ' '), ' meta ')]/strong")
+                .SelectSingleNode($"//p[{ContainsExact("class", "meta")}]/strong")
                 ?.InnerText
                 .Trim()
             ?? string.Empty;
@@ -29,8 +29,8 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         protected override List<string> GetParagraphs(HtmlDocument document)
             => document.DocumentNode
-                .SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' b-detail ')]")
-                .SelectNodes(".//*[(self::p or self::div) and not(contains(@class, 'meta')) and not (ancestor::a or ancestor::figure or ancestor::div[contains(concat(' ', @class, ' '), ' embed ')] or ancestor::div[contains(concat(' ', @class, ' '), ' b-tweet ')])]")
+                .SelectSingleNode($".//div[{ContainsExact("class", "b-detail")}]")
+                .SelectNodes($".//*[(self::p or self::div) and not(contains(@class, 'meta')) and not (ancestor::a or ancestor::figure or ancestor::div[{ContainsExact("class", "embed")}] or ancestor::div[{ContainsExact("class", "b-tweet")}])]")
                 ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
                 .Select(x => x.InnerText.Trim())
                 .ToList()

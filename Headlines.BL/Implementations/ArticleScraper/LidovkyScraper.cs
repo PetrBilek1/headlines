@@ -11,12 +11,12 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         protected override bool IsPaywalled(HtmlDocument document)
             => document.DocumentNode
-                .SelectSingleNode(".//div[contains(concat(' ', @id, ' '), ' paywall ')]")
+                .SelectSingleNode($".//div[{ContainsExact("id", "paywall")}]")
                 != null;
 
         protected override string GetTitle(HtmlDocument document)
             => document.DocumentNode
-                .SelectSingleNode(".//h1[contains(concat(' ', @itemprop, ' '), ' headline ')]")
+                .SelectSingleNode($".//h1[{ContainsExact("itemprop", "headline")}]")
                 ?.InnerText
                 .Trim() 
             ?? string.Empty;
@@ -26,7 +26,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
             => string.Join(
                 ", ",
                 document.DocumentNode
-                    .SelectNodes(".//span[contains(concat(' ', @itemprop, ' '), ' author ')]")
+                    .SelectNodes($".//span[{ContainsExact("itemprop", "author")}]")
                     .Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
                     .Select(x => x.InnerText.Trim())
                     .Distinct()
@@ -34,14 +34,14 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         protected override string GetPerex(HtmlDocument document)
             => document.DocumentNode
-                .SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' opener ')]")
+                .SelectSingleNode($".//div[{ContainsExact("class", "opener")}]")
                 ?.InnerText
                 .Trim()
             ?? string.Empty;
 
         protected override List<string> GetParagraphs(HtmlDocument document)
             => document.DocumentNode
-                .SelectNodes(".//div[contains(concat(' ', @itemprop, ' '), ' articleBody ')]//*[self::p or self::h3]")
+                .SelectNodes($".//div[{ContainsExact("itemprop", "articleBody")}]//*[self::p or self::h3]")
                 ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
                 .Select(x => x.InnerText.Trim())
                 .ToList()
@@ -49,7 +49,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         protected override List<string> GetTags(HtmlDocument document)
             => document.DocumentNode
-                .SelectNodes("//div[contains(concat(' ', @class, ' '), ' art-tags ')]/a[text()]")
+                .SelectNodes($"//div[{ContainsExact("class", "art-tags")}]/a[text()]")
                 ?.Select(x => x.InnerText.Trim())
                 .ToList()
             ?? new List<string>();

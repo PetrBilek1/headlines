@@ -19,10 +19,10 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         protected override string GetAuthor(HtmlDocument document)
         {
-            var authorNode = document.DocumentNode.SelectSingleNode("//div[contains(concat(' ', @class, ' '), ' social-container-bottom ')]//div[contains(concat(' ', @class, ' '), ' author ')]");
+            var authorNode = document.DocumentNode.SelectSingleNode($"//div[{ContainsExact("class", "social-container-bottom")}]//div[{ContainsExact("class", "author")}]");
             
-            authorNode ??= document.DocumentNode.SelectSingleNode("//div[contains(concat(' ', @class, ' '), ' author-container ')]");
-            authorNode ??= document.DocumentNode.SelectSingleNode("//div[contains(concat(' ', @class, ' '), ' authors ')]");
+            authorNode ??= document.DocumentNode.SelectSingleNode($"//div[{ContainsExact("class", "author-container")}]");
+            authorNode ??= document.DocumentNode.SelectSingleNode($"//div[{ContainsExact("class", "authors")}]");
 
             return authorNode
                 ?.InnerText
@@ -34,7 +34,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         protected override string GetPerex(HtmlDocument document)
             => document.DocumentNode
-                .SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' leadsection ') or contains(concat(' ', @class, ' '), ' perex ')]/p[text()]")
+                .SelectSingleNode($".//div[{ContainsExact("class", "leadsection")} or {ContainsExact("class", "perex")}]/p[text()]")
                 ?.InnerText
                 .Trim()
             ?? string.Empty;
@@ -47,9 +47,9 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 return document.DocumentNode
                     .SelectNodes(string.Join(string.Empty, new string[]
                     {
-                        "//li[@id and @data-id and not(contains(concat(' ', @data-id, ' '), ' related '))]",
+                        $"//li[@id and @data-id and not({ContainsExact("data-id", "related")})]",
                         "//*[",
-                        "self::p[not(ancestor::div[contains(concat(' ', @class, ' '), ' videoInArticle ')])]",
+                        $"self::p[not(ancestor::div[{ContainsExact("class", "videoInArticle")}])]",
                         " or ",
                         "self::h2[not(@class) and text()]",
                         "]",
@@ -61,9 +61,9 @@ namespace Headlines.BL.Implementations.ArticleScraper
             }
 
             var contentNode = document.DocumentNode
-                .SelectSingleNode(".//div[contains(concat(' ', @class, ' '), ' articleBody ') or contains(concat(' ', @class, ' '), ' content ')]");
+                .SelectSingleNode($".//div[{ContainsExact("class", "articleBody")} or {ContainsExact("class", "content")}]");
 
-            return contentNode.SelectNodes("./*[(self::p or self::h2) and not(contains(concat(' ', @class, ' '), ' title '))]")
+            return contentNode.SelectNodes($"./*[(self::p or self::h2) and not({ContainsExact("class", "title")})]")
                 ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
                 .Select(x => x.InnerText.Trim())
                 .ToList()
@@ -72,7 +72,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         protected override List<string> GetTags(HtmlDocument document)
             => document.DocumentNode
-                .SelectNodes(".//div[contains(concat(' ', @class, ' '), ' tagsFooter ') or contains(concat(' ', @class, ' '), ' tags ')]//a[text()]")
+                .SelectNodes($".//div[{ContainsExact("class", "tagsFooter")} or {ContainsExact("class", "tags")}]//a[text()]")
                 .Select(x => x.InnerText.Trim())
                 .ToList()
             ?? new List<string>();

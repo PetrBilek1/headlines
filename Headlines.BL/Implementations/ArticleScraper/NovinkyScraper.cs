@@ -20,29 +20,29 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         protected override string GetAuthor(HtmlDocument document)
             => document.DocumentNode
-                .SelectSingleNode("//div[contains(concat(' ', @data-dot, ' '), ' ogm-article-author ')]//a[text()]")
+                .SelectSingleNode($"//div[{ContainsExact("data-dot", "ogm-article-author")}]//a[text()]")
                 ?.InnerText
                 .Trim() 
             ?? string.Empty;
 
         protected override string GetPerex(HtmlDocument document) 
             => document.DocumentNode
-                .SelectSingleNode(".//*[contains(concat(' ', @data-dot, ' '), ' ogm-article-perex ')]")
+                .SelectSingleNode($".//*[{ContainsExact("data-dot", "ogm-article-perex")}]")
                 ?.InnerText
                 .Trim() 
             ?? string.Empty;
 
         protected override List<string> GetParagraphs(HtmlDocument document)
             => document.DocumentNode
-                .SelectSingleNode(".//div[contains(concat(' ', @data-dot, ' '), ' ogm-article-content ')]")
-                .SelectNodes(".//*[contains(concat(' ', @data-dot, ' '), ' mol-paragraph ')]")
+                .SelectSingleNode($".//div[{ContainsExact("data-dot", "ogm-article-content")}]")
+                ?.SelectNodes($".//*[{ContainsExact("data-dot", "mol-paragraph")}]")
                 ?.Select(x => x.InnerText.Trim())
                 .ToList() 
             ?? new List<string>();
 
         protected override List<string> GetTags(HtmlDocument document)
             => document.DocumentNode
-                .SelectNodes(".//div[contains(concat(' ', @data-dot, ' '), ' ogm-related-tags ')]//a[text()]")
+                .SelectNodes($".//div[{ContainsExact("data-dot", "ogm-related-tags")}]//a[text()]")
                 ?.Select(x => x.InnerText.Trim())
                 .ToList()
             ?? new List<string>();

@@ -40,6 +40,9 @@ namespace Headlines.BL.Abstractions.ArticleScraping
         protected abstract List<string> GetParagraphs(HtmlDocument document);
         protected abstract List<string> GetTags(HtmlDocument document);
 
+        protected string ContainsExact(string attributeName, string value)
+            => $"contains(concat(' ', @{attributeName}, ' '), ' {value} ')";
+
         private List<string> MergePerexAndParagraphs(string perex, List<string> paragraphs)
         {
             var merged = new List<string>(paragraphs.Count + 1);
