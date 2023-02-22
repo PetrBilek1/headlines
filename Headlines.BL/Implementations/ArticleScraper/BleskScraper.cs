@@ -9,7 +9,9 @@ namespace Headlines.BL.Implementations.ArticleScraper
         {
         }
 
-        protected override bool IsPaywalled(HtmlDocument document) => false;
+        protected override bool IsPaywalled(HtmlDocument document)
+            => document.DocumentNode
+                .SelectSingleNode($"//div[{ContainsExact("class", "subscription--article")}]") != null;
 
         protected override string GetTitle(HtmlDocument document)
             => document.DocumentNode
@@ -23,6 +25,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
             
             authorNode ??= document.DocumentNode.SelectSingleNode($"//div[{ContainsExact("class", "author-container")}]");
             authorNode ??= document.DocumentNode.SelectSingleNode($"//div[{ContainsExact("class", "authors")}]");
+            authorNode ??= document.DocumentNode.SelectSingleNode($"//div[{ContainsExact("class", "author")} and not(ancestor::div[{ContainsExact("class", "image-description")}])]");
 
             return authorNode
                 ?.InnerText
@@ -34,7 +37,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
         protected override string GetPerex(HtmlDocument document)
             => document.DocumentNode
-                .SelectSingleNode($".//div[{ContainsExact("class", "leadsection")} or {ContainsExact("class", "perex")}]/p[text()]")
+                .SelectSingleNode($".//div[{ContainsExact("class", "leadsection")} or {ContainsExact("class", "perex")} or {ContainsExact("class", "articlePerex")}]/p[text()]")
                 ?.InnerText
                 .Trim()
             ?? string.Empty;
@@ -61,9 +64,10 @@ namespace Headlines.BL.Implementations.ArticleScraper
             }
 
             var contentNode = document.DocumentNode
-                .SelectSingleNode($".//div[{ContainsExact("class", "articleBody")} or {ContainsExact("class", "content")}]");
+                .SelectSingleNode($".//div[{ContainsExact("class", "articleBody")} or {ContainsExact("class", "content")} or {ContainsExact("class", "articleText")}]");
 
-            return contentNode.SelectNodes($"./*[(self::p or self::h2) and not({ContainsExact("class", "title")})]")
+            return contentNode
+                ?.SelectNodes($"./*[(self::p or self::h2) and not({ContainsExact("class", "title")})]")
                 ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
                 .Select(x => x.InnerText.Trim())
                 .ToList()
@@ -73,7 +77,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
         protected override List<string> GetTags(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($".//div[{ContainsExact("class", "tagsFooter")} or {ContainsExact("class", "tags")}]//a[text()]")
-                .Select(x => x.InnerText.Trim())
+                ?.Select(x => x.InnerText.Trim())
                 .ToList()
             ?? new List<string>();
     }

@@ -58,6 +58,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                     "class",
                     "data-dot",
                     "data-id",
+                    "href",
                     "id",
                     "itemprop"
                 }
