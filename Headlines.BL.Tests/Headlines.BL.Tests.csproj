@@ -167,6 +167,18 @@
 	  <None Update="Resources\ScraperTestData\E15\002.html">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="Resources\ScraperTestData\Hlidacipes\001.expected">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Resources\ScraperTestData\Hlidacipes\001.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Resources\ScraperTestData\Hlidacipes\002.expected">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Resources\ScraperTestData\Hlidacipes\002.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="Resources\ScraperTestData\HospodarskeNoviny\001.expected">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
@@ -279,6 +291,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Resources\ScraperTestData\Infocz\" />
+	  <Folder Include="Resources\ScraperTestData\Hlidacipes\" />
 	  <Folder Include="Resources\ScraperTestData\ParlamentniListy\" />
 	</ItemGroup>
 

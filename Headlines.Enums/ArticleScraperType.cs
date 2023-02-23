@@ -19,5 +19,6 @@
         E15 = 140,
         ParlamentniListy = 150,
         Infocz = 160,
+        Hlidacipes = 170,
     }
 }

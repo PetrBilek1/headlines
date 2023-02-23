@@ -33,6 +33,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 ArticleScraperType.E15 => new E15Scraper(_htmlDocumentLoader),
                 ArticleScraperType.ParlamentniListy => new ParlamentniListyScraper(_htmlDocumentLoader),
                 ArticleScraperType.Infocz => new InfoczScraper(_htmlDocumentLoader),
+                ArticleScraperType.Hlidacipes => new HlidacipesScraper(_htmlDocumentLoader),
                 _ => throw new NotImplementedException(),
             };
         }
