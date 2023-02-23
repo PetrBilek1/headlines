@@ -34,6 +34,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 ArticleScraperType.ParlamentniListy => new ParlamentniListyScraper(_htmlDocumentLoader),
                 ArticleScraperType.Infocz => new InfoczScraper(_htmlDocumentLoader),
                 ArticleScraperType.Hlidacipes => new HlidacipesScraper(_htmlDocumentLoader),
+                ArticleScraperType.Reflex => new ReflexScraper(_htmlDocumentLoader),
                 _ => throw new NotImplementedException(),
             };
         }
