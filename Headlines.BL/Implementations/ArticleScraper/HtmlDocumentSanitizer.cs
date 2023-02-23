@@ -40,6 +40,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                     "cite",
                     "div",
                     "em",
+                    "footer",
                     "h1",
                     "h2",
                     "h3",

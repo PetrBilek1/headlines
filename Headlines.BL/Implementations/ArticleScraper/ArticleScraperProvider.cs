@@ -32,6 +32,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 ArticleScraperType.DenikN => new DeniknScraper(_htmlDocumentLoader),
                 ArticleScraperType.E15 => new E15Scraper(_htmlDocumentLoader),
                 ArticleScraperType.ParlamentniListy => new ParlamentniListyScraper(_htmlDocumentLoader),
+                ArticleScraperType.Infocz => new InfoczScraper(_htmlDocumentLoader),
                 _ => throw new NotImplementedException(),
             };
         }

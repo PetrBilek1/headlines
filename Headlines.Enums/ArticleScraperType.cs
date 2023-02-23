@@ -18,5 +18,6 @@
         DenikN = 130,
         E15 = 140,
         ParlamentniListy = 150,
+        Infocz = 160,
     }
 }
