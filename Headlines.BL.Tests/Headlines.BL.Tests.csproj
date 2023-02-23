@@ -287,6 +287,24 @@
 	  <None Update="Resources\ScraperTestData\Reflex\002.html">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="Resources\ScraperTestData\Respekt\001.expected">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Resources\ScraperTestData\Respekt\001.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Resources\ScraperTestData\Respekt\002.expected">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Resources\ScraperTestData\Respekt\002.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Resources\ScraperTestData\Respekt\003.expected">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Resources\ScraperTestData\Respekt\003.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="Resources\ScraperTestData\SeznamZpravy\001.expected">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
@@ -304,6 +322,7 @@
 	<ItemGroup>
 	  <Folder Include="Resources\ScraperTestData\Infocz\" />
 	  <Folder Include="Resources\ScraperTestData\Hlidacipes\" />
+	  <Folder Include="Resources\ScraperTestData\Respekt\" />
 	  <Folder Include="Resources\ScraperTestData\Reflex\" />
 	  <Folder Include="Resources\ScraperTestData\ParlamentniListy\" />
 	</ItemGroup>

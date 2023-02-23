@@ -21,5 +21,7 @@
         Infocz = 160,
         Hlidacipes = 170,
         Reflex = 180,
+        Respekt = 190,
+
     }
 }

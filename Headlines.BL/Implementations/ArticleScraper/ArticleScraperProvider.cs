@@ -35,6 +35,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 ArticleScraperType.Infocz => new InfoczScraper(_htmlDocumentLoader),
                 ArticleScraperType.Hlidacipes => new HlidacipesScraper(_htmlDocumentLoader),
                 ArticleScraperType.Reflex => new ReflexScraper(_htmlDocumentLoader),
+                ArticleScraperType.Respekt => new RespektScraper(_htmlDocumentLoader),
                 _ => throw new NotImplementedException(),
             };
         }

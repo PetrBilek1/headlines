@@ -45,6 +45,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                     "h2",
                     "h3",
                     "header",
+                    "hr",
                     "i",
                     "li",
                     "main",
@@ -53,6 +54,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                     "section",
                     "span",
                     "strong",
+                    "u",
                     "ul"
                 },
                 AllowedAttributes =
