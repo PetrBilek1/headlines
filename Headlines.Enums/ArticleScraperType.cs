@@ -23,5 +23,6 @@
         Reflex = 180,
         Respekt = 190,
         Finmag = 200,
+        Lupa = 210,
     }
 }

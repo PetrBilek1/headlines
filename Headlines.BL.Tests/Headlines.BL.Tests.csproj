@@ -263,6 +263,18 @@
 	  <None Update="Resources\ScraperTestData\Lidovky\002.html">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="Resources\ScraperTestData\Lupa\001.expected">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Resources\ScraperTestData\Lupa\001.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Resources\ScraperTestData\Lupa\002.expected">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Resources\ScraperTestData\Lupa\002.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="Resources\ScraperTestData\Novinky\001.expected">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
@@ -335,6 +347,7 @@
 	  <Folder Include="Resources\ScraperTestData\Infocz\" />
 	  <Folder Include="Resources\ScraperTestData\Hlidacipes\" />
 	  <Folder Include="Resources\ScraperTestData\Finmag\" />
+	  <Folder Include="Resources\ScraperTestData\Lupa\" />
 	  <Folder Include="Resources\ScraperTestData\Respekt\" />
 	  <Folder Include="Resources\ScraperTestData\Reflex\" />
 	  <Folder Include="Resources\ScraperTestData\ParlamentniListy\" />

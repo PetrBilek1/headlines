@@ -37,6 +37,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 ArticleScraperType.Reflex => new ReflexScraper(_htmlDocumentLoader),
                 ArticleScraperType.Respekt => new RespektScraper(_htmlDocumentLoader),
                 ArticleScraperType.Finmag => new FinmagScraper(_htmlDocumentLoader),
+                ArticleScraperType.Lupa => new LupaScraper(_htmlDocumentLoader),
                 _ => throw new NotImplementedException(),
             };
         }
