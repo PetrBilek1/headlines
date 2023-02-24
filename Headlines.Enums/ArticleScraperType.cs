@@ -22,6 +22,6 @@
         Hlidacipes = 170,
         Reflex = 180,
         Respekt = 190,
-
+        Finmag = 200,
     }
 }
