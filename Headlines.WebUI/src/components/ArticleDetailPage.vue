@@ -14,7 +14,16 @@
         <fai v-if="!article" :icon="['fas', 'spinner']" size="3x" :style="{ color: 'white' }" spin></fai>
     </section>
     <section class="spacer layer1"></section>
-    <section class="section-second">
+    <section class="section-navigation">
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="btnradio" :checked="shownSection == 3">
+            <label class="btn btn-outline-primary" @click="shownSection = 3">Článek</label>
+
+            <input type="radio" class="btn-check" name="btnradio" :checked="shownSection == 2">
+            <label class="btn btn-outline-primary" @click="shownSection = 2">Titulky</label>
+        </div>
+    </section>
+    <section v-if="shownSection == 2" class="section-second">
         <div v-if="headlineChangesPage.length == 0">
             <h3>Titulek nebyl měněn</h3>
         </div>
@@ -30,6 +39,27 @@
                                   :showarticledetaillink="false"/>
         </div>
     </section>
+    <section v-if="shownSection == 3" class="section-third">
+        <div v-if="articleDetail">
+            <div v-if="articleDetail.isPaywalled" style="font-size: 22px;">
+                <fai :icon="['fas', 'sack-dollar']"></fai>
+                Placený článek
+            </div>
+            <h1>
+                <b>{{ articleDetail.title }}</b>
+            </h1>
+            <p v-for="(paragraph, i) in articleDetail.paragraphs" v-bind:key="i">
+                {{ paragraph }}
+            </p>
+            <div v-if="articleDetail.tags.length > 0" class="mt-3">
+                <h5>Tagy:</h5>
+                <button v-for="(tag, i) in articleDetail.tags" v-bind:key="i" type="button" class="btn btn-primary btn-sm tag">
+                    {{ tag }}
+                </button>
+            </div>
+        </div>
+        <fai v-if="!articleDetail" :icon="['fas', 'spinner']" size="2x" :style="{ color: 'black' }" spin></fai>
+    </section>
 </template>
 
 <script>
@@ -44,6 +74,7 @@ export default {
         return {
             article: null,
             articleDetail: null,
+            shownSection: 3,
             currentPage: 0,
             headlineChangesPerPage: 10,
             headlineChangesPage: [],
@@ -145,6 +176,14 @@ export default {
         background-color: #26A6A6;
     }
 
+    .section-navigation {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+    }
+
     .section-second {
         position: relative;
         display: flex;
@@ -152,6 +191,24 @@ export default {
         align-items: center;
         height: 100%;
         padding: 35px 0% 100px 0%;
+    }
+
+    .section-third {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: 35px 15vw 100px 15vw;
+    }
+
+    @media screen and (max-width: 960px) {
+        .section-third {
+            padding: 35px 5vw 100px 5vw;
+        }
+    }
+
+    .section-third h1 {
+        margin-bottom: 20px;
     }
 
     .section-second-content {
@@ -169,5 +226,9 @@ export default {
 
     .layer1 {
         background-image: url('../assets/layered-peaks.svg')
+    }
+
+    .tag {
+        margin: 3px;
     }
 </style>
