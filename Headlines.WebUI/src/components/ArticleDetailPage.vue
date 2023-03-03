@@ -117,8 +117,9 @@ export default {
 
         const webSocket = this.webSocket
         webSocket.addEventListener('message', event => {
-            if (event.data.messageType === "article-detail-scraped" && event.data.articleId == this.$route.params.id) {
-                this.articleData = event.data.detail
+            const data = JSON.parse(event.data)
+            if (data.messageType === "article-detail-scraped" && data.articleId == this.$route.params.id) {
+                this.articleData = data.detail
             }
         })
         this.webSocket.send(endpoints.WebSocketServer.Messages.ListenToArticleDetailScrape(this.article.id))

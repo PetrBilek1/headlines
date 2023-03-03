@@ -7,6 +7,6 @@ namespace Headlines.WebAPI.Middlewares.WebSocketServer.Abstraction
         Guid AddSocket(WebSocket socket);
         void ConsumeTextMessage(Guid connectionId, WebSocketReceiveResult result, byte[] buffer);
         Task ConsumeCloseMessageAsync(Guid connectionId, WebSocketReceiveResult result);
-        Task SendMessageByActionKeyAsync(string actionKey, string message);
+        Task SendMessageByActionAsync(WebSocketServerRouterAction action, string message);
     }
 }

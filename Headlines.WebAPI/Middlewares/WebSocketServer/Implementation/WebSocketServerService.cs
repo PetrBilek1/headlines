@@ -27,9 +27,12 @@ namespace Headlines.WebAPI.Middlewares.WebSocketServer.Implementation
 
             var message = JsonConvert.DeserializeObject<ListenToActionMessage>(textContent);
 
-            if (message?.ActionName == WebSocketServerRouterActions.Names.ArticleDetailScraped)
+            if (message?.ActionName == WebSocketServerRouterAction.ArticleDetailScraped.ActionName)
             {
-                _router.AddListener(WebSocketServerRouterActions.ListenerKeys.ArticleDetailScraped(Convert.ToInt64(message?.Parameter)), connectionId);
+                _router.AddListener(
+                    WebSocketServerRouterAction
+                    .ArticleDetailScraped.Create(Convert.ToInt64(message?.Parameter))
+                    , connectionId);
             }
         }
 
@@ -43,9 +46,9 @@ namespace Headlines.WebAPI.Middlewares.WebSocketServer.Implementation
             await socket.CloseAsync(result.CloseStatus!.Value, result.CloseStatusDescription, default);
         }
 
-        public async Task SendMessageByActionKeyAsync(string actionKey, string message)
+        public async Task SendMessageByActionAsync(WebSocketServerRouterAction action, string message)
         {
-            foreach (var route in _router.GetRoutes(actionKey))
+            foreach (var route in _router.GetRoutes(action))
             {
                 var socket = _connectionManager.GetAllSockets()[route];
                 await socket.SendAsync(Encoding.UTF8.GetBytes(message), WebSocketMessageType.Text, true, default);

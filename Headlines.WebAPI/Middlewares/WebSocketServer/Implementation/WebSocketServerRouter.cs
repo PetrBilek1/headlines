@@ -5,21 +5,27 @@ namespace Headlines.WebAPI.Middlewares.WebSocketServer.Implementation
 {
     public sealed class WebSocketServerRouter : IWebSocketServerRouter
     {
-        private readonly ConcurrentDictionary<string, HashSet<Guid>> _listeners = new();
+        private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, HashSet<Guid>>> _listeners = new();
 
-        public void AddListener(string actionKey, Guid connectionId)
+        public void AddListener(WebSocketServerRouterAction action, Guid connectionId)
         {
-            if (!_listeners.ContainsKey(actionKey))
+            if (!_listeners.ContainsKey(action.ActionName))
             {
-                _listeners.TryAdd(actionKey, new HashSet<Guid>());
+                _listeners.TryAdd(action.ActionName, new ConcurrentDictionary<string, HashSet<Guid>>());
             }
 
-            _listeners[actionKey].Add(connectionId);
+            if (!_listeners[action.ActionName].ContainsKey(action.Parameter)) 
+            {
+                _listeners[action.ActionName].TryAdd(action.Parameter, new HashSet<Guid>());
+            }
+
+            _listeners[action.ActionName][action.Parameter].Add(connectionId);
         }
 
-        public void RemoveListener(string actionKey, Guid connectionId)
+        public void RemoveListener(WebSocketServerRouterAction action, Guid connectionId)
         {
-            if (_listeners.TryGetValue(actionKey, out var connectionIds))
+            if (_listeners.TryGetValue(action.ActionName, out var parameterDicts)
+                && parameterDicts.TryGetValue(action.Parameter, out var connectionIds))
             {
                 connectionIds.Remove(connectionId);
             }
@@ -27,15 +33,16 @@ namespace Headlines.WebAPI.Middlewares.WebSocketServer.Implementation
 
         public void RemoveListenersOfConnection(Guid connectionId)
         {
-            foreach (var connectionIds in _listeners.Values)
+            foreach (var connectionIds in _listeners.Values.SelectMany(x => x.Values))
             {
                 connectionIds.Remove(connectionId);
             }
         }
 
-        public ICollection<Guid> GetRoutes(string actionKey)
+        public ICollection<Guid> GetRoutes(WebSocketServerRouterAction action)
         {
-            if (_listeners.TryGetValue(actionKey, out var connectionIds))
+            if (_listeners.TryGetValue(action.ActionName, out var parameterDicts)
+                && parameterDicts.TryGetValue(action.Parameter, out var connectionIds))
                 return connectionIds;
 
             return new HashSet<Guid>();

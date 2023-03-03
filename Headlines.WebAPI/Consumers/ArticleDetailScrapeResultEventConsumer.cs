@@ -19,8 +19,8 @@ namespace Headlines.WebAPI.Consumers
 
         public async Task Consume(ConsumeContext<ArticleDetailScrapeResultEvent> context)
         {
-            await _server.SendMessageByActionKeyAsync(
-                WebSocketServerRouterActions.ListenerKeys.ArticleDetailScraped(context.Message.ArticleId), 
+            await _server.SendMessageByActionAsync(
+                WebSocketServerRouterAction.ArticleDetailScraped.Create(context.Message.ArticleId), 
                 JsonConvert.SerializeObject(new ArticleDetailScrapedMessage
                 {
                     ArticleId = context.Message.ArticleId,

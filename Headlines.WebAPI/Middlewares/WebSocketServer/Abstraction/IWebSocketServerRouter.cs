@@ -2,9 +2,9 @@
 {
     public interface IWebSocketServerRouter
     {
-        void AddListener(string actionKey, Guid connectionId);
-        void RemoveListener(string actionKey, Guid connectionId);
+        void AddListener(WebSocketServerRouterAction action, Guid connectionId);
+        void RemoveListener(WebSocketServerRouterAction action, Guid connectionId);
         void RemoveListenersOfConnection(Guid connectionId);
-        ICollection<Guid> GetRoutes(string actionKey);
+        ICollection<Guid> GetRoutes(WebSocketServerRouterAction action);
     }
 }
