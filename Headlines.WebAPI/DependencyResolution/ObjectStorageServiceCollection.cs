@@ -2,6 +2,7 @@
 using Headlines.BL.Implementations.ObjectStorageWrapper;
 using PBilek.ObjectStorageService.Contabo;
 using PBilek.ObjectStorageService;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Headlines.WebAPI.DependencyResolution
 {
@@ -14,6 +15,14 @@ namespace Headlines.WebAPI.DependencyResolution
                 return new ContaboObjectStorageService(objectStorageConfiguration);
             });
             services.AddTransient<IObjectStorageWrapper, ObjectStorageWrapper>();
+
+            return services;
+        }
+
+        public static IServiceCollection RemoveObjectStorageDependencyGroup(this IServiceCollection services)
+        {
+            services.RemoveAll<IObjectStorageService>();
+            services.RemoveAll<IObjectStorageWrapper>();
 
             return services;
         }

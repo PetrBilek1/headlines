@@ -8,6 +8,8 @@ using Moq;
 using Microsoft.Extensions.DependencyInjection;
 using PBilek.ORM.EntityFrameworkCore.SQL.DependencyResolution;
 using Headlines.ORM.Core.Context;
+using Headlines.WebAPI.DependencyResolution;
+using Headlines.BL.Abstractions.ObjectStorageWrapper;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 namespace Headlines.WebAPI.Tests.Integration
@@ -16,6 +18,7 @@ namespace Headlines.WebAPI.Tests.Integration
     {
 
         private Mock<IDateTimeProvider>? _dateTimeProviderMock = null;
+        private Mock<IObjectStorageWrapper>? _objectStorageWrapperMock = null;
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {            
@@ -24,11 +27,18 @@ namespace Headlines.WebAPI.Tests.Integration
                 services.RemoveORMDependencyGroup<HeadlinesDbContext>();
                 services.AddORMDependencyGroup<HeadlinesDbContext>(DatabaseProvisioner.GetConnectionString(Guid.NewGuid()));
 
+
                 if (_dateTimeProviderMock != null)
                 {
                     services.RemoveAll(typeof(IDateTimeProvider));
                     services.AddTransient<IDateTimeProvider>(c => _dateTimeProviderMock.Object);
-                }               
+                }
+                
+                if (_objectStorageWrapperMock != null)
+                {
+                    services.RemoveObjectStorageDependencyGroup();
+                    services.AddTransient<IObjectStorageWrapper>(c => _objectStorageWrapperMock.Object);
+                }
             });
         }
         /// <summary>
@@ -42,6 +52,14 @@ namespace Headlines.WebAPI.Tests.Integration
             _dateTimeProviderMock
                 .Setup(x => x.Now)
                 .Returns(now);
+        }
+
+        /// <summary>
+        /// Must be called before CreateClient()
+        /// </summary>
+        public void MockObjectStorageWrapper()
+        {
+            _objectStorageWrapperMock = new Mock<IObjectStorageWrapper>(MockBehavior.Strict);
         }
 
         public async Task InitializeAsync()
