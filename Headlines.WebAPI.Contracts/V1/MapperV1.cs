@@ -10,7 +10,8 @@ namespace Headlines.WebAPI.Contracts.V1
             => new ArticleSourceModel
             {
                 Id = articleSource.Id,
-                Name = articleSource.Name
+                Name = articleSource.Name,
+                ScrapingSupported = articleSource.ScraperType.HasValue
             };
 
         public ArticleModel MapArticle(ArticleDTO article)

@@ -58,7 +58,12 @@
                 </button>
             </div>
         </div>
-        <fai v-if="!articleDetail" :icon="['fas', 'spinner']" size="2x" :style="{ color: 'black' }" spin></fai>
+        <div v-if="article" class="article-detail-loader">
+            <fai v-if="!articleDetail && article.source.scrapingSupported" :icon="['fas', 'spinner']" size="2x" :style="{ color: 'black' }" spin></fai>
+            <div v-if="!article.source.scrapingSupported">
+                <h3>U tohoto serveru obsah článků zatím nepodporujeme :(</h3>
+            </div>
+        </div>
     </section>
 </template>
 
@@ -146,20 +151,21 @@ export default {
         await this.fetchHeadlineChangePage(this.currentPage)
         await this.fetchArticleDetailById(this.$route.params.id)
 
+        if (this.article.source.scrapingSupported != true)
+            return
+
         const webSocket = this.webSocket
-        webSocket.addEventListener('message', event => {
+        webSocket.onmessage = (event) => { 
             const data = JSON.parse(event.data)
             if (data.messageType === "article-detail-scraped" && data.articleId == this.$route.params.id) {
-                this.articleData = data.detail
+                this.articleDetail = data.detail
             }
-        })
+        }
         this.webSocket.send(endpoints.WebSocketServer.Messages.ListenToArticleDetailScrape(this.article.id))
 
         if (this.articleDetail == null) {
             await this.requestDetailScrape(this.$route.params.id)
         }
-    },
-    updated() {
     }
 }
 </script>
@@ -199,6 +205,11 @@ export default {
         flex-direction: column;
         height: 100%;
         padding: 35px 15vw 100px 15vw;
+    }
+
+    .article-detail-loader {
+        text-align: center;
+        width: 100%;
     }
 
     @media screen and (max-width: 960px) {
