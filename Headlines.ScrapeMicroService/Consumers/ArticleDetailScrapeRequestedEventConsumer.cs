@@ -40,17 +40,25 @@ namespace Headlines.ScrapeMicroService.Consumers
                     return;
                 }
 
+                var detail = new ArticleDetailDTO
+                {
+                    IsPaywalled = result.IsPaywalled,
+                    Title = result.Title,
+                    Author = result.Author,
+                    Paragraphs = result.Paragraphs,
+                    Tags = result.Tags,
+                };
+
+                await context.Publish(new ArticleDetailScrapeResultEvent
+                {
+                    ArticleId = context.Message.ArticleId,
+                    Detail = detail
+                });
+
                 await context.Publish(new ArticleDetailUploadRequestedEvent
                 {
                     ArticleId = context.Message.ArticleId,
-                    Detail = new ArticleDetailDTO
-                    {
-                        IsPaywalled = result.IsPaywalled,
-                        Title = result.Title,
-                        Author = result.Author,
-                        Paragraphs = result.Paragraphs,
-                        Tags = result.Tags,
-                    }
+                    Detail = detail
                 });
             }
             catch (ArgumentNullException)

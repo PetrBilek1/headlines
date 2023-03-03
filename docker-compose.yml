@@ -54,6 +54,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - WEB_UI_DOMAIN=${DOMAIN}
+      - REPLICA_NAME=WEBAPI-1
       #DATABASE
       - DB_LOGIN=${DB_LOGIN}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -99,6 +100,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - REPLICA_NAME=RSS-1
       #DATABASE
       - DB_LOGIN=${DB_LOGIN}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -131,6 +133,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - REPLICA_NAME=SCRAPE-1
       #DATABASE
       - DB_LOGIN=${DB_LOGIN}
       - DB_PASSWORD=${DB_PASSWORD}

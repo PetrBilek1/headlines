@@ -2,6 +2,7 @@ using Headlines.BL.Implementations.MessageBroker;
 using Headlines.ORM.Core.Context;
 using Headlines.WebAPI.Configs;
 using Headlines.WebAPI.DependencyResolution;
+using Headlines.WebAPI.Middlewares.WebSocketServer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +51,7 @@ builder.Services.AddObjectStorageDependencyGroup(GetObjectStorageConfiguration()
 builder.Services.AddMessageQueueDependencyGroup(GetMessageBrokerSettings());
 builder.Services.AddMappingDependencyGroup();
 builder.Services.AddRateLimiterDependencyGroup();
+builder.Services.AddWebSocketServerDependencyGroup();
 
 var app = builder.Build();
 
@@ -77,6 +79,9 @@ app.UseAuthorization();
 
 app.UseRateLimiter();
 
+app.UseWebSockets();
+app.UseWebSocketServer();
+
 app.MapControllers();
 
 app.Run();
@@ -97,7 +102,8 @@ MessageBrokerSettings GetMessageBrokerSettings()
     {
         Host = Environment.GetEnvironmentVariable("MQ_HOST") ?? string.Empty,
         Username = Environment.GetEnvironmentVariable("MQ_USERNAME") ?? string.Empty,
-        Password = Environment.GetEnvironmentVariable("MQ_PASSWORD") ?? string.Empty
+        Password = Environment.GetEnvironmentVariable("MQ_PASSWORD") ?? string.Empty,
+        ReplicaName = Environment.GetEnvironmentVariable("REPLICA_NAME") ?? string.Empty
     };
 }
 

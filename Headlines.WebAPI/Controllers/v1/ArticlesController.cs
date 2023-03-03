@@ -1,6 +1,8 @@
 ﻿using Headlines.BL.Abstractions.EventBus;
+using Headlines.BL.Abstractions.ObjectStorageWrapper;
 using Headlines.BL.Events;
 using Headlines.BL.Facades;
+using Headlines.DTO.Custom;
 using Headlines.DTO.Entities;
 using Headlines.WebAPI.Contracts.V1;
 using Headlines.WebAPI.Contracts.V1.Requests.Articles;
@@ -17,15 +19,17 @@ namespace Headlines.WebAPI.Controllers.v1
     {
         private readonly MapperV1 _mapper;
         private readonly IArticleFacade _articleFacade;
+        private readonly IObjectStorageWrapper _objectStorage;
         private readonly IEventBus _eventBus;
 
         public const int MaxTake = 50;
         public const int DefaultTake = 10;
 
-        public ArticlesController(IArticleFacade articleFacade, IEventBus eventBus)
+        public ArticlesController(IArticleFacade articleFacade, IObjectStorageWrapper objectStorage, IEventBus eventBus)
         {
             _mapper = new MapperV1();
             _articleFacade = articleFacade;
+            _objectStorage = objectStorage;
             _eventBus = eventBus;
         }
 
@@ -42,6 +46,31 @@ namespace Headlines.WebAPI.Controllers.v1
             return Ok(new GetByIdResponse
             {
                 Article = _mapper.MapArticle(article),
+            });
+        }
+
+        [HttpGet("GetDetailById")]
+        public async Task<IActionResult> GetDetailById(long? id, CancellationToken cancellationToken)
+        {
+            if (!id.HasValue)
+                return BadRequest(Messages.M0003);
+
+            ArticleDTO article = await _articleFacade.GetArticleByIdIncludeDetailsAsync(id.Value, cancellationToken);
+            if (article == null)
+                return NotFound();
+
+            ObjectDataDTO? latestDetail = article.Details.OrderByDescending(x => x.Created).FirstOrDefault();
+            if (latestDetail == null)
+                return Ok(new GetDetailByIdResponse
+                {
+                    Detail = null
+                });
+
+            ArticleDetailDTO? detail = await _objectStorage.DownloadObjectAsync<ArticleDetailDTO>(latestDetail.Bucket, latestDetail.Key, cancellationToken);
+
+            return Ok(new GetDetailByIdResponse
+            {
+                Detail = detail == null ? null : _mapper.MapArticleDetail(detail)
             });
         }
 

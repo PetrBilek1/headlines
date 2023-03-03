@@ -1,5 +1,6 @@
 ﻿using Headlines.BL.Abstractions.EventBus;
 using Headlines.BL.Implementations.MessageBroker;
+using Headlines.WebAPI.Consumers;
 using MassTransit;
 
 namespace Headlines.WebAPI.DependencyResolution
@@ -13,6 +14,8 @@ namespace Headlines.WebAPI.DependencyResolution
             services.AddMassTransit(busConfigurator =>
             {
                 busConfigurator.SetKebabCaseEndpointNameFormatter();
+
+                busConfigurator.AddConsumer<ArticleDetailScrapeResultEventConsumer>();
 
                 if (string.IsNullOrEmpty(messageBrokerSettings.Host))
                 {
@@ -28,6 +31,13 @@ namespace Headlines.WebAPI.DependencyResolution
                     {
                         h.Username(settings.Username);
                         h.Password(settings.Password);
+                    });
+
+                    configurator.ReceiveEndpoint($"websocket-article-detail-service-{messageBrokerSettings.ReplicaName}", x =>
+                    {
+                        x.Lazy = true;
+                        x.PrefetchCount = 20;
+                        x.Consumer<ArticleDetailScrapeResultEventConsumer>(context);
                     });
                 });
             });

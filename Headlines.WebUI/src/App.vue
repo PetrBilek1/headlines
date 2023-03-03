@@ -5,15 +5,17 @@
 
 <script>
     import TheNavbar from './components/TheNavbar.vue'
+    import { mapActions } from 'vuex'
 
     export default {
         name: 'App',
         components: {
             TheNavbar
         },
-        methods: {                       
+        methods: {
+            ...mapActions(['connectWebSocket']),
             getUserDataCookie() {
-                var userData = this.$cookies.get("user_data")
+                let userData = this.$cookies.get("user_data")
 
                 if (userData == null) {
                     userData = {
@@ -40,7 +42,8 @@
         created() {
             var userData = this.getUserDataCookie()
             this.$store.state.userData = userData
-            this.$store.dispatch('fetchUserUpvotes', userData.userToken)  
+            this.$store.dispatch('fetchUserUpvotes', userData.userToken) 
+            this.connectWebSocket()
         },
         mounted() {
             this.$store.getters.userData.lastSeen = this.$store.getters.userData.nowSeen

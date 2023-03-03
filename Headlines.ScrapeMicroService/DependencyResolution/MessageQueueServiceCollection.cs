@@ -37,14 +37,14 @@ namespace Headlines.ScrapeMicroService.DependencyResolution
 
                     configurator.UseDelayedMessageScheduler();
 
-                    configurator.ReceiveEndpoint(MessageBrokerEndpoints.ArticleDetailScrapeRequestedEvent, x =>
+                    configurator.ReceiveEndpoint("scrape-article-detail-service", x =>
                     {
                         x.Lazy = true;
                         x.PrefetchCount = 20;
                         x.Consumer<ArticleDetailScrapeRequestedEventConsumer>(context);
                     });
 
-                    configurator.ReceiveEndpoint(MessageBrokerEndpoints.ArticleDetailUploadRequestedEvent, x =>
+                    configurator.ReceiveEndpoint("upload-article-detail-service", x =>
                     {
                         x.Lazy = true;
                         x.PrefetchCount = 20;

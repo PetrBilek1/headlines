@@ -51,7 +51,8 @@ MessageBrokerSettings GetMessageBrokerSettings()
     {
         Host = Environment.GetEnvironmentVariable("MQ_HOST") ?? string.Empty,
         Username = Environment.GetEnvironmentVariable("MQ_USERNAME") ?? string.Empty,
-        Password = Environment.GetEnvironmentVariable("MQ_PASSWORD") ?? string.Empty
+        Password = Environment.GetEnvironmentVariable("MQ_PASSWORD") ?? string.Empty,
+        ReplicaName = Environment.GetEnvironmentVariable("REPLICA_NAME") ?? string.Empty
     };
 }
 

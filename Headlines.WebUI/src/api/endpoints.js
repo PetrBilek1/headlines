@@ -1,10 +1,19 @@
 function getApiAddress() {
-    var host = window.location.host.replace("www.", "")
+    let host = window.location.host.replace("www.", "")
 
     if (host.includes("localhost"))
         return "http://localhost:8083"
 
     return "https://api." + host
+}
+
+function getWsAddress() {
+    let host = window.location.host.replace("www.", "")
+
+    if (host.includes("localhost"))
+        return "ws://localhost:8083"
+
+    return "ws://api." + host
 }
 
 export default {
@@ -41,8 +50,27 @@ export default {
         GetById(id) {
             return getApiAddress() + "/v1/Articles/GetById?id=" + id
         },
+        GetDetailById(id) {
+            return getApiAddress() + "/v1/Articles/GetDetailById?id=" + id
+        },
         GetSkipTake() {
             return getApiAddress() + "/v1/Articles/GetSkipTake"
+        },
+        RequestDetailScrape() {
+            return getApiAddress() + "/v1/Articles/RequestDetailScrape"
+        }
+    },
+    WebSocketServer: {
+        GetAddress() {
+            return getWsAddress()
+        },
+        Messages: {
+            ListenToArticleDetailScrape(articleId) {
+                return JSON.stringify({
+                    actionName: "article-detail-scraped",
+                    parameter: articleId
+                })
+            }
         }
     }
 }

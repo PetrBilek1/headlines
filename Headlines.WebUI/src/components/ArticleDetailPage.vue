@@ -43,6 +43,7 @@ export default {
     data() {
         return {
             article: null,
+            articleDetail: null,
             currentPage: 0,
             headlineChangesPerPage: 10,
             headlineChangesPage: [],
@@ -58,16 +59,24 @@ export default {
         },
         userUpvotes() {
             return this.$store.getters.userUpvotes
+        },
+        webSocket() {
+            return this.$store.getters.webSocket
         }
     },
     methods: {
         async fetchArticleById(articleId) {
-            var response = await axios.get(endpoints.Articles.GetById(articleId))
+            const response = await axios.get(endpoints.Articles.GetById(articleId))
 
             this.article = response.data.article
         },
+        async fetchArticleDetailById(articleId) {
+            const response = await axios.get(endpoints.Articles.GetDetailById(articleId))
+
+            this.articleDetail = response.data.detail
+        },
         async fetchHeadlineChangePage(page) {
-            var response = await axios.get(endpoints.HeadlineChanges.GetByArticleIdSkipTake(this.$route.params.id, page * this.headlineChangesPerPage, this.headlineChangesPerPage))
+            const response = await axios.get(endpoints.HeadlineChanges.GetByArticleIdSkipTake(this.$route.params.id, page * this.headlineChangesPerPage, this.headlineChangesPerPage))
 
             response.data.headlineChanges.forEach(x => x.article = this.article)
 
@@ -79,6 +88,12 @@ export default {
             this.$store.commit('setUserUpvotes', data)
 
             await this.fetchHeadlineChangePage(this.currentPage)
+        },
+        async requestDetailScrape(articleId) {
+            await axios.post(endpoints.Articles.RequestDetailScrape(), {
+                articleId: articleId
+            })
+
         },
         getLocalTimeString(dateTimeUTC) {
             const date = new Date(dateTimeUTC + '+00:00')
@@ -98,6 +113,21 @@ export default {
     async mounted() {
         await this.fetchArticleById(this.$route.params.id)
         await this.fetchHeadlineChangePage(this.currentPage)
+        await this.fetchArticleDetailById(this.$route.params.id)
+
+        const webSocket = this.webSocket
+        webSocket.addEventListener('message', event => {
+            if (event.data.messageType === "article-detail-scraped" && event.data.articleId == this.$route.params.id) {
+                this.articleData = event.data.detail
+            }
+        })
+        this.webSocket.send(endpoints.WebSocketServer.Messages.ListenToArticleDetailScrape(this.article.id))
+
+        if (this.articleDetail == null) {
+            await this.requestDetailScrape(this.$route.params.id)
+        }
+    },
+    updated() {
     }
 }
 </script>
