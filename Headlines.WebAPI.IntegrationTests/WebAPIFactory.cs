@@ -10,6 +10,7 @@ using PBilek.ORM.EntityFrameworkCore.SQL.DependencyResolution;
 using Headlines.ORM.Core.Context;
 using Headlines.WebAPI.DependencyResolution;
 using Headlines.BL.Abstractions.ObjectStorageWrapper;
+using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 namespace Headlines.WebAPI.Tests.Integration
@@ -18,7 +19,7 @@ namespace Headlines.WebAPI.Tests.Integration
     {
 
         private Mock<IDateTimeProvider>? _dateTimeProviderMock = null;
-        private Mock<IObjectStorageWrapper>? _objectStorageWrapperMock = null;
+        private IObjectStorageWrapper? _objectStorageWrapperMock = null;
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {            
@@ -37,7 +38,7 @@ namespace Headlines.WebAPI.Tests.Integration
                 if (_objectStorageWrapperMock != null)
                 {
                     services.RemoveObjectStorageDependencyGroup();
-                    services.AddTransient<IObjectStorageWrapper>(c => _objectStorageWrapperMock.Object);
+                    services.AddTransient<IObjectStorageWrapper>(c => _objectStorageWrapperMock);
                 }
             });
         }
@@ -59,7 +60,11 @@ namespace Headlines.WebAPI.Tests.Integration
         /// </summary>
         public void MockObjectStorageWrapper()
         {
-            _objectStorageWrapperMock = new Mock<IObjectStorageWrapper>(MockBehavior.Strict);
+            MockObjectStorageWrapper(new List<(string, string, object)>());
+        }
+        public void MockObjectStorageWrapper(ICollection<(string Bucket, string Key, object Object)> data)
+        {
+            _objectStorageWrapperMock = new ObjectStorageWrapperMock(data);
         }
 
         public async Task InitializeAsync()
