@@ -106,6 +106,8 @@ namespace Headlines.WebAPI.Controllers.v1
             ArticleDTO article = await _articleFacade.GetArticleByIdIncludeSourceAsync(request.ArticleId);
             if (article == null)
                 return NotFound(Messages.M0004);
+            if (!article.Source.ScraperType.HasValue)
+                return BadRequest(Messages.M0005);
 
             await _eventBus.PublishAsync(new ArticleDetailScrapeRequestedEvent
             {

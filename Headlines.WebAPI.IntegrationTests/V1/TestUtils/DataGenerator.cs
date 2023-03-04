@@ -21,9 +21,14 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
             }
         }
 
-        public static IEnumerable<ArticleDTO> GenerateArticles(int count)
+        public static IEnumerable<ArticleDTO> GenerateArticles(int count, bool sourceHasScraper = false)
         {
             var articleSourceGenerator = ArticleSourceDTO();
+            if (sourceHasScraper)
+            {
+                articleSourceGenerator.RuleFor(x => x.ScraperType, ArticleScraperType.Default);
+            }
+
             var articleGenerator = ArticleDTO().RuleFor(x => x.Source, articleSourceGenerator);
 
             for (int i = 0; i < count; i++)

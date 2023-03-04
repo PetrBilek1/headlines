@@ -11,15 +11,16 @@ using Headlines.ORM.Core.Context;
 using Headlines.WebAPI.DependencyResolution;
 using Headlines.BL.Abstractions.ObjectStorageWrapper;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
+using Headlines.BL.Abstractions.EventBus;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 namespace Headlines.WebAPI.Tests.Integration
 {
     public sealed class WebAPIFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
     {
-
         private Mock<IDateTimeProvider>? _dateTimeProviderMock = null;
         private IObjectStorageWrapper? _objectStorageWrapperMock = null;
+        private Mock<IEventBus>? _eventBusMock = null;
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {            
@@ -39,6 +40,12 @@ namespace Headlines.WebAPI.Tests.Integration
                 {
                     services.RemoveObjectStorageDependencyGroup();
                     services.AddTransient<IObjectStorageWrapper>(c => _objectStorageWrapperMock);
+                }
+
+                if (_eventBusMock != null)
+                {
+                    services.RemoveAll(typeof(IEventBus));
+                    services.AddTransient<IEventBus>(c => _eventBusMock.Object);
                 }
             });
         }
@@ -60,11 +67,18 @@ namespace Headlines.WebAPI.Tests.Integration
         /// </summary>
         public void MockObjectStorageWrapper()
         {
-            MockObjectStorageWrapper(new List<(string, string, object)>());
+            _objectStorageWrapperMock = new ObjectStorageWrapperMock(new List<(string, string, object)>());
+
         }
-        public void MockObjectStorageWrapper(ICollection<(string Bucket, string Key, object Object)> data)
+
+        /// <summary>
+        /// Must be called before CreateClient()
+        /// </summary>
+        public Mock<IEventBus> MockEventBus()
         {
-            _objectStorageWrapperMock = new ObjectStorageWrapperMock(data);
+            _eventBusMock = new Mock<IEventBus>(MockBehavior.Strict);
+
+            return _eventBusMock;
         }
 
         public async Task InitializeAsync()

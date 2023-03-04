@@ -242,6 +242,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
                 Name = articleSourceDTO.Name,
                 RssUrl = articleSourceDTO.RssUrl,
                 UrlIdSource = articleSourceDTO.UrlIdSource,
+                ScraperType = articleSourceDTO.ScraperType,
             };
 
             await _articleSourceDAO.InsertAsync(articleSource);
