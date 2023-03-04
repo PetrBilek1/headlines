@@ -30,7 +30,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
         protected override List<string> GetParagraphs(HtmlDocument document)
             => document.DocumentNode
                 .SelectSingleNode($".//div[{ContainsExact("class", "b-detail")}]")
-                .SelectNodes($".//*[(self::p or self::div) and not(contains(@class, 'meta')) and not (ancestor::a or ancestor::figure or ancestor::div[{ContainsExact("class", "embed")}] or ancestor::div[{ContainsExact("class", "b-tweet")}])]")
+                .SelectNodes($".//*[(self::p or self::div or self::h2) and not(contains(@class, 'meta')) and not (ancestor::a or ancestor::figure or ancestor::div[{ContainsExact("class", "embed")}] or ancestor::div[{ContainsExact("class", "b-tweet")}] or ancestor-or-self::div[{ContainsExact("class", "b-inline")}])]")
                 ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
                 .Select(x => x.InnerText.Trim())
                 .ToList()

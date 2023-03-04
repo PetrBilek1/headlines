@@ -251,6 +251,12 @@
 	  <None Update="Resources\ScraperTestData\Irozhlas\002.html">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="Resources\ScraperTestData\Irozhlas\003.expected">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Resources\ScraperTestData\Irozhlas\003.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="Resources\ScraperTestData\Lidovky\001.expected">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
