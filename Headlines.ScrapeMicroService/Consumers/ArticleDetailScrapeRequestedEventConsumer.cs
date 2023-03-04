@@ -52,6 +52,7 @@ namespace Headlines.ScrapeMicroService.Consumers
                 await context.Publish(new ArticleDetailScrapeResultEvent
                 {
                     ArticleId = context.Message.ArticleId,
+                    WasSuccessful = true,
                     Detail = detail
                 });
 
@@ -74,6 +75,13 @@ namespace Headlines.ScrapeMicroService.Consumers
             if (context.Message.Retried >= RetryCount)
             {
                 _logger.LogError("Scraping of article with Id '{articleId}' was not successful '{retries}'.", context.Message.ArticleId, RetryCount);
+
+                await context.Publish(new ArticleDetailScrapeResultEvent
+                {
+                    ArticleId = context.Message.ArticleId,
+                    WasSuccessful = false,
+                });
+
                 throw new ConsumerException($"Scraping of article with Id '{context.Message.ArticleId}' source Name '{article.Source.Name}' was not successful '{context.Message.Retried + 1}' times.");
             }
 

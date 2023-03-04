@@ -24,6 +24,7 @@ namespace Headlines.WebAPI.Consumers
                 JsonConvert.SerializeObject(new ArticleDetailScrapedMessage
                 {
                     ArticleId = context.Message.ArticleId,
+                    WasSuccessful = context.Message.WasSuccessful,
                     Detail = _mapper.MapArticleDetail(context.Message.Detail)
                 })
             );

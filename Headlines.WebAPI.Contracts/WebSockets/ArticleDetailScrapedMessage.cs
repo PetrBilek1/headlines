@@ -9,6 +9,8 @@ namespace Headlines.WebAPI.Contracts.WebSockets
         public const string MessageType = "article-detail-scraped";
         [JsonProperty("articleId")]
         public long ArticleId { get; set; }
+        [JsonProperty("wasSuccessful")]
+        public bool WasSuccessful { get; set; }
         [JsonProperty("detail")]
         public ArticleDetailModel Detail { get; set; }
     }

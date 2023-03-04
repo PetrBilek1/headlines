@@ -40,6 +40,14 @@
         </div>
     </section>
     <section v-if="shownSection == 3" class="section-third">
+        <div v-if="articleDetailScrapeUnsuccessful" class="align-text-center mb-3">
+            <h3>
+                Získání článku se nezdařilo :(&nbsp;
+            </h3>
+            <button class="btn btn-primary btn-sm" @click="requestDetailScrape($route.params.id)" :disabled="articleDetailScrapeRequested">
+                Zkusit znovu
+            </button>
+        </div>
         <div v-if="articleDetail">
             <div v-if="articleDetail.isPaywalled" style="font-size: 22px;">
                 <fai :icon="['fas', 'sack-dollar']"></fai>
@@ -58,7 +66,7 @@
                 </button>
             </div>
         </div>
-        <div v-if="article" class="article-detail-loader">
+        <div v-if="article" class="align-text-center">
             <fai v-if="!articleDetail && article.source.scrapingSupported" :icon="['fas', 'spinner']" size="2x" :style="{ color: 'black' }" spin></fai>
             <div v-if="!article.source.scrapingSupported">
                 <h3>U tohoto serveru obsah článků zatím nepodporujeme :(</h3>
@@ -78,6 +86,8 @@ export default {
     data() {
         return {
             article: null,
+            articleDetailScrapeRequested: false,
+            articleDetailScrapeUnsuccessful: false,
             articleDetail: null,
             shownSection: 3,
             currentPage: 0,
@@ -126,6 +136,10 @@ export default {
             await this.fetchHeadlineChangePage(this.currentPage)
         },
         async requestDetailScrape(articleId) {
+            if (this.articleDetailScrapeRequested)
+                return
+
+            this.articleDetailScrapeRequested = true
             await axios.post(endpoints.Articles.RequestDetailScrape(), {
                 articleId: articleId
             })
@@ -158,7 +172,11 @@ export default {
         webSocket.onmessage = (event) => { 
             const data = JSON.parse(event.data)
             if (data.messageType === "article-detail-scraped" && data.articleId == this.$route.params.id) {
-                this.articleDetail = data.detail
+                if (data.wasSuccessful == true) {
+                    this.articleDetail = data.detail
+                }
+                setTimeout(() => { this.articleDetailScrapeRequested = false }, 1000)
+                this.articleDetailScrapeUnsuccessful = !data.wasSuccessful
             }
         }
         this.webSocket.send(endpoints.WebSocketServer.Messages.ListenToArticleDetailScrape(this.article.id))
@@ -207,7 +225,7 @@ export default {
         padding: 35px 15vw 100px 15vw;
     }
 
-    .article-detail-loader {
+    .align-text-center {
         text-align: center;
         width: 100%;
     }
