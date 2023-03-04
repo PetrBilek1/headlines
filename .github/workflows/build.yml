@@ -36,3 +36,14 @@ jobs:
                              
       - name: "🚀 build rss"
         run: docker build --build-arg package_pass=${{ secrets.PBILEK_PACKAGES_TOKEN }} -f Headlines.RSSProcessingMicroService/Dockerfile .
+        
+  docker-scrape:
+    name: Build Scrape
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v3        
+                             
+      - name: "🚀 build scrape"
+        run: docker build --build-arg package_pass=${{ secrets.PBILEK_PACKAGES_TOKEN }} -f Headlines.ScrapeMicroService/Dockerfile .
