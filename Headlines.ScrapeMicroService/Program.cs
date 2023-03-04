@@ -1,5 +1,6 @@
 using Headlines.BL.Implementations.MessageBroker;
 using Headlines.ORM.Core.Context;
+using Headlines.ScrapeMicroService.Configuration;
 using Headlines.ScrapeMicroService.DependencyResolution;
 using PBilek.ObjectStorageService;
 using PBilek.ORM.EntityFrameworkCore.SQL.DependencyResolution;
@@ -22,6 +23,8 @@ namespace Headlines.ScrapeMicroService
             builder.Services.AddMappingDependencyGroup();
             builder.Services.AddMessageQueueDependencyGroup(GetMessageBrokerSettings());
 
+            builder.Services.AddSingleton(GetUploadConfiguration(builder));
+
             var app = builder.Build();
 
             app.MapHealthChecks("/health");
@@ -36,6 +39,14 @@ namespace Headlines.ScrapeMicroService
             app.UseRouting();
 
             app.Run();
+        }
+
+        private static UploadConfiguration GetUploadConfiguration(WebApplicationBuilder builder)
+        {
+            return new UploadConfiguration
+            {
+                BucketName = builder?.Configuration.GetValue<string>("OsDefaultBucket") ?? string.Empty,
+            };
         }
 
         private static string GetConnectionString(string template)

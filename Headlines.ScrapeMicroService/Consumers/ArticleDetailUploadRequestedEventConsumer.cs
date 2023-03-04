@@ -4,23 +4,24 @@ using Headlines.BL.Events;
 using Headlines.BL.Facades;
 using Headlines.DTO.Custom;
 using Headlines.DTO.Entities;
+using Headlines.ScrapeMicroService.Configuration;
 using MassTransit;
 
 namespace Headlines.ScrapeMicroService.Consumers
 {
     public sealed class ArticleDetailUploadRequestedEventConsumer : IConsumer<ArticleDetailUploadRequestedEvent>
     {
-        private const string BucketName = "headlines-staging";
-
         private readonly IArticleFacade _articleFacade;
         private readonly IObjectStorageWrapper _objectStorage;
         private readonly ILogger<ArticleDetailUploadRequestedEventConsumer> _logger;
+        private readonly UploadConfiguration _uploadConfiguration;
 
-        public ArticleDetailUploadRequestedEventConsumer(IArticleFacade articleFacade, IObjectStorageWrapper objectStorage, ILogger<ArticleDetailUploadRequestedEventConsumer> logger)
+        public ArticleDetailUploadRequestedEventConsumer(IArticleFacade articleFacade, IObjectStorageWrapper objectStorage, ILogger<ArticleDetailUploadRequestedEventConsumer> logger, UploadConfiguration uploadConfiguration)
         {
             _articleFacade = articleFacade;
             _objectStorage = objectStorage;
             _logger = logger;
+            _uploadConfiguration = uploadConfiguration;
         }
 
         public async Task Consume(ConsumeContext<ArticleDetailUploadRequestedEvent> context)
@@ -38,7 +39,7 @@ namespace Headlines.ScrapeMicroService.Consumers
                     Paragraphs = context.Message.Detail.Paragraphs,
                     Tags = context.Message.Detail.Tags,
                 },
-                BucketName);
+                _uploadConfiguration.BucketName);
 
                 await _articleFacade.InsertArticleDetailByArticleIdAsync(context.Message.ArticleId, objectData);
             }
