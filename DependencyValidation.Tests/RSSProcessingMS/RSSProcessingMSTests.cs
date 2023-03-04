@@ -1,4 +1,6 @@
 ﻿using DependencyValidation.Tests.DTO;
+using Headlines.BL.Abstractions.EventBus;
+using Headlines.BL.Implementations.MessageBroker;
 using Headlines.RSSProcessingMicroService;
 using Headlines.RSSProcessingMicroService.Services;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -29,6 +31,12 @@ namespace DependencyValidation.Tests.RSSProcessingMS
                 ServiceType = typeof(IRSSProcessorService),
                 ImplementationType = typeof(RSSProcessorService),
                 Lifetime = ServiceLifetime.Scoped
+            },
+            new ValidationServiceDescriptor
+            {
+                ServiceType = typeof(IEventBus),
+                ImplementationType = typeof(EventBus),
+                Lifetime = ServiceLifetime.Transient
             }
         };
 
