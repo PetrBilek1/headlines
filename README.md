@@ -5,6 +5,7 @@
 ### Technologies used:
 **Frontend:**
  - **Vue.js**
+ - WebSockets
 
 **Backend:**
  - **ASPNET Core**
