@@ -14,7 +14,7 @@
                     <td>{{ article.currentTitle }}</td>
                     <td class="published-col">{{ getLocalTimeString(article.published) }}</td>
                     <td>
-                        <a :href="article.link"><fai :icon="['fas', 'link']"></fai></a>
+                        <a class="cursor-pointer" @click="redirect(article.link)" style="color: --bs-link-color;"><fai :icon="['fas', 'link']"></fai></a>
                         &nbsp;
                         <router-link :to="{ name: 'Article', params: { id: article.id } }">
                             <fai :icon="['fas', 'circle-info']"></fai>
@@ -127,6 +127,12 @@ export default {
 
             return moment(date).format("HH:mm DD.MM.YYYY")
         },
+        redirect(url) {
+            if (url.length <= 0)
+                return
+
+            window.open(url)
+        }
     },
     mounted() {
         this.currentPage = this.startPage
