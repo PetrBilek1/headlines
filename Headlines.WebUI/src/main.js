@@ -10,9 +10,9 @@ import 'bootstrap/dist/js/bootstrap.js'
 //fontawesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faLink, faLinkSlash, faThumbsUp, faList, faMagnifyingGlass, faSpinner, faCircleInfo, faNewspaper, faSackDollar } from '@fortawesome/free-solid-svg-icons'
+import { faLink, faLinkSlash, faThumbsUp, faList, faMagnifyingGlass, faSpinner, faCircleInfo, faNewspaper } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faLink, faLinkSlash, faThumbsUp, faList, faMagnifyingGlass, faSpinner, faCircleInfo, faNewspaper, faSackDollar)
+library.add(faLink, faLinkSlash, faThumbsUp, faList, faMagnifyingGlass, faSpinner, faCircleInfo, faNewspaper)
 
 createApp(App)
     .use(router)

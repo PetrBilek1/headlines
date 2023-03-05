@@ -67,19 +67,3 @@ jobs:
           build-args: package_pass=${{ secrets.PBILEK_PACKAGES_TOKEN }}
           tags: ${{ steps.meta-rss.outputs.tags }}
           labels: ${{ steps.meta-rss.outputs.labels }}
-      
-      - name: "🔧 extract scrape metadata"
-        id: meta-scrape
-        uses: docker/metadata-action@v4
-        with:
-          images: ghcr.io/${{ github.repository_owner }}/headlines-scrape
-          
-      - name: "🚀 build and push scrape"
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: Headlines.ScrapeMicroService/Dockerfile
-          push: true
-          build-args: package_pass=${{ secrets.PBILEK_PACKAGES_TOKEN }}
-          tags: ${{ steps.meta-scrape.outputs.tags }}
-          labels: ${{ steps.meta-scrape.outputs.labels }}

@@ -8,6 +8,5 @@ namespace Headlines.DTO.Entities
         public string Name { get; set; }
         public string RssUrl { get; set; }
         public ArticleUrlIdSource UrlIdSource { get; set; }
-        public ArticleScraperType? ScraperType { get; set; }
     }
 }

@@ -51,29 +51,6 @@ namespace Headlines.BL.Tests.Facades
         }
 
         [Fact]
-        public async Task GetArticleByIdIncludeDetailsAsync_Simple()
-        {
-            //Arrange
-            _uowProviderMock.Setup(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking))
-                .Returns(_uowMock.Object);
-
-            _uowMock.Setup(x => x.Dispose());
-
-            _articleDaoMock.Setup(x => x.GetByIdAsync(_data.Article1.Id, It.IsAny<CancellationToken>(), x => x.Details))
-                .ReturnsAsync(_data.Article1);
-
-            //Act
-            ArticleDTO result = await _sut.GetArticleByIdIncludeDetailsAsync(_data.Article1.Id, default);
-
-            //Assert
-            result.Should().NotBeNull();
-
-            _uowProviderMock.Verify(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking), Times.Once());
-            _uowMock.Verify(x => x.CommitAsync(), Times.Never);
-            _uowMock.Verify(x => x.Dispose(), Times.Once);
-        }
-
-        [Fact]
         public async Task GetArticlesByUrlIdsAsync_Simple()
         {
             //Arrange
@@ -240,71 +217,6 @@ namespace Headlines.BL.Tests.Facades
             _articleDaoMock.Verify(x => x.GetCountByFiltersAsync(default, null, null, null, null), Times.Once);
 
             result.Should().Be(_data.Articles.Count);
-        }
-
-        [Fact]
-        public async Task InsertArticleDetailByArticleIdAsync_ShouldInsertArticleDetail()
-        {
-            //Arrange
-            long articleId = 1;
-            ObjectDataDTO objectData = new()
-            {
-                Bucket = "bucket",
-                Key = "key",
-                ContentType = "application/json"
-            };
-
-            _uowProviderMock.Setup(x => x.CreateUnitOfWork())
-                .Returns(_uowMock.Object);
-            _uowMock.Setup(x => x.CommitAsync())
-                .Returns(Task.CompletedTask);
-            _uowMock.Setup(x => x.Dispose());
-
-            _articleDaoMock.Setup(x => x.GetByIdAsync(articleId))
-                .ReturnsAsync(_data.Article1);
-
-            //Act
-            ObjectDataDTO result = await _sut.InsertArticleDetailByArticleIdAsync(articleId, objectData);
-
-            //Assert
-            _uowProviderMock.Verify(x => x.CreateUnitOfWork(), Times.Once());
-            _uowMock.Verify(x => x.CommitAsync(), Times.Once());
-            _uowMock.Verify(x => x.Dispose(), Times.Once);
-
-            AssertionUtils.AssertObjectDataMatches(objectData, result);
-            _data.Article1.Details.Count.Should().Be(1);
-            AssertionUtils.AssertObjectDataMatches(objectData, _data.Article1.Details.First());
-        }
-
-        [Fact]
-        public async Task InsertArticleDetailByArticleIdAsync_WhenArticleNotFound_ShouldThrowException()
-        {
-            //Arrange
-            ObjectDataDTO objectData = new()
-            {
-                Bucket = "bucket",
-                Key = "key",
-                ContentType = "application/json"
-            };
-
-            _uowProviderMock.Setup(x => x.CreateUnitOfWork())
-                .Returns(_uowMock.Object);
-            _uowMock.Setup(x => x.CommitAsync())
-                .Returns(Task.CompletedTask);
-            _uowMock.Setup(x => x.Dispose());
-
-            _articleDaoMock.Setup(x => x.GetByIdAsync(It.IsAny<long>()))
-                .ReturnsAsync((Article) null!);
-
-            //Act
-            Func<Task> act = async () => await _sut.InsertArticleDetailByArticleIdAsync(1, objectData);
-
-            //Assert           
-            await act.Should().ThrowAsync<Exception>().WithMessage($"Article with Id '{1}' not found.");
-
-            _uowProviderMock.Verify(x => x.CreateUnitOfWork(), Times.Once());
-            _uowMock.Verify(x => x.CommitAsync(), Times.Never);
-            _uowMock.Verify(x => x.Dispose(), Times.Once);
         }
 
         private sealed class TestData
