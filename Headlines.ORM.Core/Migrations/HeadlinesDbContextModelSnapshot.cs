@@ -22,6 +22,21 @@ namespace Headlines.ORM.Core.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ArticleObjectData", b =>
+                {
+                    b.Property<long>("ArticleId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("DetailsId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ArticleId", "DetailsId");
+
+                    b.HasIndex("DetailsId");
+
+                    b.ToTable("ArticleObjectData");
+                });
+
             modelBuilder.Entity("Headlines.ORM.Core.Entities.Article", b =>
                 {
                     b.Property<long>("Id")
@@ -92,6 +107,10 @@ namespace Headlines.ORM.Core.Migrations
                         .HasColumnType("nvarchar(512)")
                         .HasColumnName("RSS_URL");
 
+                    b.Property<int?>("ScraperType")
+                        .HasColumnType("int")
+                        .HasColumnName("SCRAPER_TYPE");
+
                     b.Property<int>("UrlIdSource")
                         .HasColumnType("int")
                         .HasColumnName("URL_ID_SOURCE");
@@ -143,6 +162,42 @@ namespace Headlines.ORM.Core.Migrations
                     b.ToTable("HEADLINE_CHANGE", (string)null);
                 });
 
+            modelBuilder.Entity("Headlines.ORM.Core.Entities.ObjectData", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Bucket")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("BUCKET");
+
+                    b.Property<DateTime?>("Changed")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CHANGED");
+
+                    b.Property<string>("ContentType")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CONTENT_TYPE");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CREATED");
+
+                    b.Property<string>("Key")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)")
+                        .HasColumnName("KEY");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OBJECT_DATA", (string)null);
+                });
+
             modelBuilder.Entity("Headlines.ORM.Core.Entities.UserUpvotes", b =>
                 {
                     b.Property<long>("Id")
@@ -166,6 +221,21 @@ namespace Headlines.ORM.Core.Migrations
                     b.HasIndex("UserToken");
 
                     b.ToTable("USER_UPVOTES", (string)null);
+                });
+
+            modelBuilder.Entity("ArticleObjectData", b =>
+                {
+                    b.HasOne("Headlines.ORM.Core.Entities.Article", null)
+                        .WithMany()
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Headlines.ORM.Core.Entities.ObjectData", null)
+                        .WithMany()
+                        .HasForeignKey("DetailsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Headlines.ORM.Core.Entities.Article", b =>

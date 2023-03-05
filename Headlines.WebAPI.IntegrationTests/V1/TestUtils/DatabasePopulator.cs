@@ -15,6 +15,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
         private readonly IArticleDAO _articleDAO;
         private readonly IArticleSourceDAO _articleSourceDAO;
         private readonly IUserUpvotesDAO _userUpvotesDAO;
+        private readonly IObjectDataDAO _objectDataDAO;
         private readonly IMapper _mapper;
 
         private DatabasePopulator(IServiceProvider serviceProvider)
@@ -26,6 +27,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
             _articleDAO = scope.ServiceProvider.GetRequiredService<IArticleDAO>();
             _articleSourceDAO = scope.ServiceProvider.GetRequiredService<IArticleSourceDAO>();
             _userUpvotesDAO = scope.ServiceProvider.GetRequiredService<IUserUpvotesDAO>();
+            _objectDataDAO = scope.ServiceProvider.GetRequiredService<IObjectDataDAO>();
             _mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
         }
 
@@ -155,6 +157,14 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
 
                 await uow.CommitAsync();
             }
+
+            using (var uow = _uowProvider.CreateUnitOfWork())
+            {
+                List<ObjectData> objects = await _objectDataDAO.GetAllAsync(default);
+                objects.ForEach(_objectDataDAO.Delete);
+
+                await uow.CommitAsync();
+            }
         }
 
         private async Task<HeadlineChange> GetOrInsertHeadlineChangeAsync(HeadlineChangeDTO headlineChangeDTO)
@@ -206,6 +216,14 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
                 article.Source = await GetOrInsertArticleSourceAsync(articleDTO.Source);
             }
 
+            if (articleDTO.Details != null)
+            {
+                articleDTO.Details.ForEach(async x =>
+                {
+                    article.Details.Add(await GetOrInsertObjectDataAsync(x));
+                });
+            }
+
             await _articleDAO.InsertAsync(article);
 
             return article;
@@ -224,11 +242,34 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
                 Name = articleSourceDTO.Name,
                 RssUrl = articleSourceDTO.RssUrl,
                 UrlIdSource = articleSourceDTO.UrlIdSource,
+                ScraperType = articleSourceDTO.ScraperType,
             };
 
             await _articleSourceDAO.InsertAsync(articleSource);
 
             return articleSource;
+        }
+
+        private async Task<ObjectData> GetOrInsertObjectDataAsync(ObjectDataDTO objectDataDTO)
+        {
+            ObjectData? objectData = objectDataDTO.Id != default ? await _objectDataDAO.AssertExistsAsync(objectDataDTO.Id) : null;
+
+            if (objectData != null)
+                return objectData;
+
+            objectData = new ObjectData()
+            {
+                Id = objectDataDTO.Id,
+                Bucket = objectDataDTO.Bucket,
+                Key = objectDataDTO.Key,
+                ContentType = objectDataDTO.ContentType,
+                Created = objectDataDTO.Created,
+                Changed = objectDataDTO.Changed,
+            };
+
+            await _objectDataDAO.InsertAsync(objectData);
+
+            return objectData;
         }
     }
 }

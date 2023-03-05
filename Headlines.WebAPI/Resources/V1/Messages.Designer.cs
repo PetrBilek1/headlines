@@ -86,5 +86,23 @@ namespace Headlines.WebAPI.Resources.V1 {
                 return ResourceManager.GetString("M0003", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Article does not exist..
+        /// </summary>
+        internal static string M0004 {
+            get {
+                return ResourceManager.GetString("M0004", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Article source does not support scraping..
+        /// </summary>
+        internal static string M0005 {
+            get {
+                return ResourceManager.GetString("M0005", resourceCulture);
+            }
+        }
     }
 }

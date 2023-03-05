@@ -15,8 +15,4 @@
     <ProjectReference Include="..\Headlines.Enums\Headlines.Enums.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Custom\" />
-  </ItemGroup>
-
 </Project>

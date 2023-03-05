@@ -1,6 +1,8 @@
 ﻿using Headlines.BL.Facades;
 using Headlines.RSSProcessingMicroService.Services;
 using NetCore.AutoRegisterDi;
+using PBilek.Infrastructure.DatetimeProvider;
+using PBilek.ObjectStorageService;
 using PBilek.RSSReaderService;
 using System.Reflection;
 
@@ -8,8 +10,10 @@ namespace Headlines.RSSProcessingMicroService.DependencyResolution
 {
     public static class MicroServiceCollection
     {
-        public static IServiceCollection AddMicroServiceDependencyGroup(this IServiceCollection services)
+        public static IServiceCollection AddMicroServiceDependencyGroup(this IServiceCollection services, ObjectStorageConfiguration objectStorageConfiguration)
         {
+            services.AddTransient<IDateTimeProvider, DefaultDateTimeProvider>();
+
             Assembly?[] assembliesToScan = new[]
             {
                 Assembly.GetAssembly(typeof(IArticleSourceFacade)),

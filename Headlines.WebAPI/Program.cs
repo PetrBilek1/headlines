@@ -1,10 +1,13 @@
-using Headlines.DependencyResolution;
+using Headlines.BL.Implementations.MessageBroker;
 using Headlines.ORM.Core.Context;
 using Headlines.WebAPI.Configs;
 using Headlines.WebAPI.DependencyResolution;
+using Headlines.WebAPI.Middlewares.WebSocketServer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
+using PBilek.ObjectStorageService;
+using PBilek.ORM.EntityFrameworkCore.SQL.DependencyResolution;
 
 var builder = WebApplication.CreateBuilder(args);
 var corsPolicyName = "corsPolicyName";
@@ -42,11 +45,13 @@ builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
 string connectionStringTemplate = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
 
-builder.Services.AddBasicDependencyGroup();
-builder.Services.AddORMDependencyGroup(GetConnectionString(connectionStringTemplate));
+builder.Services.AddORMDependencyGroup<HeadlinesDbContext>(GetConnectionString(connectionStringTemplate));
 builder.Services.AddWebAPIDependencyGroup();
+builder.Services.AddObjectStorageDependencyGroup(GetObjectStorageConfiguration());
+builder.Services.AddMessageQueueDependencyGroup(GetMessageBrokerSettings());
 builder.Services.AddMappingDependencyGroup();
 builder.Services.AddRateLimiterDependencyGroup();
+builder.Services.AddWebSocketServerDependencyGroup();
 
 var app = builder.Build();
 
@@ -74,6 +79,9 @@ app.UseAuthorization();
 
 app.UseRateLimiter();
 
+app.UseWebSockets();
+app.UseWebSocketServer();
+
 app.MapControllers();
 
 app.Run();
@@ -86,6 +94,27 @@ string GetConnectionString(string template)
     template = template.Replace("{DB_INITIAL_CATALOG}", Environment.GetEnvironmentVariable("DB_INITIAL_CATALOG"));
 
     return template;
+}
+
+MessageBrokerSettings GetMessageBrokerSettings()
+{
+    return new MessageBrokerSettings
+    {
+        Host = Environment.GetEnvironmentVariable("MQ_HOST") ?? string.Empty,
+        Username = Environment.GetEnvironmentVariable("MQ_USERNAME") ?? string.Empty,
+        Password = Environment.GetEnvironmentVariable("MQ_PASSWORD") ?? string.Empty,
+        ReplicaName = Environment.GetEnvironmentVariable("REPLICA_NAME") ?? string.Empty
+    };
+}
+
+ObjectStorageConfiguration GetObjectStorageConfiguration()
+{
+    return new ObjectStorageConfiguration
+    {
+        ServiceUrl = Environment.GetEnvironmentVariable("OS_URL") ?? string.Empty,
+        AccessKey = Environment.GetEnvironmentVariable("OS_ACCESS_KEY") ?? string.Empty,
+        SecretKey = Environment.GetEnvironmentVariable("OS_SECRET_KEY") ?? string.Empty,
+    };
 }
 
 IEnumerable<string> GetCorsOrigins()

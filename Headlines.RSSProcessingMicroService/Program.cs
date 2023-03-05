@@ -1,5 +1,8 @@
-using Headlines.DependencyResolution;
+using Headlines.BL.Implementations.MessageBroker;
+using Headlines.ORM.Core.Context;
 using Headlines.RSSProcessingMicroService.DependencyResolution;
+using PBilek.ObjectStorageService;
+using PBilek.ORM.EntityFrameworkCore.SQL.DependencyResolution;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,11 +11,10 @@ builder.Services.AddHealthChecks();
 
 string? connectionStringTemplate = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services
-    .AddBasicDependencyGroup()
-    .AddORMDependencyGroup(GetConnectionString(connectionStringTemplate!))
-    .AddMicroServiceDependencyGroup()
-    .AddMappingDependencyGroup();
+builder.Services.AddORMDependencyGroup<HeadlinesDbContext>(GetConnectionString(connectionStringTemplate!));
+builder.Services.AddMessageQueueDependencyGroup(GetMessageBrokerSettings());
+builder.Services.AddMicroServiceDependencyGroup(GetObjectStorageConfiguration());
+builder.Services.AddMappingDependencyGroup();
 
 var app = builder.Build();
 
@@ -41,4 +43,25 @@ string GetConnectionString(string template)
     template = template.Replace("{DB_INITIAL_CATALOG}", Environment.GetEnvironmentVariable("DB_INITIAL_CATALOG"));
 
     return template;
+}
+
+MessageBrokerSettings GetMessageBrokerSettings()
+{
+    return new MessageBrokerSettings
+    {
+        Host = Environment.GetEnvironmentVariable("MQ_HOST") ?? string.Empty,
+        Username = Environment.GetEnvironmentVariable("MQ_USERNAME") ?? string.Empty,
+        Password = Environment.GetEnvironmentVariable("MQ_PASSWORD") ?? string.Empty,
+        ReplicaName = Environment.GetEnvironmentVariable("REPLICA_NAME") ?? string.Empty
+    };
+}
+
+ObjectStorageConfiguration GetObjectStorageConfiguration()
+{
+    return new ObjectStorageConfiguration
+    {
+        ServiceUrl = Environment.GetEnvironmentVariable("OS_URL") ?? string.Empty,
+        AccessKey = Environment.GetEnvironmentVariable("OS_ACCESS_KEY") ?? string.Empty,
+        SecretKey = Environment.GetEnvironmentVariable("OS_SECRET_KEY") ?? string.Empty,
+    };
 }
