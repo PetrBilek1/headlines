@@ -10,8 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MassTransit" Version="8.0.12" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
@@ -27,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Headlines.BL\Headlines.BL.csproj" />
+    <ProjectReference Include="..\Headlines.DependencyResolution\Headlines.DependencyResolution.csproj" />
     <ProjectReference Include="..\Headlines.WebAPI.Contracts\Headlines.WebAPI.Contracts.csproj" />
   </ItemGroup>
 

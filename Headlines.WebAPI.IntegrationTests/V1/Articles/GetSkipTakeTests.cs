@@ -17,8 +17,6 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
 
         public GetSkipTakeTests(WebAPIFactory apiFactory)
         {
-            apiFactory.MockObjectStorageWrapper();
-
             _client = apiFactory.CreateClient();
             _serviceProvider = apiFactory.Services;
         }

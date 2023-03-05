@@ -51,16 +51,6 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         }
 
         [Fact]
-        public void Articles_RequestDetailScrapeRequest()
-        {
-            //Assert
-            TestExtensions.AssertProperties<RequestDetailScrapeRequest>(new()
-            {
-                ("ArticleId", typeof(long), new string[] { _jsonPropertyAttribute, _requiredAttribute }),
-            });
-        }
-
-        [Fact]
         public void HeadlineChanges_UpvoteRequest()
         {
             //Assert

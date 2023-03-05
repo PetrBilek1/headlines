@@ -7,7 +7,6 @@ const store = createStore({
         return {
             userData: null,
             userUpvotes: [],
-            webSocket: null,
             homePage: {
                 stopAnimating: false
             },
@@ -30,9 +29,6 @@ const store = createStore({
         },
         articlesPage(state) {
             return state.articlesPage
-        },
-        webSocket(state) {
-            return state.webSocket
         }
     },
     mutations: {
@@ -44,9 +40,6 @@ const store = createStore({
         },
         setArticlesPage(state, articlesPage) {
             state.articlesPage = articlesPage
-        },
-        setWebSocket(state, webSocket) {
-            state.webSocket = webSocket
         }
     },
     actions: {
@@ -57,12 +50,6 @@ const store = createStore({
                     context.commit('setUserUpvotes', response.data.upvotes)
                 })
         },
-        connectWebSocket(context) {
-            const webSocket = new WebSocket(endpoints.WebSocketServer.GetAddress())
-            webSocket.onopen = () => {
-                context.commit('setWebSocket', webSocket)
-            }
-        }
     }
 })
 

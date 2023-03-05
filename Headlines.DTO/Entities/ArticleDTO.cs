@@ -13,6 +13,5 @@
         public string Link { get; set; }
 
         public ArticleSourceDTO Source { get; set; }
-        public List<ObjectDataDTO> Details { get; set; }
     }
 }

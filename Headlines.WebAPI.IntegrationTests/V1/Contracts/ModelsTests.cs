@@ -44,7 +44,6 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
             {
                 ("Id", typeof(long), new string[] { _jsonPropertyAttribute }),
                 ("Name", typeof(string), new string[] { _jsonPropertyAttribute }),
-                ("ScrapingSupported", typeof(bool), new string[] { _jsonPropertyAttribute }),
             });
         }
 
@@ -61,20 +60,6 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
                 ("CurrentTitle", typeof(string), new string[] { _jsonPropertyAttribute }),
                 ("Link", typeof(string), new string[] { _jsonPropertyAttribute }),
                 ("Source", typeof(ArticleSourceModel), new string[] { _jsonPropertyAttribute }),
-            });
-        }
-
-        [Fact]
-        public void ArticleDetailModel()
-        {
-            //Assert
-            TestExtensions.AssertProperties<ArticleDetailModel>(new()
-            {
-                ("IsPaywalled", typeof(bool), new string[] { _jsonPropertyAttribute }),
-                ("Title", typeof(string), new string[] { _jsonPropertyAttribute }),
-                ("Author", typeof(string), new string[] { _jsonPropertyAttribute }),
-                ("Paragraphs", typeof(List<string>), new string[] { _jsonPropertyAttribute }),
-                ("Tags", typeof(List<string>), new string[] { _jsonPropertyAttribute }),
             });
         }
 

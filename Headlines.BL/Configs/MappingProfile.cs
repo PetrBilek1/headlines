@@ -13,8 +13,6 @@ namespace Headlines.BL.Configs
 
             CreateMap<HeadlineChange, HeadlineChangeDTO>();
 
-            CreateMap<ObjectData, ObjectDataDTO>();
-
             CreateMap<UserUpvotes, UserUpvotesDTO>();
         }
     }
