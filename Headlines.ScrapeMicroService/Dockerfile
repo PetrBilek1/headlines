@@ -5,7 +5,12 @@ WORKDIR /app
 EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+ARG package_pass
+
 WORKDIR /src
+
+RUN echo "<configuration><packageSources><add key=\"github\" value=\"https://nuget.pkg.github.com/PetrBilek1/index.json\" /></packageSources> <packageSourceCredentials><github><add key=\"Username\" value=\"PetrBilek1\" /><add key=\"ClearTextPassword\" value=\"${package_pass}\" /></github></packageSourceCredentials></configuration>" > nuget.config
+
 COPY ["Headlines.ScrapeMicroService/Headlines.ScrapeMicroService.csproj", "Headlines.ScrapeMicroService/"]
 RUN dotnet restore "Headlines.ScrapeMicroService/Headlines.ScrapeMicroService.csproj"
 COPY . .
