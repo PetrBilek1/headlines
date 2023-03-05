@@ -13,7 +13,7 @@ function getWsAddress() {
     if (host.includes("localhost"))
         return "ws://localhost:8083"
 
-    return "ws://api." + host
+    return "wss://api." + host
 }
 
 export default {
