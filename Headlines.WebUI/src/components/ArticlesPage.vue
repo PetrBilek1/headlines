@@ -1,5 +1,5 @@
 <template>
-    <section class="section-first">
+    <section class="section-first" @keyup.enter="fetchArticlePage(selectedPage)">
         <h1 class="color-yellow text-wrapper mb-3 mb-lg-5">
             <b>Články</b>
         </h1>
