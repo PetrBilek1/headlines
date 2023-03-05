@@ -1,0 +1,20 @@
+﻿{
+	"IsSuccess" : true,
+	"IsPaywalled" : false,
+	"Title" : "Tesla v dalších problémech. Její autonomní řízení může v Americe ohrožovat dopravu",
+	"Author" : "Jan Matoušek",
+	"Paragraphs" : [
+			"Systému \"plně autonomního řízení\" automobilky Tesla se už podruhé v tomto týdnu dostává negativní publicity. Nejprve jeho funkčnost zpochybňoval reklamní spot, vysílaný během ostře sledovaného nedělního Super Bowlu, teď navíc musí skoro 363 tisíc aut v Americe projít aktualizací softwaru. Mohlo by se totiž stát, že Tesla udělá přesně to, na co upozorňovalo zmíněné video: ohrozí dopravu.",
+			"Nejprve krátké vysvětlení: systém Full-Self Driving, tedy \"plně autonomní řízení\", o nějž v tomto případě jde, byl až do listopadu loňského roku nabízen jen vybraným zákazníkům, kteří se stali takzvanými beta testovači tohoto řešení.",
+			"Pak však automobilka Elona Muska vydala upgrade, takže testovacím jezdcem se nyní může v Americe stát kdokoliv. Stačí zaplatit jednorázově 15 tisíc dolarů - asi 332 tisíc korun -, případně si balíček, který doplňuje standardní soubor asistentů Autopilot, předplatit.",
+			"Celý software nicméně stále funguje jen v testovacím režimu, jinak by nebyl legální. Navíc, na což upozorňuje na svých stránkách i sama Tesla, navzdory označení auto nikdy nemůže jet samo, musí být stále pod aktivním dohledem řidiče. Na rozdíl od řešení mnoha jiných výrobců ale umí Tesly jezdit samostatně (vedle dálnice) i v městském provozu - zvládne číst značky, zastavovat na semaforech, brzdit nebo akcelerovat podle jiných aut v daném jízdním pruhu.",
+			"A přesně systém samočinné jízdy ve městě může být u některých modelů kamenem úrazu. V upozornění na svolávací akci, které vydal americký Národní úřad pro bezpečnost silničního provozu (zkráceně NHTSA), se píše celkem o 362 758 automobilech. Spadají do toho Modely S a X z modelových roků 2016 až 2023, Model 3 modelového roku 2017 až 2023 a Model Y modelového roku 2020 až 2023. Nejde o všechny vyrobené kusy, ale jen některé z nich. Je to logické, ne všechny totiž byly příslušným softwarem vybavené.",
+			"Podle NHTSA by mohl systém způsobit nebezpečné chování auta na křižovatce. \"Například by mohlo projet křižovatku rovně, i když je v odbočovacím pruhu, vjet do křižovatky označené značkou 'stop', aniž by zcela zastavilo, nebo vjet do křižovatky ve chvíli, kdy svítí žlutá a řidič má být připraven zastavit,\" konstatuje úřad. Objevit by se mohl také problém s řidičem nastaveným rychlostním limitem, který by auto mohlo třeba úplně ignorovat.",
+			"Řešením je update softwaru na dálku, který Tesla zdarma provede v nejbližších týdnech, píše oborový magazín Automotive News. Do 15. dubna by měla všechny dotčené majitele vozidel kontaktovat dopisem a o svolávací akci je informovat.",
+			"NHTSA o možných problémech informovala Teslu už koncem ledna. Po několika rozhovorech sice automobilka závěry úřadu neuznala, nicméně sama vyhlásila dobrovolnou svolávací akci, píše se v dokumentu, který byl k celému problému vydán.",
+			"Mimochodem spojení \"svolávací akce\" se stalo tak trochu trnem v oku majiteli Tesly Elonu Muskovi. Ten na Twitteru odpověděl v jedné z konverzací, že pojem \"svolávací akce\" pro update softwaru je \"anachronismus a zkrátka naprosto mimo\".",
+			"Tesla každopádně doposud identifikovala osmnáct podnětů v rámci poskytované záruky, které by mohly souviset s aktuální svolávací akcí. Obdržet je měla mezi 8. květnem 2019 a 12. zářím 2022. Žádný z nich ale údajně nevedl k nehodě, případně dokonce usmrcení člověka.",
+			"Není to však první případ, kdy NHTSA prošetřuje Teslu. Nadále třeba probíhá vyšetřování souboru asistenčních systémů Autopilot po sérií několika nehod, které vedly k více než dvanácti zraněním a jednomu úmrtí. Odděleně také úřad vyšetřuje stovky stížností, které přišly na samovolnou aktivaci nouzového brzdění.",
+		],
+	"Tags" : ["Portál eletromobilita", "auto", "Aktuálně.cz", "tesla", "technika", "autonomní řízení"]
+}

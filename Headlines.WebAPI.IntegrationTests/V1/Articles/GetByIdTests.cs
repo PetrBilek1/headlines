@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Headlines.WebAPI.Contracts.V1.Requests.Articles;
 using Headlines.WebAPI.Contracts.V1.Responses.Articles;
 using Headlines.WebAPI.Resources.V1;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
@@ -15,6 +14,8 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
 
         public GetByIdTests(WebAPIFactory apiFactory)
         {
+            apiFactory.MockObjectStorageWrapper();
+
             _client = apiFactory.CreateClient();
             _serviceProvider = apiFactory.Services;
         }

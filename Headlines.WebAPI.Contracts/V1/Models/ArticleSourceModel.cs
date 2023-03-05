@@ -8,5 +8,7 @@ namespace Headlines.WebAPI.Contracts.V1.Models
         public long Id { get; set; }
         [JsonProperty("name")]
         public string Name { get; set; }
+        [JsonProperty("scrapingSupported")]
+        public bool ScrapingSupported { get; set; }
     }
 }

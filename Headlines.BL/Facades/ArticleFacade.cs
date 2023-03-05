@@ -9,6 +9,7 @@ namespace Headlines.BL.Facades
 {
     public sealed class ArticleFacade : IArticleFacade
     {
+
         private readonly IArticleDAO _articleDAO;
         private readonly IUnitOfWorkProvider _uowProvider;
         private readonly IMapper _mapper;
@@ -25,6 +26,15 @@ namespace Headlines.BL.Facades
             using var _ = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
             Article article = await _articleDAO.GetByIdAsync(id, cancellationToken, x => x.Source);
+
+            return _mapper.Map<ArticleDTO>(article);
+        }
+
+        public async Task<ArticleDTO> GetArticleByIdIncludeDetailsAsync(long id, CancellationToken cancellationToken = default)
+        {
+            using var _ = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
+
+            Article article = await _articleDAO.GetByIdAsync(id, cancellationToken, x => x.Details);
 
             return _mapper.Map<ArticleDTO>(article);
         }
@@ -55,6 +65,27 @@ namespace Headlines.BL.Facades
             await uow.CommitAsync();
 
             return _mapper.Map<ArticleDTO>(article);
+        }
+
+        public async Task<ObjectDataDTO> InsertArticleDetailByArticleIdAsync(long articleId, ObjectDataDTO dataDTO)
+        {
+            using IUnitOfWork uow = _uowProvider.CreateUnitOfWork();
+
+            var article = await _articleDAO.GetByIdAsync(articleId);
+            if (article == null)
+                throw new Exception($"Article with Id '{articleId}' not found.");
+
+            var data = new ObjectData
+            {
+                Bucket = dataDTO.Bucket,
+                Key = dataDTO.Key,
+                ContentType = dataDTO.ContentType,
+            };
+            article.Details.Add(data);
+
+            await uow.CommitAsync();
+
+            return _mapper.Map<ObjectDataDTO>(data);
         }
 
         public async Task<List<ArticleDTO>> GetArticlesByFiltersSkipTakeAsync(int skip, int take, string? currentTitlePrompt = null, long[]? articleSources = null, DateTime? from = null, DateTime? to = null, CancellationToken cancellationToken = default)

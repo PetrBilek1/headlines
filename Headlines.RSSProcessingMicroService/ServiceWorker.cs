@@ -1,4 +1,7 @@
-﻿using Headlines.RSSProcessingMicroService.Services;
+﻿using Headlines.BL.Abstractions.EventBus;
+using Headlines.BL.Events;
+using Headlines.DTO.Entities;
+using Headlines.RSSProcessingMicroService.Services;
 
 namespace Headlines.RSSProcessingMicroService
 {
@@ -33,7 +36,9 @@ namespace Headlines.RSSProcessingMicroService
 
                     IRSSProcessorService processorService = scope.ServiceProvider.GetRequiredService<IRSSProcessorService>();
 
-                    await processorService.DoWorkAsync(stoppingToken);
+                    var result = await processorService.DoWorkAsync(stoppingToken);
+
+                    await PublishScrapeRequestsAsync(result.CreatedArticles, scope);                    
                 }
                 catch (Exception ex)
                 {
@@ -47,6 +52,22 @@ namespace Headlines.RSSProcessingMicroService
             _logger.LogInformation("RSS Reader Hosted Service is stopping.");
 
             await base.StopAsync(stoppingToken);
+        }
+
+        private async Task PublishScrapeRequestsAsync(List<ArticleDTO> articles, IServiceScope scope)
+        {
+            IEventBus eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
+
+            var random = new Random();
+            var shuffledArticles = articles.OrderBy(x => random.Next()).ToList();
+
+            foreach (var article in shuffledArticles)
+            {
+                await eventBus.PublishAsync(new ArticleDetailScrapeRequestedEvent
+                {
+                    ArticleId = article.Id,
+                });
+            }
         }
     }
 }

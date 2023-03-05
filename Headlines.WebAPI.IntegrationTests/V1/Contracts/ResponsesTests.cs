@@ -46,6 +46,37 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         }
 
         [Fact]
+        public void Articles_GetSkipTakeResponse()
+        {
+            //Assert
+            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.Articles.GetSkipTakeResponse>(new()
+            {
+                ("Articles", typeof(List<ArticleModel>), new string[] { _jsonPropertyAttribute }),
+                ("MatchesFiltersCount", typeof(long), new string[] { _jsonPropertyAttribute })
+            });
+        }
+
+        [Fact]
+        public void Articles_GetByIdResponse()
+        {
+            //Assert
+            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.Articles.GetByIdResponse>(new()
+            {
+                ("Article", typeof(ArticleModel), new string[] { _jsonPropertyAttribute })
+            });
+        }
+
+        [Fact]
+        public void Articles_GetDetailByIdResponse()
+        {
+            //Assert
+            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.Articles.GetDetailByIdResponse>(new()
+            {
+                ("Detail", typeof(ArticleDetailModel), new string[] { _jsonPropertyAttribute })
+            });
+        }
+
+        [Fact]
         public void HeadlineChanges_GetSkipTakeResponse()
         {
             //Assert
@@ -94,27 +125,6 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
             {
                 ("Upvotes", typeof(List<UpvoteModel>), new string[] { _jsonPropertyAttribute })
             });
-        }
-
-        [Fact]
-        public void Articles_GetSkipTakeResponse()
-        {
-            //Assert
-            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.Articles.GetSkipTakeResponse>(new()
-            {
-                ("Articles", typeof(List<ArticleModel>), new string[] { _jsonPropertyAttribute }),
-                ("MatchesFiltersCount", typeof(long), new string[] { _jsonPropertyAttribute })
-            });
-        }
-
-        [Fact]
-        public void Articles_GetByIdResponse()
-        {
-            //Assert
-            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.Articles.GetByIdResponse>(new()
-            {
-                ("Article", typeof(ArticleModel), new string[] { _jsonPropertyAttribute })
-            });
-        }
+        }        
     }
 }

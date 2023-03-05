@@ -17,7 +17,8 @@ namespace Headlines.ORM.Core.Entities
         public string CurrentTitle { get; set; }
         public string Link { get; set; }
 
-        public ArticleSource Source { get; set; }        
+        public ArticleSource Source { get; set; }
+        public ICollection<ObjectData> Details { get; set; } = new List<ObjectData>();
     }
 
     public sealed class ArticleConfiguration : IEntityTypeConfiguration<Article>
@@ -38,6 +39,7 @@ namespace Headlines.ORM.Core.Entities
             builder.HasIndex(x => x.UrlId);
 
             builder.HasOne(x => x.Source).WithMany().HasForeignKey(x => x.SourceId);
+            builder.HasMany(x => x.Details).WithMany();
         }
     }
 }

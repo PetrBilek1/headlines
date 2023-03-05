@@ -1,4 +1,6 @@
 ﻿using Bogus;
+using Bogus.DataSets;
+using Headlines.DTO.Custom;
 using Headlines.DTO.Entities;
 using Headlines.Enums;
 using Headlines.WebAPI.Contracts.V1.Models;
@@ -19,14 +21,29 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
             }
         }
 
-        public static IEnumerable<ArticleDTO> GenerateArticles(int count)
+        public static IEnumerable<ArticleDTO> GenerateArticles(int count, bool sourceHasScraper = false)
         {
             var articleSourceGenerator = ArticleSourceDTO();
+            if (sourceHasScraper)
+            {
+                articleSourceGenerator.RuleFor(x => x.ScraperType, ArticleScraperType.Default);
+            }
+
             var articleGenerator = ArticleDTO().RuleFor(x => x.Source, articleSourceGenerator);
 
             for (int i = 0; i < count; i++)
             {
                 yield return articleGenerator.Generate();
+            }
+        }
+
+        public static IEnumerable<ArticleDetailDTO> GenerateArticleDetails(int count)
+        {
+            var articleDetailGenerator = ArticleDetailDTO();
+
+            for (int i = 0; i < count; i++)
+            {
+                yield return articleDetailGenerator.Generate();
             }
         }
 
@@ -80,7 +97,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
                 .RuleFor(x => x.UpvoteCount, faker => faker.Random.Long(0, 1000));
         }
 
-        public static Faker<ArticleDTO> ArticleDTO()
+        public static Faker<ArticleDTO> ArticleDTO(int detailCount = 0)
         {
             return new Faker<ArticleDTO>()
                 .UseSeed(Seed)
@@ -89,7 +106,8 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
                 .RuleFor(x => x.Published, faker => faker.Date.Between(new DateTime(2020, 10, 1), new DateTime(2022, 10, 1)))
                 .RuleFor(x => x.UrlId, y => Guid.NewGuid().ToString())
                 .RuleFor(x => x.CurrentTitle, faker => faker.Lorem.Sentences(2, ""))
-                .RuleFor(x => x.Link, y => Guid.NewGuid().ToString());
+                .RuleFor(x => x.Link, y => Guid.NewGuid().ToString())
+                .RuleFor(x => x.Details, y => ObjectDataDTO().GenerateBetween(detailCount, detailCount));
         }
 
         public static Faker<ArticleSourceDTO> ArticleSourceDTO()
@@ -100,6 +118,28 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
                 .RuleFor(x => x.Name, faker => faker.Lorem.Word())
                 .RuleFor(x => x.RssUrl, y => Guid.NewGuid().ToString())
                 .RuleFor(x => x.UrlIdSource, y => ArticleUrlIdSource.Id);
+        }
+
+        public static Faker<ObjectDataDTO> ObjectDataDTO()
+        {
+            return new Faker<ObjectDataDTO>()
+                .UseSeed(Seed)
+                .RuleFor(x => x.Id, y => default)
+                .RuleFor(x => x.Bucket, y => "bucket")
+                .RuleFor(x => x.Key, faker => $"{faker.Lorem.Word()}.json")
+                .RuleFor(x => x.ContentType, y => "application/json")
+                .RuleFor(x => x.Created, faker => faker.Date.Between(new DateTime(2020, 10, 1), new DateTime(2022, 10, 1)));
+        }
+
+        public static Faker<ArticleDetailDTO> ArticleDetailDTO()
+        {
+            return new Faker<ArticleDetailDTO>()
+                .UseSeed(Seed)
+                .RuleFor(x => x.IsPaywalled, faker => faker.Random.Bool())
+                .RuleFor(x => x.Title, faker => faker.Lorem.Sentence())
+                .RuleFor(x => x.Author, faker => faker.Name.FullName())
+                .RuleFor(x => x.Paragraphs, faker => faker.Make(5, y => faker.Lorem.Sentences(5)))
+                .RuleFor(x => x.Tags, faker => faker.Make(4, y => faker.Lorem.Word()));
         }
     }
 }
