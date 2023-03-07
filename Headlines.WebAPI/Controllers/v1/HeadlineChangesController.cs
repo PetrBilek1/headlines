@@ -33,7 +33,7 @@ namespace Headlines.WebAPI.Controllers.V1
             _dateTimeProvider = dateTimeProvider;
         }
 
-        [HttpGet("GetCount")]
+        [HttpGet("Count")]
         public async Task<IActionResult> GetCount()
         {
             long count = await _headlineChangeFacade.GetHeadlineChangeCountAsync();
@@ -41,7 +41,8 @@ namespace Headlines.WebAPI.Controllers.V1
             return Ok(count);
         }
 
-        [HttpGet("GetTopUpvoted")]
+        [HttpGet("TopUpvoted")]
+        [HttpGet("TopUpvoted/Take/{take}")]
         public async Task<IActionResult> GetTopUpvoted(CancellationToken cancellationToken, int take = DefaultTake)
         {
             take = Math.Min(take, MaxTake);
@@ -54,7 +55,7 @@ namespace Headlines.WebAPI.Controllers.V1
             });
         }
 
-        [HttpGet("GetSkipTake")]
+        [HttpGet("Skip/{skip}/Take/{take}")]
         public async Task<IActionResult> GetSkipTake(int? skip, int? take, CancellationToken cancellationToken)
         {
             if (!skip.HasValue || !take.HasValue)
@@ -70,26 +71,7 @@ namespace Headlines.WebAPI.Controllers.V1
             });
         }
 
-        [HttpGet("GetByArticleIdSkipTake")]
-        public async Task<IActionResult> GetByArticleIdSkipTake(long? articleId, int? skip, int? take, CancellationToken cancellationToken)
-        {
-            if (!articleId.HasValue)
-                return BadRequest(Messages.M0003);
-
-            if (!skip.HasValue || !take.HasValue)
-                return BadRequest(Messages.M0001);
-
-            take = Math.Min(take.Value, MaxTake);
-
-            List<HeadlineChangeDTO> headlineChanges = await _headlineChangeFacade.GetHeadlineChangesByArticleIdOrderByDetectedDescendingAsync(articleId.Value, skip.Value, take.Value, cancellationToken);
-            long count = await _headlineChangeFacade.GetHeadlineChangeCountAsync(articleId);
-
-            return Ok(new GetByArticleIdSkipTakeResponse
-            {
-                HeadlineChanges = headlineChanges.Select(_mapper.MapHeadlineChange).ToList(),
-                TotalCount = count
-            });
-        }
+        
 
         [HttpPost("Upvote")]
         public async Task<IActionResult> Upvote([FromBody] UpvoteRequest request, CancellationToken cancellationToken)

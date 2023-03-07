@@ -41,7 +41,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         public void Articles_GetSkipTakeRequest()
         {
             //Assert
-            TestExtensions.AssertProperties<GetSkipTakeRequest>(new()
+            TestExtensions.AssertProperties<SearchRequest>(new()
             {
                 ("Skip", typeof(int?), new string[] { _jsonPropertyAttribute }),
                 ("Take", typeof(int?), new string[] { _jsonPropertyAttribute }),

@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Headlines.DTO.Entities;
-using Headlines.WebAPI.Contracts.V1.Responses.HeadlineChanges;
+using Headlines.WebAPI.Contracts.V1.Responses.Articles;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
 using System.Net;
 using Xunit;

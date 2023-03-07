@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Headlines.WebAPI.Contracts;
 using Headlines.WebAPI.Contracts.V1.Models;
+using Headlines.WebAPI.Contracts.V1.Responses.Articles;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
 using Xunit;
 
@@ -49,7 +50,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         public void Articles_GetSkipTakeResponse()
         {
             //Assert
-            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.Articles.GetSkipTakeResponse>(new()
+            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.Articles.SearchResponse>(new()
             {
                 ("Articles", typeof(List<ArticleModel>), new string[] { _jsonPropertyAttribute }),
                 ("MatchesFiltersCount", typeof(long), new string[] { _jsonPropertyAttribute })
@@ -110,7 +111,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         public void HeadlineChanges_GetByArticleIdSkipTakeResponse()
         {
             //Assert
-            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.HeadlineChanges.GetByArticleIdSkipTakeResponse>(new()
+            TestExtensions.AssertProperties<GetByArticleIdSkipTakeResponse>(new()
             {
                 ("HeadlineChanges", typeof(List<HeadlineChangeModel>), new string[] { _jsonPropertyAttribute }),
                 ("TotalCount", typeof(long), new string[] { _jsonPropertyAttribute })

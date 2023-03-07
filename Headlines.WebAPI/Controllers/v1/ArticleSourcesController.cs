@@ -20,7 +20,7 @@ namespace Headlines.WebAPI.Controllers.v1
             _articleSourceFacade = articleSourceFacade;
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             List<ArticleSourceDTO> sources = await _articleSourceFacade.GetAllArticleSourcesAsync(cancellationToken);

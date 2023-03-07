@@ -1,9 +1,9 @@
 ﻿using Headlines.WebAPI.Contracts.V1.Models;
 using Newtonsoft.Json;
 
-namespace Headlines.WebAPI.Contracts.V1.Responses.HeadlineChanges
+namespace Headlines.WebAPI.Contracts.V1.Responses.Articles
 {
-    public sealed class GetByArticleIdSkipTakeResponse
+    public sealed class GetHeadlineChangesByArticleIdResponse
     {
         [JsonProperty("headlineChanges")]
         public List<HeadlineChangeModel> HeadlineChanges { get; set; }

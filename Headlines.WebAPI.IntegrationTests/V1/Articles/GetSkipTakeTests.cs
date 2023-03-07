@@ -36,14 +36,14 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             await populator.InsertArticlesAsync(DataGenerator.GenerateArticles(count));
 
             //Act
-            var response = await _client.PostAsJsonAsync("/v1/Articles/GetSkipTake", new GetSkipTakeRequest()
+            var response = await _client.PostAsJsonAsync("/v1/Articles/GetSkipTake", new SearchRequest()
             {
                 Skip = skip,
                 Take = take,
                 SearchPrompt = null,
                 ArticleSources = null
             });
-            var content = await response.Content.ReadAsAsync<GetSkipTakeResponse>();
+            var content = await response.Content.ReadAsAsync<SearchResponse>();
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -93,14 +93,14 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             Thread.Sleep(7500);
 
             //Act
-            var response = await _client.PostAsJsonAsync("/v1/Articles/GetSkipTake", new GetSkipTakeRequest()
+            var response = await _client.PostAsJsonAsync("/v1/Articles/GetSkipTake", new SearchRequest()
             {
                 Skip = skip,
                 Take = take,
                 SearchPrompt = prompt,
                 ArticleSources = null
             });
-            var content = await response.Content.ReadAsAsync<GetSkipTakeResponse>();
+            var content = await response.Content.ReadAsAsync<SearchResponse>();
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -137,14 +137,14 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             var articlesMatchingFilter = data.Where(x => articleSourcesFilter.Contains(x.SourceId)).OrderByDescending(x => x.Published).ToList();
 
             //Act
-            var response = await _client.PostAsJsonAsync("/v1/Articles/GetSkipTake", new GetSkipTakeRequest()
+            var response = await _client.PostAsJsonAsync("/v1/Articles/GetSkipTake", new SearchRequest()
             {
                 Skip = skip,
                 Take = take,
                 SearchPrompt = null,
                 ArticleSources = articleSourcesFilter
             });
-            var content = await response.Content.ReadAsAsync<GetSkipTakeResponse>();
+            var content = await response.Content.ReadAsAsync<SearchResponse>();
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -168,14 +168,14 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
         public async Task GetSkipTake_WhenNoArticleSourcesInFilter_ShouldReturnEmptyResponse()
         {
             //Act
-            var response = await _client.PostAsJsonAsync("/v1/Articles/GetSkipTake", new GetSkipTakeRequest()
+            var response = await _client.PostAsJsonAsync("/v1/Articles/GetSkipTake", new SearchRequest()
             {
                 Skip = 0,
                 Take = 10,
                 SearchPrompt = null,
                 ArticleSources = new long[] {}
             });
-            var content = await response.Content.ReadAsAsync<GetSkipTakeResponse>();
+            var content = await response.Content.ReadAsAsync<SearchResponse>();
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -195,19 +195,19 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             var headlineChange = (await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(1))).First();
 
             //Act
-            var response = await _client.PostAsJsonAsync("/v1/Articles/GetSkipTake", new GetSkipTakeRequest()
+            var response = await _client.PostAsJsonAsync("/v1/Articles/GetSkipTake", new SearchRequest()
             {
                 Skip = 0,
                 Take = 10,
                 SearchPrompt = null,
                 ArticleSources = null
             });
-            var content = await response.Content.ReadAsAsync<GetSkipTakeResponse>();
+            var content = await response.Content.ReadAsAsync<SearchResponse>();
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Should().NotBeNull();
-            content.Should().BeOfType<GetSkipTakeResponse>();
+            content.Should().BeOfType<SearchResponse>();
         }
 
         private void AssertArticle(ArticleModel actual, ArticleDTO expected)
