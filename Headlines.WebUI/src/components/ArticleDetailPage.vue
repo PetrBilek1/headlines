@@ -122,7 +122,7 @@ export default {
             this.articleDetail = response.data.detail
         },
         async fetchHeadlineChangePage(page) {
-            const response = await axios.get(endpoints.HeadlineChanges.GetByArticleIdSkipTake(this.$route.params.id, page * this.headlineChangesPerPage, this.headlineChangesPerPage))
+            const response = await axios.get(endpoints.Articles.GetHeadlineChangesByArticleId(this.$route.params.id, page * this.headlineChangesPerPage, this.headlineChangesPerPage))
 
             response.data.headlineChanges.forEach(x => x.article = this.article)
 
