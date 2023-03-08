@@ -21,22 +21,10 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
         }
 
         [Fact]
-        public async Task GetById_WhenArticleIdNotSet_ShouldReturnBadRequest()
-        {
-            //Act
-            var response = await _client.GetAsync($"/v1/Articles/GetById");
-            var content = await response.Content.ReadAsStringAsync();
-
-            //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            content.Should().Be(Messages.M0003);
-        }
-
-        [Fact]
         public async Task GetById_WhenArticleDoesNotExist_ShouldReturnNotFound()
         {
             //Act
-            var response = await _client.GetAsync($"/v1/Articles/GetById?id=999");
+            var response = await _client.GetAsync($"/v1/Articles/999999999");
             var content = await response.Content.ReadAsStringAsync();
 
             //Assert
@@ -51,7 +39,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             var data = await populator.InsertArticlesAsync(DataGenerator.GenerateArticles(2));
 
             //Act
-            var response = await _client.GetAsync($"/v1/Articles/GetById?id={data.First().Id}");
+            var response = await _client.GetAsync($"/v1/Articles/{data.First().Id}");
             var content = await response.Content.ReadAsAsync<GetByIdResponse>();
 
             //Assert
@@ -68,7 +56,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             var data = await populator.InsertArticlesAsync(DataGenerator.GenerateArticles(1));
 
             //Act
-            var response = await _client.GetAsync($"/v1/Articles/GetById?id={data.First().Id}");
+            var response = await _client.GetAsync($"/v1/Articles/{data.First().Id}");
             var content = await response.Content.ReadAsAsync<GetByIdResponse>();
 
             //Assert

@@ -84,7 +84,7 @@ export default {
             this.setAllSourcesSelected()
         },
         async fetchArticlePage(page) {
-            var response = await axios.post(endpoints.Articles.GetSkipTake(), {
+            var response = await axios.post(endpoints.Articles.Search(), {
                     skip: page * this.articlesPerPage,
                     take: this.articlesPerPage,
                     searchPrompt: this.searchPrompt,

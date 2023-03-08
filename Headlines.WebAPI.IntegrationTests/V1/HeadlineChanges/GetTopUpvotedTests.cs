@@ -33,7 +33,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(count));
 
             //Act
-            var response = await _client.GetAsync($"/v1/HeadlineChanges/GetTopUpvoted?take={take}");
+            var response = await _client.GetAsync($"/v1/HeadlineChanges/TopUpvoted/Take/{take}");
             var content = await response.Content.ReadAsAsync<GetTopUpvotedResponse>();
 
             //Assert
@@ -51,7 +51,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(HeadlineChangesController.MaxTake));
 
             //Act
-            var response = await _client.GetAsync($"/v1/HeadlineChanges/GetTopUpvoted?take={HeadlineChangesController.MaxTake}");
+            var response = await _client.GetAsync($"/v1/HeadlineChanges/TopUpvoted/Take/{HeadlineChangesController.MaxTake}");
             var content = await response.Content.ReadAsAsync<GetTopUpvotedResponse>();
 
             //Assert
@@ -69,7 +69,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(HeadlineChangesController.MaxTake));
 
             //Act
-            var response = await _client.GetAsync("/v1/HeadlineChanges/GetTopUpvoted");
+            var response = await _client.GetAsync("/v1/HeadlineChanges/TopUpvoted");
             var content = await response.Content.ReadAsAsync<GetTopUpvotedResponse>();
 
             //Assert
@@ -87,7 +87,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
             var data = await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(HeadlineChangesController.DefaultTake));
 
             //Act
-            var response = await _client.GetAsync("/v1/HeadlineChanges/GetTopUpvoted");
+            var response = await _client.GetAsync("/v1/HeadlineChanges/TopUpvoted");
             var content = await response.Content.ReadAsAsync<GetTopUpvotedResponse>();
 
             //Assert
@@ -125,7 +125,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(HeadlineChangesController.DefaultTake));
 
             //Act
-            var response = await _client.GetAsync("/v1/HeadlineChanges/GetTopUpvoted");
+            var response = await _client.GetAsync("/v1/HeadlineChanges/TopUpvoted");
             var content = await response.Content.ReadAsAsync<GetTopUpvotedResponse>();
 
             //Assert

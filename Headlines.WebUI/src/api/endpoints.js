@@ -20,17 +20,14 @@ export default {
     HeadlineChanges: {
         GetTopUpvoted(take) {
             return take
-                ? getApiAddress() + "/v1/HeadlineChanges/GetTopUpvoted?take=" + take
-                : getApiAddress() + "/v1/HeadlineChanges/GetTopUpvoted"
+                ? getApiAddress() + "/v1/HeadlineChanges/TopUpvoted/Take/" + take
+                : getApiAddress() + "/v1/HeadlineChanges/TopUpvoted"
         },
         GetSkipTake(skip, take) {
-            return getApiAddress() + "/v1/HeadlineChanges/GetSkipTake?skip=" + skip + "&take=" + take
+            return getApiAddress() + "/v1/HeadlineChanges/Skip/" + skip + "/Take/" + take
         },
         GetCount() {
-            return getApiAddress() + "/v1/HeadlineChanges/GetCount"
-        },
-        GetByArticleIdSkipTake(articleId, skip, take) {
-            return getApiAddress() + "/v1/HeadlineChanges/GetByArticleIdSkipTake?articleId=" + articleId + "&skip=" + skip + "&take=" + take
+            return getApiAddress() + "/v1/HeadlineChanges/Count"
         },
         Upvote() {
             return getApiAddress() + "/v1/HeadlineChanges/Upvote"
@@ -38,26 +35,29 @@ export default {
     },
     UserUpvotes: {
         Get(userToken) {
-            return getApiAddress() + "/v1/UserUpvotes/Get?userToken=" + userToken
+            return getApiAddress() + "/v1/UserUpvotes/" + userToken
         }    
     },
     ArticleSources: {
         GetAll() {
-            return getApiAddress() + "/v1/ArticleSources/GetAll"
+            return getApiAddress() + "/v1/ArticleSources"
         }
     },
     Articles: {
         GetById(id) {
-            return getApiAddress() + "/v1/Articles/GetById?id=" + id
+            return getApiAddress() + "/v1/Articles/" + id
         },
         GetDetailById(id) {
-            return getApiAddress() + "/v1/Articles/GetDetailById?id=" + id
+            return getApiAddress() + "/v1/Articles/" + id + "/Detail"
         },
-        GetSkipTake() {
-            return getApiAddress() + "/v1/Articles/GetSkipTake"
+        Search() {
+            return getApiAddress() + "/v1/Articles/Search"
         },
         RequestDetailScrape() {
             return getApiAddress() + "/v1/Articles/RequestDetailScrape"
+        },
+        GetHeadlineChangesByArticleId(articleId, skip, take) {
+            return getApiAddress() + "/v1/Articles/" + articleId + "/HeadlineChanges/Skip/" + skip + "/Take/" + take
         }
     },
     WebSocketServer: {

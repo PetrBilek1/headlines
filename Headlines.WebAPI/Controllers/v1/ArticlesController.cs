@@ -19,27 +19,26 @@ namespace Headlines.WebAPI.Controllers.v1
     {
         private readonly MapperV1 _mapper;
         private readonly IArticleFacade _articleFacade;
+        private readonly IHeadlineChangeFacade _headlineChangeFacade;
         private readonly IObjectStorageWrapper _objectStorage;
         private readonly IEventBus _eventBus;
 
         public const int MaxTake = 50;
         public const int DefaultTake = 10;
 
-        public ArticlesController(IArticleFacade articleFacade, IObjectStorageWrapper objectStorage, IEventBus eventBus)
+        public ArticlesController(IArticleFacade articleFacade, IHeadlineChangeFacade headlineChangeFacade, IObjectStorageWrapper objectStorage, IEventBus eventBus)
         {
             _mapper = new MapperV1();
             _articleFacade = articleFacade;
+            _headlineChangeFacade = headlineChangeFacade;
             _objectStorage = objectStorage;
             _eventBus = eventBus;
         }
 
-        [HttpGet("GetById")]
-        public async Task<IActionResult> GetById(long? id, CancellationToken cancellationToken)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(long id, CancellationToken cancellationToken)
         {
-            if (!id.HasValue)
-                return BadRequest(Messages.M0003);
-
-            ArticleDTO article = await _articleFacade.GetArticleByIdIncludeSourceAsync(id.Value, cancellationToken);
+            ArticleDTO article = await _articleFacade.GetArticleByIdIncludeSourceAsync(id, cancellationToken);
             if (article == null)
                 return NotFound();
 
@@ -49,13 +48,10 @@ namespace Headlines.WebAPI.Controllers.v1
             });
         }
 
-        [HttpGet("GetDetailById")]
-        public async Task<IActionResult> GetDetailById(long? id, CancellationToken cancellationToken)
+        [HttpGet("{id}/Detail")]
+        public async Task<IActionResult> GetDetailById(long id, CancellationToken cancellationToken)
         {
-            if (!id.HasValue)
-                return BadRequest(Messages.M0003);
-
-            ArticleDTO article = await _articleFacade.GetArticleByIdIncludeDetailsAsync(id.Value, cancellationToken);
+            ArticleDTO article = await _articleFacade.GetArticleByIdIncludeDetailsAsync(id, cancellationToken);
             if (article == null)
                 return NotFound();
 
@@ -74,8 +70,8 @@ namespace Headlines.WebAPI.Controllers.v1
             });
         }
 
-        [HttpPost("GetSkipTake")]
-        public async Task<IActionResult> GetSkipTake([FromBody] GetSkipTakeRequest request, CancellationToken cancellationToken)
+        [HttpPost("Search")]
+        public async Task<IActionResult> Search([FromBody] SearchRequest request, CancellationToken cancellationToken)
         {
             request.Skip ??= 0;
             request.Take ??= DefaultTake;
@@ -83,7 +79,7 @@ namespace Headlines.WebAPI.Controllers.v1
 
             if (request.ArticleSources != null && !request.ArticleSources.Any())
             {
-                return Ok(new GetSkipTakeResponse
+                return Ok(new SearchResponse
                 {
                     Articles = new(),
                     MatchesFiltersCount = 0
@@ -93,7 +89,7 @@ namespace Headlines.WebAPI.Controllers.v1
             List<ArticleDTO> articles = await _articleFacade.GetArticlesByFiltersSkipTakeAsync(request.Skip.Value, request.Take.Value, request.SearchPrompt, request.ArticleSources, null, null, cancellationToken);
             long count = await _articleFacade.GetArticlesCountByFiltersAsync(request.SearchPrompt, request.ArticleSources, null, null, cancellationToken);
 
-            return Ok(new GetSkipTakeResponse
+            return Ok(new SearchResponse
             {
                 Articles = articles.Select(_mapper.MapArticle).ToList(),
                 MatchesFiltersCount = count
@@ -116,6 +112,21 @@ namespace Headlines.WebAPI.Controllers.v1
             cancellationToken);
 
             return Ok();
+        }
+
+        [HttpGet("{id}/HeadlineChanges/Skip/{skip}/Take/{take}")]
+        public async Task<IActionResult> GetHeadlineChangesByArticleId(long id, int skip, int take, CancellationToken cancellationToken)
+        {
+            take = Math.Min(take, MaxTake);
+
+            List<HeadlineChangeDTO> headlineChanges = await _headlineChangeFacade.GetHeadlineChangesByArticleIdOrderByDetectedDescendingAsync(id, skip, take, cancellationToken);
+            long count = await _headlineChangeFacade.GetHeadlineChangeCountAsync(id);
+
+            return Ok(new GetHeadlineChangesByArticleIdResponse
+            {
+                HeadlineChanges = headlineChanges.Select(_mapper.MapHeadlineChange).ToList(),
+                TotalCount = count
+            });
         }
     }
 }

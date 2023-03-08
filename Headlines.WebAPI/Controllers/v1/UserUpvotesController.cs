@@ -20,10 +20,10 @@ namespace Headlines.WebAPI.Controllers.V1
             _userUpvotesFacade = userUpvotesFacade;
         }
 
-        [HttpGet("Get")]
+        [HttpGet("{userToken}")]
         public async Task<IActionResult> Get(string userToken, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(userToken))
+            if (string.IsNullOrWhiteSpace(userToken))
                 return BadRequest(Messages.M0002);
 
             UserUpvotesDTO userUpvotes = await _userUpvotesFacade.GetUserUpvotesByUserTokenAsync(userToken, cancellationToken);

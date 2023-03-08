@@ -27,7 +27,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(count));
 
             //Act
-            var response = await _client.GetAsync("/v1/HeadlineChanges/GetCount");
+            var response = await _client.GetAsync("/v1/HeadlineChanges/Count");
             var content = await response.Content.ReadAsAsync<long>();
 
             //Assert

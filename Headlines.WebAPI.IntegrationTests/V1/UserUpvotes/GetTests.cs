@@ -44,7 +44,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.UserUpvotes
             });
 
             //Act
-            var response = await _client.GetAsync($"/v1/UserUpvotes/Get?userToken={userToken}");
+            var response = await _client.GetAsync($"/v1/UserUpvotes/{userToken}");
             var content = await response.Content.ReadAsAsync<GetResponse>();
 
             //Assert
@@ -62,7 +62,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.UserUpvotes
             var userToken = Guid.NewGuid().ToString();
 
             //Act
-            var response = await _client.GetAsync($"/v1/UserUpvotes/Get?userToken={userToken}");
+            var response = await _client.GetAsync($"/v1/UserUpvotes/{userToken}");
             var content = await response.Content.ReadAsAsync<GetResponse>();
 
             //Assert
@@ -75,16 +75,6 @@ namespace Headlines.WebAPI.Tests.Integration.V1.UserUpvotes
             dbUpvotes.Should().NotBeNull();
             dbUpvotes.Should().HaveCount(1);
             dbUpvotes.First().UserToken.Should().Be(userToken);
-        }
-
-        [Fact]
-        public async Task Get_WhenUserTokenNotSpecified_ShouldReturnBadRequest()
-        {
-            //Act
-            var response = await _client.GetAsync($"/v1/UserUpvotes/Get?userToken=");
-
-            //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -113,7 +103,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.UserUpvotes
             });
 
             //Act
-            var response = await _client.GetAsync($"/v1/UserUpvotes/Get?userToken={userToken}");
+            var response = await _client.GetAsync($"/v1/UserUpvotes/{userToken}");
             var content = await response.Content.ReadAsAsync<UpvoteResponse>();
 
             //Assert
@@ -150,7 +140,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.UserUpvotes
             });
 
             //Act
-            var response = await _client.GetAsync($"/v1/UserUpvotes/Get?userToken={userToken}");
+            var response = await _client.GetAsync($"/v1/UserUpvotes/{userToken}");
             var content = await response.Content.ReadAsAsync<GetResponse>();
 
             //Assert
