@@ -12,6 +12,7 @@
  - **Entity Framework Core**
  - **Microsoft SQL**
  - **RabbitMQ** + MassTransit
+ - **Redis**
 
 **Testing:**
  - [XUnit](https://github.com/xunit/xunit)
