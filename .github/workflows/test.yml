@@ -10,7 +10,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: "☁️ checkout repository"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         
       - name: "🔧 setup dotnet"
         uses: actions/setup-dotnet@v3
@@ -32,7 +32,7 @@ jobs:
     needs: unit-test
     steps:
       - name: "☁️ checkout repository"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         
       - name: "🔧 setup dotnet"
         uses: actions/setup-dotnet@v3
