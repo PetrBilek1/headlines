@@ -103,7 +103,13 @@ string GetConnectionString(string template)
     return template;
 }
 
-string GetRedisConnectionString(string template) => template.Replace("{REDIS_HOST}", Environment.GetEnvironmentVariable("REDIS_HOST"));
+string GetRedisConnectionString(string template)
+{
+    template = template.Replace("{REDIS_HOST}", Environment.GetEnvironmentVariable("REDIS_HOST"));
+    template = template.Replace("{REDIS_PASSWORD}", Environment.GetEnvironmentVariable("REDIS_PASSWORD"));
+
+    return template;
+}
 
 MessageBrokerSettings GetMessageBrokerSettings()
 {
