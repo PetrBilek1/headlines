@@ -36,12 +36,9 @@ namespace Headlines.WebAPI.Controllers.v1
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(long? id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetById(long id, CancellationToken cancellationToken)
         {
-            if (!id.HasValue)
-                return BadRequest(Messages.M0003);
-
-            ArticleDTO article = await _articleFacade.GetArticleByIdIncludeSourceAsync(id.Value, cancellationToken);
+            ArticleDTO article = await _articleFacade.GetArticleByIdIncludeSourceAsync(id, cancellationToken);
             if (article == null)
                 return NotFound();
 
@@ -52,12 +49,9 @@ namespace Headlines.WebAPI.Controllers.v1
         }
 
         [HttpGet("{id}/Detail")]
-        public async Task<IActionResult> GetDetailById(long? id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetDetailById(long id, CancellationToken cancellationToken)
         {
-            if (!id.HasValue)
-                return BadRequest(Messages.M0003);
-
-            ArticleDTO article = await _articleFacade.GetArticleByIdIncludeDetailsAsync(id.Value, cancellationToken);
+            ArticleDTO article = await _articleFacade.GetArticleByIdIncludeDetailsAsync(id, cancellationToken);
             if (article == null)
                 return NotFound();
 
@@ -121,17 +115,11 @@ namespace Headlines.WebAPI.Controllers.v1
         }
 
         [HttpGet("{id}/HeadlineChanges/Skip/{skip}/Take/{take}")]
-        public async Task<IActionResult> GetHeadlineChangesByArticleId(long? id, int? skip, int? take, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetHeadlineChangesByArticleId(long id, int skip, int take, CancellationToken cancellationToken)
         {
-            if (!id.HasValue)
-                return BadRequest(Messages.M0003);
+            take = Math.Min(take, MaxTake);
 
-            if (!skip.HasValue || !take.HasValue)
-                return BadRequest(Messages.M0001);
-
-            take = Math.Min(take.Value, MaxTake);
-
-            List<HeadlineChangeDTO> headlineChanges = await _headlineChangeFacade.GetHeadlineChangesByArticleIdOrderByDetectedDescendingAsync(id.Value, skip.Value, take.Value, cancellationToken);
+            List<HeadlineChangeDTO> headlineChanges = await _headlineChangeFacade.GetHeadlineChangesByArticleIdOrderByDetectedDescendingAsync(id, skip, take, cancellationToken);
             long count = await _headlineChangeFacade.GetHeadlineChangeCountAsync(id);
 
             return Ok(new GetHeadlineChangesByArticleIdResponse

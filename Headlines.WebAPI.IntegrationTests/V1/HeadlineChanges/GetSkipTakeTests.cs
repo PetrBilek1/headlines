@@ -34,7 +34,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(count));
 
             //Act
-            var response = await _client.GetAsync($"/v1/HeadlineChanges/GetSkipTake?skip=0&take={take}");
+            var response = await _client.GetAsync($"/v1/HeadlineChanges/Skip/{0}/Take/{take}");
             var content = await response.Content.ReadAsAsync<GetSkipTakeResponse>();
 
             //Assert
@@ -57,7 +57,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(count));
 
             //Act
-            var response = await _client.GetAsync($"/v1/HeadlineChanges/GetSkipTake?skip={skip}&take={take}");
+            var response = await _client.GetAsync($"/v1/HeadlineChanges/Skip/{skip}/Take/{take}");
             var content = await response.Content.ReadAsAsync<GetSkipTakeResponse>();
 
             //Assert
@@ -75,7 +75,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(100));
 
             //Act
-            var response = await _client.GetAsync($"/v1/HeadlineChanges/GetSkipTake?skip=0&take={HeadlineChangesController.MaxTake}");
+            var response = await _client.GetAsync($"/v1/HeadlineChanges/Skip/0/Take/{HeadlineChangesController.MaxTake}");
             var content = await response.Content.ReadAsAsync<GetSkipTakeResponse>();
 
             //Assert
@@ -86,22 +86,6 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
         }
 
         [Fact]
-        public async Task GetSkipTake_WhenSkipTakeNotSpecified_ShouldReturnException()
-        {
-            //Arrange
-            await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
-            await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(100));
-
-            //Act
-            var response = await _client.GetAsync($"/v1/HeadlineChanges/GetSkipTake");
-            var content = await response.Content.ReadAsStringAsync();
-
-            //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            content.Should().Be(Messages.M0001);
-        }
-
-        [Fact]
         public async Task GetSkipTake_Simple_ShouldReturnCorrectMapping()
         {
             //Arrange
@@ -109,7 +93,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
             var data = await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(HeadlineChangesController.DefaultTake));
 
             //Act
-            var response = await _client.GetAsync($"/v1/HeadlineChanges/GetSkipTake?skip=0&take={HeadlineChangesController.DefaultTake}");
+            var response = await _client.GetAsync($"/v1/HeadlineChanges/Skip/0/Take/{HeadlineChangesController.DefaultTake}");
             var content = await response.Content.ReadAsAsync<GetTopUpvotedResponse>();
 
             //Assert
@@ -147,7 +131,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
             await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(HeadlineChangesController.DefaultTake));
 
             //Act
-            var response = await _client.GetAsync($"/v1/HeadlineChanges/GetSkipTake?skip=0&take={HeadlineChangesController.DefaultTake}");
+            var response = await _client.GetAsync($"/v1/HeadlineChanges/Skip/0/Take/{HeadlineChangesController.DefaultTake}");
             var content = await response.Content.ReadAsAsync<GetSkipTakeResponse>();
 
             //Assert

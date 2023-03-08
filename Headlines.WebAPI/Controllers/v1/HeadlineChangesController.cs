@@ -56,14 +56,11 @@ namespace Headlines.WebAPI.Controllers.V1
         }
 
         [HttpGet("Skip/{skip}/Take/{take}")]
-        public async Task<IActionResult> GetSkipTake(int? skip, int? take, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetSkipTake(int skip, int take, CancellationToken cancellationToken)
         {
-            if (!skip.HasValue || !take.HasValue)
-                return BadRequest(Messages.M0001);
+            take = Math.Min(take, MaxTake);
 
-            take = Math.Min(take.Value, MaxTake);
-
-            List<HeadlineChangeDTO> headlineChanges = await _headlineChangeFacade.GetHeadlineChangesOrderByDetectedDescendingIncludeArticleAsync(skip.Value, take.Value, cancellationToken);
+            List<HeadlineChangeDTO> headlineChanges = await _headlineChangeFacade.GetHeadlineChangesOrderByDetectedDescendingIncludeArticleAsync(skip, take, cancellationToken);
 
             return Ok(new GetSkipTakeResponse
             {

@@ -38,7 +38,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         }
 
         [Fact]
-        public void Articles_GetSkipTakeRequest()
+        public void Articles_SearchRequest()
         {
             //Assert
             TestExtensions.AssertProperties<SearchRequest>(new()

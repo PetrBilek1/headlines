@@ -25,7 +25,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.ArticleSources
             await populator.InsertArticleSourcesAsync(DataGenerator.GenerateArticleSources(10));
 
             //Act
-            var response = await _client.GetAsync($"/v1/ArticleSources/GetAll");
+            var response = await _client.GetAsync($"/v1/ArticleSources");
             var content = await response.Content.ReadAsAsync<GetAllResponse>();
 
             //Assert
@@ -43,7 +43,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.ArticleSources
             var data = await populator.InsertArticleSourcesAsync(DataGenerator.GenerateArticleSources(10));
 
             //Act
-            var response = await _client.GetAsync($"/v1/ArticleSources/GetAll");
+            var response = await _client.GetAsync($"/v1/ArticleSources");
             var content = await response.Content.ReadAsAsync<GetAllResponse>();
 
             //Assert
@@ -68,7 +68,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.ArticleSources
             var data = await populator.InsertArticleSourcesAsync(DataGenerator.GenerateArticleSources(10));
 
             //Act
-            var response = await _client.GetAsync($"/v1/ArticleSources/GetAll");
+            var response = await _client.GetAsync($"/v1/ArticleSources");
             var content = await response.Content.ReadAsAsync<GetAllResponse>();
 
             //Assert

@@ -25,22 +25,10 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
         }
 
         [Fact]
-        public async Task GetDetailById_WhenArticleIdNotSet_ShouldReturnBadRequest()
-        {
-            //Act
-            var response = await _client.GetAsync($"/v1/Articles/GetDetailById");
-            var content = await response.Content.ReadAsStringAsync();
-
-            //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            content.Should().Be(Messages.M0003);
-        }
-
-        [Fact]
         public async Task GetDetailById_WhenArticleDoesNotExist_ShouldReturnNotFound()
         {
             //Act
-            var response = await _client.GetAsync($"/v1/Articles/GetDetailById?id=1");
+            var response = await _client.GetAsync($"/v1/Articles/1/Detail");
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -54,7 +42,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             var article = await populator.InsertArticlesAsync(DataGenerator.GenerateArticles(1));
 
             //Act
-            var response = await _client.GetAsync($"/v1/Articles/GetDetailById?id={article.First().Id}");
+            var response = await _client.GetAsync($"/v1/Articles/{article.First().Id}/Detail");
             var content = await response.Content.ReadAsAsync<GetDetailByIdResponse>();
 
             //Assert
@@ -90,7 +78,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             var expectedDetail = detailsByKeys[article.Details.OrderByDescending(x => x.Created).First().Key];
 
             //Act
-            var response = await _client.GetAsync($"/v1/Articles/GetDetailById?id={article.Id}");
+            var response = await _client.GetAsync($"/v1/Articles/{article.Id}/Detail");
             var content = await response.Content.ReadAsAsync<GetDetailByIdResponse>();
 
             //Assert
@@ -128,7 +116,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             var data = await populator.InsertArticlesAsync(DataGenerator.GenerateArticles(1));
 
             //Act
-            var response = await _client.GetAsync($"/v1/Articles/GetDetailById?id={data.First().Id}");
+            var response = await _client.GetAsync($"/v1/Articles/{data.First().Id}/Detail");
             var content = await response.Content.ReadAsAsync<GetDetailByIdResponse>();
 
             //Assert

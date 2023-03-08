@@ -47,10 +47,10 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         }
 
         [Fact]
-        public void Articles_GetSkipTakeResponse()
+        public void Articles_SearchResponse()
         {
             //Assert
-            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.Articles.SearchResponse>(new()
+            TestExtensions.AssertProperties<SearchResponse>(new()
             {
                 ("Articles", typeof(List<ArticleModel>), new string[] { _jsonPropertyAttribute }),
                 ("MatchesFiltersCount", typeof(long), new string[] { _jsonPropertyAttribute })
@@ -61,7 +61,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         public void Articles_GetByIdResponse()
         {
             //Assert
-            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.Articles.GetByIdResponse>(new()
+            TestExtensions.AssertProperties<GetByIdResponse>(new()
             {
                 ("Article", typeof(ArticleModel), new string[] { _jsonPropertyAttribute })
             });
@@ -71,9 +71,20 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
         public void Articles_GetDetailByIdResponse()
         {
             //Assert
-            TestExtensions.AssertProperties<WebAPI.Contracts.V1.Responses.Articles.GetDetailByIdResponse>(new()
+            TestExtensions.AssertProperties<GetDetailByIdResponse>(new()
             {
                 ("Detail", typeof(ArticleDetailModel), new string[] { _jsonPropertyAttribute })
+            });
+        }
+
+        [Fact]
+        public void Articles_GetHeadlineChangesByArticleIdResponse()
+        {
+            //Assert
+            TestExtensions.AssertProperties<GetHeadlineChangesByArticleIdResponse>(new()
+            {
+                ("HeadlineChanges", typeof(List<HeadlineChangeModel>), new string[] { _jsonPropertyAttribute }),
+                ("TotalCount", typeof(long), new string[] { _jsonPropertyAttribute })
             });
         }
 
@@ -105,18 +116,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
             {
                 ("Upvotes", typeof(List<UpvoteModel>), new string[] { _jsonPropertyAttribute })
             });
-        }
-
-        [Fact]
-        public void HeadlineChanges_GetByArticleIdSkipTakeResponse()
-        {
-            //Assert
-            TestExtensions.AssertProperties<GetByArticleIdSkipTakeResponse>(new()
-            {
-                ("HeadlineChanges", typeof(List<HeadlineChangeModel>), new string[] { _jsonPropertyAttribute }),
-                ("TotalCount", typeof(long), new string[] { _jsonPropertyAttribute })
-            });
-        }
+        }        
 
         [Fact]
         public void UserUpvotes_GetResponse()
