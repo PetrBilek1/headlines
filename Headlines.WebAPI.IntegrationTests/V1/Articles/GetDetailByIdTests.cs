@@ -3,9 +3,10 @@ using Headlines.BL.Abstractions.ObjectStorageWrapper;
 using Headlines.DTO.Custom;
 using Headlines.DTO.Entities;
 using Headlines.WebAPI.Contracts.V1.Responses.Articles;
-using Headlines.WebAPI.Resources.V1;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using System.Net;
 using Xunit;
 
@@ -15,10 +16,12 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
     {
         private readonly HttpClient _client;
         private readonly IServiceProvider _serviceProvider;
+        private readonly Mock<IDistributedCache> _cacheMock;
 
         public GetDetailByIdTests(WebAPIFactory apiFactory)
         {
             apiFactory.MockObjectStorageWrapper();
+            _cacheMock = apiFactory.MockCache();
 
             _client = apiFactory.CreateClient();
             _serviceProvider = apiFactory.Services;
@@ -56,6 +59,11 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
         public async Task GetDetailById_WhenArticleHasDetails_ShouldReturnLatestCreatedDetail(int articleDetailCount)
         {
             //Arrange
+            _cacheMock.Setup(x => x.GetAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(null as byte[]);
+            _cacheMock.Setup(x => x.SetAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<DistributedCacheEntryOptions>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
             var article = DataGenerator.ArticleDTO(articleDetailCount)
                 .RuleFor(x => x.Source, DataGenerator.ArticleSourceDTO())
                 .Generate();
@@ -88,6 +96,9 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             content.Detail.IsPaywalled.Should().Be(expectedDetail.IsPaywalled);
             content.Detail.Title.Should().Be(expectedDetail.Title);
             content.Detail.Author.Should().Be(expectedDetail.Author);
+
+            _cacheMock.Verify(x => x.GetAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+            _cacheMock.Verify(x => x.SetAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<DistributedCacheEntryOptions>(), It.IsAny<CancellationToken>()), Times.Once);
 
             content.Detail.Paragraphs.Should().HaveCount(expectedDetail.Paragraphs.Count);
             for(int i = 0; i < expectedDetail.Paragraphs.Count; i++)

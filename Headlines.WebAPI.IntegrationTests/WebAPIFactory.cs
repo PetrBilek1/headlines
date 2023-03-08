@@ -12,6 +12,7 @@ using Headlines.WebAPI.DependencyResolution;
 using Headlines.BL.Abstractions.ObjectStorageWrapper;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
 using Headlines.BL.Abstractions.EventBus;
+using Microsoft.Extensions.Caching.Distributed;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 namespace Headlines.WebAPI.Tests.Integration
@@ -21,6 +22,7 @@ namespace Headlines.WebAPI.Tests.Integration
         private Mock<IDateTimeProvider>? _dateTimeProviderMock = null;
         private IObjectStorageWrapper? _objectStorageWrapperMock = null;
         private Mock<IEventBus>? _eventBusMock = null;
+        private Mock<IDistributedCache>? _cacheMock = null;
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {            
@@ -46,6 +48,12 @@ namespace Headlines.WebAPI.Tests.Integration
                 {
                     services.RemoveAll(typeof(IEventBus));
                     services.AddTransient<IEventBus>(c => _eventBusMock.Object);
+                }
+
+                if (_cacheMock != null)
+                {
+                    services.RemoveAll(typeof(IDistributedCache));
+                    services.AddTransient<IDistributedCache>(c => _cacheMock.Object);
                 }
             });
         }
@@ -79,6 +87,13 @@ namespace Headlines.WebAPI.Tests.Integration
             _eventBusMock = new Mock<IEventBus>(MockBehavior.Strict);
 
             return _eventBusMock;
+        }
+
+        public Mock<IDistributedCache> MockCache()
+        {
+            _cacheMock = new Mock<IDistributedCache>(MockBehavior.Strict);
+
+            return _cacheMock;
         }
 
         public async Task InitializeAsync()
