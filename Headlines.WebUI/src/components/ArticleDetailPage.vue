@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import axios from 'axios'
 import moment from 'moment'
 import endpoints from './../api/endpoints.js'
@@ -111,6 +112,7 @@ export default {
         }
     },
     methods: {
+        ...mapActions(['connectWebSocket']),
         async fetchArticleById(articleId) {
             const response = await axios.get(endpoints.Articles.GetById(articleId))
 
@@ -155,6 +157,12 @@ export default {
                 return
 
             window.open(url)
+        },
+        connectWebSocketIfNotAlready() {
+            if (this.webSocket == null || this.webSocket.readyState == WebSocket.CLOSED) {
+                console.log("WebSocket connection re-established.")
+                this.connectWebSocket()
+            }
         }
     },
     created() {
@@ -167,9 +175,10 @@ export default {
 
         if (this.article.source.scrapingSupported != true)
             return
+        
+        this.connectWebSocketIfNotAlready()
 
-        const webSocket = this.webSocket
-        webSocket.onmessage = (event) => { 
+        this.webSocket.onmessage = (event) => { 
             const data = JSON.parse(event.data)
             if (data.messageType === "article-detail-scraped" && data.articleId == this.$route.params.id) {
                 if (data.wasSuccessful == true) {
