@@ -37,6 +37,14 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${MQ_USERNAME}
       RABBITMQ_DEFAULT_PASS: ${MQ_PASSWORD}
+
+  headlines.redis:
+    container_name: headlines.redis
+    image: redis:7.0.4-alpine
+    ports:
+      - 8005:6379
+    networks:
+      - headlines.network.internal
       
   headlines.webapi:
     container_name: headlines.webapi
@@ -45,6 +53,7 @@ services:
       dockerfile: Headlines.WebAPI/Dockerfile 
     depends_on:
       - headlines.db
+      - headlines.redis
       - headlines.mq
     networks:
       - headlines.network.internal
@@ -68,6 +77,8 @@ services:
       - OS_URL=${OS_URL}
       - OS_ACCESS_KEY=${OS_ACCESS_KEY}
       - OS_SECRET_KEY=${OS_SECRET_KEY}
+      #REDIS
+      - REDIS_HOST=${REDIS_HOST}
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

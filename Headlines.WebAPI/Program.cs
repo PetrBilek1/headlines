@@ -53,6 +53,13 @@ builder.Services.AddMappingDependencyGroup();
 builder.Services.AddRateLimiterDependencyGroup();
 builder.Services.AddWebSocketServerDependencyGroup();
 
+string redisConnectionStringTemplate = builder.Configuration.GetConnectionString("Redis") ?? string.Empty;
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = GetRedisConnectionString(redisConnectionStringTemplate);
+    options.InstanceName = "headlines-webapi-";
+});
+
 var app = builder.Build();
 
 var dbContext = app.Services.GetRequiredService<HeadlinesDbContext>();
@@ -95,6 +102,8 @@ string GetConnectionString(string template)
 
     return template;
 }
+
+string GetRedisConnectionString(string template) => template.Replace("{REDIS_HOST}", Environment.GetEnvironmentVariable("REDIS_HOST"));
 
 MessageBrokerSettings GetMessageBrokerSettings()
 {

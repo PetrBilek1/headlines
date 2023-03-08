@@ -7,8 +7,10 @@ using Headlines.DTO.Entities;
 using Headlines.WebAPI.Contracts.V1;
 using Headlines.WebAPI.Contracts.V1.Requests.Articles;
 using Headlines.WebAPI.Contracts.V1.Responses.Articles;
+using Headlines.WebAPI.Extensions;
 using Headlines.WebAPI.Resources.V1;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Headlines.WebAPI.Controllers.v1
 {
@@ -22,17 +24,19 @@ namespace Headlines.WebAPI.Controllers.v1
         private readonly IHeadlineChangeFacade _headlineChangeFacade;
         private readonly IObjectStorageWrapper _objectStorage;
         private readonly IEventBus _eventBus;
+        private readonly IDistributedCache _cache;
 
         public const int MaxTake = 50;
         public const int DefaultTake = 10;
 
-        public ArticlesController(IArticleFacade articleFacade, IHeadlineChangeFacade headlineChangeFacade, IObjectStorageWrapper objectStorage, IEventBus eventBus)
+        public ArticlesController(IArticleFacade articleFacade, IHeadlineChangeFacade headlineChangeFacade, IObjectStorageWrapper objectStorage, IEventBus eventBus, IDistributedCache cache)
         {
             _mapper = new MapperV1();
             _articleFacade = articleFacade;
             _headlineChangeFacade = headlineChangeFacade;
             _objectStorage = objectStorage;
             _eventBus = eventBus;
+            _cache = cache;
         }
 
         [HttpGet("{id}")]
@@ -62,7 +66,12 @@ namespace Headlines.WebAPI.Controllers.v1
                     Detail = null
                 });
 
-            ArticleDetailDTO? detail = await _objectStorage.DownloadObjectAsync<ArticleDetailDTO>(latestDetail.Bucket, latestDetail.Key, cancellationToken);
+            ArticleDetailDTO? detail = await _cache.GetRecordAsync<ArticleDetailDTO?>(GetObjectStorageCacheKey(latestDetail.Bucket, latestDetail.Key));
+            if (detail == null)
+            {
+                detail = await _objectStorage.DownloadObjectAsync<ArticleDetailDTO>(latestDetail.Bucket, latestDetail.Key, cancellationToken);
+                await _cache.SetRecordAsync(GetObjectStorageCacheKey(latestDetail.Bucket, latestDetail.Key), detail, TimeSpan.FromMinutes(5));
+            }
 
             return Ok(new GetDetailByIdResponse
             {
@@ -78,13 +87,11 @@ namespace Headlines.WebAPI.Controllers.v1
             request.Take = Math.Min(request.Take.Value, MaxTake);
 
             if (request.ArticleSources != null && !request.ArticleSources.Any())
-            {
                 return Ok(new SearchResponse
                 {
                     Articles = new(),
                     MatchesFiltersCount = 0
                 });
-            }
 
             List<ArticleDTO> articles = await _articleFacade.GetArticlesByFiltersSkipTakeAsync(request.Skip.Value, request.Take.Value, request.SearchPrompt, request.ArticleSources, null, null, cancellationToken);
             long count = await _articleFacade.GetArticlesCountByFiltersAsync(request.SearchPrompt, request.ArticleSources, null, null, cancellationToken);
@@ -128,5 +135,7 @@ namespace Headlines.WebAPI.Controllers.v1
                 TotalCount = count
             });
         }
+
+        private string GetObjectStorageCacheKey(string bucket, string key) => $"ObjectData-Bucket:{bucket}-Key:{key}";
     }
 }
