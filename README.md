@@ -1,6 +1,8 @@
 # headlines
 
-**Headlines is a web application for tracking headlines of news articles and it's changes.**
+**Headlines is a web application for tracking articles and their headlines.**
+
+Can be seen here: https://titulkovac.pbilek.eu/
 
 ### Technologies used:
 **Frontend:**
