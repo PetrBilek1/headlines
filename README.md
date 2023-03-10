@@ -15,6 +15,7 @@ Can be seen here: https://titulkovac.pbilek.eu/
  - **Microsoft SQL**
  - **RabbitMQ** + MassTransit
  - **Redis**
+ - **Cloud Object Storage**
 
 **Testing:**
  - [XUnit](https://github.com/xunit/xunit)
