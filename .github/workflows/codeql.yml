@@ -41,7 +41,10 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-
+    
+    - name: Add nuget package source
+      run: echo "<configuration><packageSources><add key=\"github\" value=\"https://nuget.pkg.github.com/PetrBilek1/index.json\" /></packageSources> <packageSourceCredentials><github><add key=\"Username\" value=\"PetrBilek1\" /><add key=\"ClearTextPassword\" value=\"${{ secrets.PBILEK_PACKAGES_TOKEN }}\" /></github></packageSourceCredentials></configuration>" > nuget.config
+    
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
