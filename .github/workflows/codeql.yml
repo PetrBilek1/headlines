@@ -63,6 +63,9 @@ jobs:
       if: ${{ matrix.language == 'javascript' }}
       uses: github/codeql-action/autobuild@v2
     
+    - name: Csharp setup dotnet
+      uses: actions/setup-dotnet@v3.0.3
+    
     - name: Csharp build
       if: ${{ matrix.language == 'csharp' }}
       run: dotnet build ./Headlines.sln
