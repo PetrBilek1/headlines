@@ -7,7 +7,7 @@ namespace Headlines.BL.Tests.Resources.ScraperTestData
     {
         internal static async Task<string> GetHtmlAsync(string folder, string index)
         {
-            using StreamReader reader = new StreamReader(GetPath(folder, index, "html"));            
+            using StreamReader reader = new StreamReader(GetPath(folder, index, "input"));            
 
             return await reader.ReadToEndAsync();
         }
