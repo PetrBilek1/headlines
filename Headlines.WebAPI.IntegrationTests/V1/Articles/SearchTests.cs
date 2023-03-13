@@ -71,7 +71,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             for (int i = 0; i < promptMatchCount; i++)
             {
                 string[] words = articles[i].CurrentTitle.Split(' ');
-                words[random.Next(0, words.Count())] = prompt;
+                words[random.Next(0, words.Length)] = prompt;
                 articles[i].CurrentTitle = string.Join(" ", words);
                 matchingArticles.Add(articles[i]);
             }
@@ -79,7 +79,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
 
             await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
             articles = await populator.InsertArticlesAsync(articles);
-            for (int i = 0; i < articles.Count(); i++)
+            for (int i = 0; i < articles.Count; i++)
             {
                 var articleMatch = matchingArticles.FirstOrDefault(x => x.CurrentTitle == articles[i].CurrentTitle);
                 if (articleMatch == null)
@@ -112,9 +112,9 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
 
             var expectedMatchingArticles = skip >= matchingArticles.Count
                 ? new List<ArticleDto>()
-                : matchingArticles.GetRange(skip, Math.Max(0, Math.Min(matchingArticles.Count() - skip, take)));
+                : matchingArticles.GetRange(skip, Math.Max(0, Math.Min(matchingArticles.Count - skip, take)));
 
-            for (int i = 0; i < expectedMatchingArticles.Count(); i++)
+            for (int i = 0; i < expectedMatchingArticles.Count; i++)
             {
                 AssertArticle(content.Articles[i], expectedMatchingArticles[i]);
             }
@@ -173,7 +173,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
                 Skip = 0,
                 Take = 10,
                 SearchPrompt = null,
-                ArticleSources = new long[] {}
+                ArticleSources = Array.Empty<long>()
             });
             var content = await response.Content.ReadAsAsync<SearchResponse>();
 
@@ -210,7 +210,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             content.Should().BeOfType<SearchResponse>();
         }
 
-        private void AssertArticle(ArticleModel actual, ArticleDto expected)
+        private static void AssertArticle(ArticleModel actual, ArticleDto expected)
         {
             actual.Id.Should().Be(expected.Id);
             actual.SourceId.Should().Be(expected.SourceId);
