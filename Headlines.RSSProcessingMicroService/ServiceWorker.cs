@@ -18,17 +18,17 @@ namespace Headlines.RSSProcessingMicroService
             _serviceProvider = serviceProvider;
         }
 
-        public override async Task StartAsync(CancellationToken stoppingToken)
+        public override async Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("RSS Reader Hosted Service is starting.");
 
-            await base.StartAsync(stoppingToken);
+            await base.StartAsync(cancellationToken);
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             using PeriodicTimer timer = new PeriodicTimer(_readingPeriod);
-            while (!stoppingToken.IsCancellationRequested && await timer.WaitForNextTickAsync(stoppingToken))
+            while (!cancellationToken.IsCancellationRequested && await timer.WaitForNextTickAsync(cancellationToken))
             {
                 try
                 {
@@ -36,7 +36,7 @@ namespace Headlines.RSSProcessingMicroService
 
                     IRssProcessorService processorService = scope.ServiceProvider.GetRequiredService<IRssProcessorService>();
 
-                    var result = await processorService.DoWorkAsync(stoppingToken);
+                    var result = await processorService.DoWorkAsync(cancellationToken);
 
                     await PublishScrapeRequestsAsync(result.CreatedArticles, scope);                    
                 }
@@ -47,14 +47,14 @@ namespace Headlines.RSSProcessingMicroService
             }
         }
 
-        public override async Task StopAsync(CancellationToken stoppingToken)
+        public override async Task StopAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("RSS Reader Hosted Service is stopping.");
 
-            await base.StopAsync(stoppingToken);
+            await base.StopAsync(cancellationToken);
         }
 
-        private async Task PublishScrapeRequestsAsync(List<ArticleDto> articles, IServiceScope scope)
+        private static async Task PublishScrapeRequestsAsync(List<ArticleDto> articles, IServiceScope scope)
         {
             IEventBus eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
 
