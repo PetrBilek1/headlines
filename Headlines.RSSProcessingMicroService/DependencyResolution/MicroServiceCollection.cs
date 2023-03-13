@@ -26,8 +26,8 @@ namespace Headlines.RSSProcessingMicroService.DependencyResolution
 
             services.AddTransient<IRSSReaderService, RSSReaderService>();
 
-            services.AddScoped<IRSSSourceReaderService, RSSSourceReaderService>();
-            services.AddScoped<IRSSProcessorService, RSSProcessorService>();
+            services.AddScoped<IRssSourceReaderService, RssSourceReaderService>();
+            services.AddScoped<IRssProcessorService, RssProcessorService>();
 
             services.AddHostedService<ServiceWorker>();
 

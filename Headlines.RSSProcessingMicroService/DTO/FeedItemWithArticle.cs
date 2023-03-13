@@ -6,7 +6,7 @@ namespace Headlines.RSSProcessingMicroService.DTO
     public sealed class FeedItemWithArticle
     {        
         public FeedItemDTO? FeedItem { get; set; }
-        public ArticleSourceDTO? ArticleSource { get; set; }
-        public ArticleDTO? Article { get; set; }
+        public ArticleSourceDto? ArticleSource { get; set; }
+        public ArticleDto? Article { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace Headlines.BL.Implementations.ObjectStorageWrapper
             _objectStorageService = objectStorageService;
         }
 
-        public async Task<ObjectDataDTO> UploadObjectAsync<T>(T data, string bucket, CancellationToken cancellationToken = default)
+        public async Task<ObjectDataDto> UploadObjectAsync<T>(T data, string bucket, CancellationToken cancellationToken = default)
             where T : class
         {
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data)));
@@ -28,7 +28,7 @@ namespace Headlines.BL.Implementations.ObjectStorageWrapper
 
             await _objectStorageService.PutObjectAsync(bucket, key, JsonContentType, stream, cancellationToken);
 
-            return new ObjectDataDTO
+            return new ObjectDataDto
             {
                 Bucket = bucket,
                 Key = key,

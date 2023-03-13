@@ -1,6 +1,6 @@
 ﻿namespace Headlines.DTO.Entities
 {
-    public sealed class UserUpvotesDTO
+    public sealed class UserUpvotesDto
     {
         public long Id { get; set; }
         public string UserToken { get; set; }

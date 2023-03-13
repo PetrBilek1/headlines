@@ -22,14 +22,14 @@ namespace DependencyValidation.Tests.RSSProcessingMS
             },
             new ValidationServiceDescriptor
             {
-                ServiceType = typeof(IRSSSourceReaderService),
-                ImplementationType = typeof(RSSSourceReaderService),
+                ServiceType = typeof(IRssSourceReaderService),
+                ImplementationType = typeof(RssSourceReaderService),
                 Lifetime = ServiceLifetime.Scoped
             },
             new ValidationServiceDescriptor
             {
-                ServiceType = typeof(IRSSProcessorService),
-                ImplementationType = typeof(RSSProcessorService),
+                ServiceType = typeof(IRssProcessorService),
+                ImplementationType = typeof(RssProcessorService),
                 Lifetime = ServiceLifetime.Scoped
             },
             new ValidationServiceDescriptor

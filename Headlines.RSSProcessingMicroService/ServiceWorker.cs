@@ -34,7 +34,7 @@ namespace Headlines.RSSProcessingMicroService
                 {
                     using IServiceScope scope = _serviceProvider.CreateScope();
 
-                    IRSSProcessorService processorService = scope.ServiceProvider.GetRequiredService<IRSSProcessorService>();
+                    IRssProcessorService processorService = scope.ServiceProvider.GetRequiredService<IRssProcessorService>();
 
                     var result = await processorService.DoWorkAsync(stoppingToken);
 
@@ -54,7 +54,7 @@ namespace Headlines.RSSProcessingMicroService
             await base.StopAsync(stoppingToken);
         }
 
-        private async Task PublishScrapeRequestsAsync(List<ArticleDTO> articles, IServiceScope scope)
+        private async Task PublishScrapeRequestsAsync(List<ArticleDto> articles, IServiceScope scope)
         {
             IEventBus eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
 

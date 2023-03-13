@@ -2,10 +2,10 @@
 
 namespace Headlines.RSSProcessingMicroService.DTO
 {
-    public sealed class ProcessingResultDTO
+    public sealed class ProcessingResultDto
     {
-        public List<ArticleDTO> CreatedArticles { get; set; } = new List<ArticleDTO>();
-        public List<ArticleDTO> UpdatedArticles { get; set; } = new List<ArticleDTO>();
-        public List<HeadlineChangeDTO> RecordedHeadlineChanges { get; set; } = new List<HeadlineChangeDTO>();
+        public List<ArticleDto> CreatedArticles { get; set; } = new List<ArticleDto>();
+        public List<ArticleDto> UpdatedArticles { get; set; } = new List<ArticleDto>();
+        public List<HeadlineChangeDto> RecordedHeadlineChanges { get; set; } = new List<HeadlineChangeDto>();
     }
 }

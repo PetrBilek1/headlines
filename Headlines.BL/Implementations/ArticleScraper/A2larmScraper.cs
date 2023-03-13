@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace Headlines.BL.Implementations.ArticleScraper
 {
-    public sealed class A2larmScraper : ArticleScraperBase
+    public sealed class A2LarmScraper : ArticleScraperBase
     {
-        public A2larmScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
+        public A2LarmScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {
         }
 
@@ -41,7 +41,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
             => document.DocumentNode
                 .SelectNodes($"//div[{ContainsExact("class", "entry-content")}]/*[self::p or self::h3 or self::blockquote]")
                 ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
-                .Select(x => Regex.Replace(x.InnerText.Trim(), @"\s+", " "))
+                .Select(x => ScraperRegex.WhiteSpaceRegex().Replace(x.InnerText.Trim(), " "))
                 .ToList()
             ?? new List<string>();
 

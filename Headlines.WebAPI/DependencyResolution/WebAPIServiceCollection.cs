@@ -5,9 +5,9 @@ using System.Reflection;
 
 namespace Headlines.WebAPI.DependencyResolution
 {
-    public static class WebAPIServiceCollection
+    public static class WebApiServiceCollection
     {
-        public static IServiceCollection AddWebAPIDependencyGroup(this IServiceCollection services)
+        public static IServiceCollection AddWebApiDependencyGroup(this IServiceCollection services)
         {
             services.AddSingleton<IDateTimeProvider, DefaultDateTimeProvider>();
 

@@ -69,7 +69,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             var articleDetails = DataGenerator.GenerateArticleDetails(articleDetailCount).ToList();
             var objectStorage = _serviceProvider.GetRequiredService<IObjectStorageWrapper>();
 
-            var detailsByKeys = new Dictionary<string, ArticleDetailDTO>();
+            var detailsByKeys = new Dictionary<string, ArticleDetailDto>();
             for(int i = 0; i < articleDetailCount; i++)
             {
                 var objectData = await objectStorage.UploadObjectAsync(articleDetails[i], article.Details[i].Bucket);
@@ -79,7 +79,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             }
 
             await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
-            article = (await populator.InsertArticlesAsync(new List<ArticleDTO> { article })).First();
+            article = (await populator.InsertArticlesAsync(new List<ArticleDto> { article })).First();
 
             var expectedDetail = detailsByKeys[article.Details.OrderByDescending(x => x.Created).First().Key];
 

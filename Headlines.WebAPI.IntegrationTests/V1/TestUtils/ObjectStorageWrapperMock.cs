@@ -20,9 +20,9 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
             return Task.FromResult((T?) _data[(bucket, key)]);
         }
 
-        public Task<ObjectDataDTO> UploadObjectAsync<T>(T data, string bucket, CancellationToken cancellationToken = default) where T : class
+        public Task<ObjectDataDto> UploadObjectAsync<T>(T data, string bucket, CancellationToken cancellationToken = default) where T : class
         {
-            var objectData = new ObjectDataDTO
+            var objectData = new ObjectDataDto
             {
                 Bucket = bucket,
                 Key = Guid.NewGuid().ToString(),

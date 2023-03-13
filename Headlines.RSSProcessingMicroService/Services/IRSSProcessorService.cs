@@ -2,8 +2,8 @@
 
 namespace Headlines.RSSProcessingMicroService.Services
 {
-    public interface IRSSProcessorService
+    public interface IRssProcessorService
     {
-        Task<ProcessingResultDTO> DoWorkAsync(CancellationToken cancellationToken = default);
+        Task<ProcessingResultDto> DoWorkAsync(CancellationToken cancellationToken = default);
     }
 }

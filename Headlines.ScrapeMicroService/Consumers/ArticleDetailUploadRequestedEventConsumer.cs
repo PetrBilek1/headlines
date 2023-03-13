@@ -31,7 +31,7 @@ namespace Headlines.ScrapeMicroService.Consumers
 
             try
             {
-                ObjectDataDTO objectData = await _objectStorage.UploadObjectAsync(new ArticleDetailDTO
+                ObjectDataDto objectData = await _objectStorage.UploadObjectAsync(new ArticleDetailDto
                 {
                     IsPaywalled = context.Message.Detail.IsPaywalled,
                     Title = context.Message.Detail.Title,

@@ -6,14 +6,14 @@ using PBilek.RSSReaderService;
 
 namespace Headlines.RSSProcessingMicroService.Services
 {
-    public sealed class RSSSourceReaderService : IRSSSourceReaderService
+    public sealed class RssSourceReaderService : IRssSourceReaderService
     {
         private readonly IRSSReaderService _rssReaderService;
         private readonly IArticleSourceFacade _articleSourceFacade;
         private readonly IArticleFacade _articleFacade;
-        private readonly ILogger<RSSSourceReaderService> _logger;
+        private readonly ILogger<RssSourceReaderService> _logger;
 
-        public RSSSourceReaderService(IRSSReaderService rssReaderService, IArticleSourceFacade articleSourceFacade, IArticleFacade articleFacade, ILogger<RSSSourceReaderService> logger)
+        public RssSourceReaderService(IRSSReaderService rssReaderService, IArticleSourceFacade articleSourceFacade, IArticleFacade articleFacade, ILogger<RssSourceReaderService> logger)
         {
             _rssReaderService = rssReaderService;
             _articleSourceFacade = articleSourceFacade;
@@ -23,11 +23,11 @@ namespace Headlines.RSSProcessingMicroService.Services
 
         public async Task<List<FeedItemWithArticle>> ReadFeedItemsFromSourcesAsync(CancellationToken cancellationToken = default)
         {
-            List<ArticleSourceDTO> sources = await _articleSourceFacade.GetAllArticleSourcesAsync(cancellationToken);
+            List<ArticleSourceDto> sources = await _articleSourceFacade.GetAllArticleSourcesAsync(cancellationToken);
 
             var feedItems = new List<FeedItemWithArticle>();
 
-            foreach(ArticleSourceDTO source in sources)
+            foreach(ArticleSourceDto source in sources)
             {
                 feedItems.AddRange(await ReadFeedItemsFromSourceAsync(source, cancellationToken));
             }
@@ -35,7 +35,7 @@ namespace Headlines.RSSProcessingMicroService.Services
             return feedItems;
         }
 
-        private async Task<List<FeedItemWithArticle>> ReadFeedItemsFromSourceAsync(ArticleSourceDTO source, CancellationToken cancellationToken)
+        private async Task<List<FeedItemWithArticle>> ReadFeedItemsFromSourceAsync(ArticleSourceDto source, CancellationToken cancellationToken)
         {
             var feedItems = new List<FeedItemDTO>();
 
@@ -50,14 +50,14 @@ namespace Headlines.RSSProcessingMicroService.Services
             }
 
             string[] urlIds = feedItems.Select(x => FeedItemUtils.GetUrlId(x, source)).ToArray();
-            List<ArticleDTO> articles = await _articleFacade.GetArticlesByUrlIdsAsync(urlIds, cancellationToken);
-            Dictionary<string, ArticleDTO> articlesByUrlId = articles.ToDictionary(x => x.UrlId);
+            List<ArticleDto> articles = await _articleFacade.GetArticlesByUrlIdsAsync(urlIds, cancellationToken);
+            Dictionary<string, ArticleDto> articlesByUrlId = articles.ToDictionary(x => x.UrlId);
 
             return feedItems.Select(feedItem => new FeedItemWithArticle()
             {
                 FeedItem = feedItem,
                 ArticleSource = source,
-                Article = articlesByUrlId.TryGetValue(FeedItemUtils.GetUrlId(feedItem, source), out ArticleDTO? outArticle)
+                Article = articlesByUrlId.TryGetValue(FeedItemUtils.GetUrlId(feedItem, source), out ArticleDto? outArticle)
                         ? outArticle
                         : null
             }).ToList();

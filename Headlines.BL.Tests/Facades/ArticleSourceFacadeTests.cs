@@ -18,7 +18,7 @@ namespace Headlines.BL.Tests.Facades
 
         private readonly Mock<IUnitOfWorkProvider> _uowProviderMock = new Mock<IUnitOfWorkProvider>(MockBehavior.Strict);
         private readonly Mock<IUnitOfWork> _uowMock = new Mock<IUnitOfWork>(MockBehavior.Strict);
-        private readonly Mock<IArticleSourceDAO> _articleSourceDaoMock = new Mock<IArticleSourceDAO>(MockBehavior.Strict);
+        private readonly Mock<IArticleSourceDao> _articleSourceDaoMock = new Mock<IArticleSourceDao>(MockBehavior.Strict);
         private readonly IMapper _mapper = TestUtils.GetMapper();
 
         public ArticleSourceFacadeTests()
@@ -40,7 +40,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(_data.ArticleSources);
 
             //Act
-            List<ArticleSourceDTO> result = await _sut.GetAllArticleSourcesAsync();
+            List<ArticleSourceDto> result = await _sut.GetAllArticleSourcesAsync();
 
             //Assert
             result.Should().NotBeNull();

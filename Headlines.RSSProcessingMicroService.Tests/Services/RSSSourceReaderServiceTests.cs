@@ -12,17 +12,17 @@ namespace Headlines.RSSProcessingMicroService.Tests.Services
 {
     public sealed class RSSSourceReaderServiceTests
     {
-        private readonly RSSSourceReaderService _sut;
+        private readonly RssSourceReaderService _sut;
         private readonly TestData _data;
 
         private readonly Mock<IRSSReaderService> _rssReaderServiceMock = new Mock<IRSSReaderService>(MockBehavior.Strict);
         private readonly Mock<IArticleSourceFacade> _articleSourceFacadeMock = new Mock<IArticleSourceFacade>(MockBehavior.Strict);
         private readonly Mock<IArticleFacade> _articleFacadeMock = new Mock<IArticleFacade>(MockBehavior.Strict);
-        private readonly Mock<ILogger<RSSSourceReaderService>> _loggerMock = new Mock<ILogger<RSSSourceReaderService>>();
+        private readonly Mock<ILogger<RssSourceReaderService>> _loggerMock = new Mock<ILogger<RssSourceReaderService>>();
 
         public RSSSourceReaderServiceTests()
         {
-            _sut = new RSSSourceReaderService(_rssReaderServiceMock.Object, _articleSourceFacadeMock.Object, _articleFacadeMock.Object, _loggerMock.Object);
+            _sut = new RssSourceReaderService(_rssReaderServiceMock.Object, _articleSourceFacadeMock.Object, _articleFacadeMock.Object, _loggerMock.Object);
             _data = new TestData();
         }
 
@@ -98,20 +98,20 @@ namespace Headlines.RSSProcessingMicroService.Tests.Services
 
     sealed class TestData
     {
-        public List<ArticleSourceDTO> ArticleSources => new List<ArticleSourceDTO>() { ArticleSource1, ArticleSource2 };
+        public List<ArticleSourceDto> ArticleSources => new List<ArticleSourceDto>() { ArticleSource1, ArticleSource2 };
         public List<FeedItemDTO> FeedItems1 => new List<FeedItemDTO>() { FeedItem1, FeedItem2 };
         public List<FeedItemDTO> FeedItems2 => new List<FeedItemDTO>() { FeedItem3 };
-        public List<ArticleDTO> Articles1 => new List<ArticleDTO>() { Article1 };   
-        public List<ArticleDTO> Articles2 => new List<ArticleDTO>() { Article2 };
+        public List<ArticleDto> Articles1 => new List<ArticleDto>() { Article1 };   
+        public List<ArticleDto> Articles2 => new List<ArticleDto>() { Article2 };
 
-        public ArticleSourceDTO ArticleSource1 = new()
+        public ArticleSourceDto ArticleSource1 = new()
         {
             Id = 1,
             Name = "name",
             RssUrl = "rssUrl",
             UrlIdSource = Enums.ArticleUrlIdSource.Id
         };
-        public ArticleSourceDTO ArticleSource2 = new()
+        public ArticleSourceDto ArticleSource2 = new()
         {
             Id = 2,
             Name = "name2",
@@ -141,7 +141,7 @@ namespace Headlines.RSSProcessingMicroService.Tests.Services
             Title = "title3"
         };
 
-        public ArticleDTO Article1 = new()
+        public ArticleDto Article1 = new()
         {
             Id = 1,
             SourceId = 1,
@@ -150,7 +150,7 @@ namespace Headlines.RSSProcessingMicroService.Tests.Services
             CurrentTitle = "title1",
             Link = "link1"
         };
-        public ArticleDTO Article2 = new()
+        public ArticleDto Article2 = new()
         {
             Id = 2,
             SourceId = 2,

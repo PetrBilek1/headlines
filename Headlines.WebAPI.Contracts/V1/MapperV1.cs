@@ -6,7 +6,7 @@ namespace Headlines.WebAPI.Contracts.V1
 {
     public sealed class MapperV1
     {
-        public ArticleSourceModel MapArticleSource(ArticleSourceDTO articleSource)
+        public ArticleSourceModel MapArticleSource(ArticleSourceDto articleSource)
             => new ArticleSourceModel
             {
                 Id = articleSource.Id,
@@ -14,7 +14,7 @@ namespace Headlines.WebAPI.Contracts.V1
                 ScrapingSupported = articleSource.ScraperType.HasValue
             };
 
-        public ArticleModel MapArticle(ArticleDTO article)
+        public ArticleModel MapArticle(ArticleDto article)
             => new ArticleModel
             {
                 Id = article.Id,
@@ -28,7 +28,7 @@ namespace Headlines.WebAPI.Contracts.V1
                     : MapArticleSource(article.Source)
             };
 
-        public ArticleDetailModel MapArticleDetail(ArticleDetailDTO articleDetail)
+        public ArticleDetailModel MapArticleDetail(ArticleDetailDto articleDetail)
             => new ArticleDetailModel
             {
                 IsPaywalled = articleDetail.IsPaywalled,
@@ -38,7 +38,7 @@ namespace Headlines.WebAPI.Contracts.V1
                 Tags = articleDetail.Tags,
             };
 
-        public HeadlineChangeModel MapHeadlineChange(HeadlineChangeDTO headlineChange)
+        public HeadlineChangeModel MapHeadlineChange(HeadlineChangeDto headlineChange)
             => new HeadlineChangeModel
             {
                 Id = headlineChange.Id,

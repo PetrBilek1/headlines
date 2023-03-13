@@ -23,7 +23,7 @@ namespace Headlines.RSSProcessingMicroService.Tests.Utils
                 Title = "title"
             };
 
-            ArticleSourceDTO articleSource = new()
+            ArticleSourceDto articleSource = new()
             {
                 Id = 1,
                 Name = "name",
@@ -57,7 +57,7 @@ namespace Headlines.RSSProcessingMicroService.Tests.Utils
                 Title = "title"
             };
 
-            ArticleSourceDTO articleSource = new()
+            ArticleSourceDto articleSource = new()
             {
                 Id = 1,
                 Name = "name",

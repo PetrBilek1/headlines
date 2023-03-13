@@ -66,8 +66,8 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             string prompt = "andrej";
             Random random = new Random(66666);
 
-            List<ArticleDTO> articles = DataGenerator.GenerateArticles(count).ToList();
-            List<ArticleDTO> matchingArticles = new();
+            List<ArticleDto> articles = DataGenerator.GenerateArticles(count).ToList();
+            List<ArticleDto> matchingArticles = new();
             for (int i = 0; i < promptMatchCount; i++)
             {
                 string[] words = articles[i].CurrentTitle.Split(' ');
@@ -111,7 +111,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             content.MatchesFiltersCount.Should().Be(promptMatchCount);
 
             var expectedMatchingArticles = skip >= matchingArticles.Count
-                ? new List<ArticleDTO>()
+                ? new List<ArticleDto>()
                 : matchingArticles.GetRange(skip, Math.Max(0, Math.Min(matchingArticles.Count() - skip, take)));
 
             for (int i = 0; i < expectedMatchingArticles.Count(); i++)
@@ -155,7 +155,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             content.MatchesFiltersCount.Should().Be(articlesMatchingFilter.Count);
 
             var expectedMatchingArticles = skip >= articlesMatchingFilter.Count
-                ? new List<ArticleDTO>()
+                ? new List<ArticleDto>()
                 : articlesMatchingFilter.GetRange(skip, Math.Max(0, Math.Min(articlesMatchingFilter.Count - skip, take)));
 
             for (int i = 0; i < expectedMatchingArticles.Count; i++)
@@ -210,7 +210,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             content.Should().BeOfType<SearchResponse>();
         }
 
-        private void AssertArticle(ArticleModel actual, ArticleDTO expected)
+        private void AssertArticle(ArticleModel actual, ArticleDto expected)
         {
             actual.Id.Should().Be(expected.Id);
             actual.SourceId.Should().Be(expected.SourceId);

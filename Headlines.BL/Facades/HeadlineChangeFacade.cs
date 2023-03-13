@@ -10,17 +10,17 @@ namespace Headlines.BL.Facades
     public sealed class HeadlineChangeFacade : IHeadlineChangeFacade
     {
         private readonly IUnitOfWorkProvider _uowProvider;
-        private readonly IHeadlineChangeDAO _headlineChangeDAO;
+        private readonly IHeadlineChangeDao _headlineChangeDAO;
         private readonly IMapper _mapper;
 
-        public HeadlineChangeFacade(IUnitOfWorkProvider uowProvider, IHeadlineChangeDAO headlineChangeDAO, IMapper mapper)
+        public HeadlineChangeFacade(IUnitOfWorkProvider uowProvider, IHeadlineChangeDao headlineChangeDAO, IMapper mapper)
         {
             _uowProvider = uowProvider;
             _headlineChangeDAO = headlineChangeDAO;
             _mapper = mapper;
         }
 
-        public async Task<HeadlineChangeDTO> CreateOrUpdateHeadlineChangeAsync(HeadlineChangeDTO headlineChangeDTO)
+        public async Task<HeadlineChangeDto> CreateOrUpdateHeadlineChangeAsync(HeadlineChangeDto headlineChangeDTO)
         {
             using IUnitOfWork uow = _uowProvider.CreateUnitOfWork();
 
@@ -36,10 +36,10 @@ namespace Headlines.BL.Facades
 
             await uow.CommitAsync();
 
-            return _mapper.Map<HeadlineChangeDTO>(headlineChange);
+            return _mapper.Map<HeadlineChangeDto>(headlineChange);
         }
 
-        public async Task<HeadlineChangeDTO> DeleteHeadlineChangeAsync(HeadlineChangeDTO headlineChangeDTO)
+        public async Task<HeadlineChangeDto> DeleteHeadlineChangeAsync(HeadlineChangeDto headlineChangeDTO)
         {
             using IUnitOfWork uow = _uowProvider.CreateUnitOfWork();
             
@@ -52,25 +52,25 @@ namespace Headlines.BL.Facades
 
             await uow.CommitAsync();
 
-            return _mapper.Map<HeadlineChangeDTO>(headlineChange);
+            return _mapper.Map<HeadlineChangeDto>(headlineChange);
         }
 
-        public async Task<List<HeadlineChangeDTO>> GetHeadlineChangesOrderByUpvotesCountIncludeArticleAsync(int take = 10, CancellationToken cancellationToken = default)
+        public async Task<List<HeadlineChangeDto>> GetHeadlineChangesOrderByUpvotesCountIncludeArticleAsync(int take = 10, CancellationToken cancellationToken = default)
         {
             using var _ = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
             List<HeadlineChange> changes = await _headlineChangeDAO.GetOrderByUpvotesCountIncludeArticleAsync(take, cancellationToken);
 
-            return _mapper.Map<List<HeadlineChangeDTO>>(changes);
+            return _mapper.Map<List<HeadlineChangeDto>>(changes);
         }
 
-        public async Task<List<HeadlineChangeDTO>> GetHeadlineChangesOrderByDetectedDescendingIncludeArticleAsync(int skip, int take, CancellationToken cancellationToken = default)
+        public async Task<List<HeadlineChangeDto>> GetHeadlineChangesOrderByDetectedDescendingIncludeArticleAsync(int skip, int take, CancellationToken cancellationToken = default)
         {
             using var _ = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
             List<HeadlineChange> changes = await _headlineChangeDAO.GetOrderByDetectedDescendingIncludeArticleAsync(skip, take, cancellationToken);
 
-            return _mapper.Map<List<HeadlineChangeDTO>>(changes);
+            return _mapper.Map<List<HeadlineChangeDto>>(changes);
         }
 
         public async Task<long> GetHeadlineChangeCountAsync(long? articleId = null)
@@ -82,16 +82,16 @@ namespace Headlines.BL.Facades
             return count;
         }
 
-        public async Task<List<HeadlineChangeDTO>> GetHeadlineChangesByArticleIdOrderByDetectedDescendingAsync(long articleId, int skip, int take, CancellationToken cancellationToken = default)
+        public async Task<List<HeadlineChangeDto>> GetHeadlineChangesByArticleIdOrderByDetectedDescendingAsync(long articleId, int skip, int take, CancellationToken cancellationToken = default)
         {
             using var _ = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
             List<HeadlineChange> changes = await _headlineChangeDAO.GetByArticleIdOrderByDetectedDescendingAsync(articleId, skip, take, cancellationToken);
 
-            return _mapper.Map<List<HeadlineChangeDTO>>(changes);
+            return _mapper.Map<List<HeadlineChangeDto>>(changes);
         }
 
-        public async Task<HeadlineChangeDTO> AddUpvotesToHeadlineChangeAsync(long id, int amount)
+        public async Task<HeadlineChangeDto> AddUpvotesToHeadlineChangeAsync(long id, int amount)
         {
             using IUnitOfWork uow = _uowProvider.CreateUnitOfWork();
 
@@ -104,7 +104,7 @@ namespace Headlines.BL.Facades
 
             await uow.CommitAsync();
 
-            return _mapper.Map<HeadlineChangeDTO>(headlineChange);
+            return _mapper.Map<HeadlineChangeDto>(headlineChange);
         }
     }
 }

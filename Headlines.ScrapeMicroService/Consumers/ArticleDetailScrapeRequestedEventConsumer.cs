@@ -28,7 +28,7 @@ namespace Headlines.ScrapeMicroService.Consumers
 
             try
             {
-                ArticleDTO article = await _articleFacade.GetArticleByIdIncludeSourceAsync(context.Message.ArticleId);
+                ArticleDto article = await _articleFacade.GetArticleByIdIncludeSourceAsync(context.Message.ArticleId);
                 ArgumentNullException.ThrowIfNull(article.Source.ScraperType);
 
                 IArticleScraper scraper = _scraperProvider.Provide(article.Source.ScraperType.Value);
@@ -40,7 +40,7 @@ namespace Headlines.ScrapeMicroService.Consumers
                     return;
                 }
 
-                var detail = new ArticleDetailDTO
+                var detail = new ArticleDetailDto
                 {
                     IsPaywalled = result.IsPaywalled,
                     Title = result.Title,
@@ -68,7 +68,7 @@ namespace Headlines.ScrapeMicroService.Consumers
             }
         }
 
-        private async Task ScrapeUnsuccessfulAsync(ConsumeContext<ArticleDetailScrapeRequestedEvent> context, ArticleDTO article)
+        private async Task ScrapeUnsuccessfulAsync(ConsumeContext<ArticleDetailScrapeRequestedEvent> context, ArticleDto article)
         {
             _logger.LogWarning("Scraping of article Id '{articleId} source Name '{sourceName}' was not successful.'", article.Id, article.Source.Name);
 

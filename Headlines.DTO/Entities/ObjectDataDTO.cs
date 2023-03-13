@@ -1,6 +1,6 @@
 ﻿namespace Headlines.DTO.Entities
 {
-    public sealed class ObjectDataDTO
+    public sealed class ObjectDataDto
     {
         public long Id { get; set; }
 

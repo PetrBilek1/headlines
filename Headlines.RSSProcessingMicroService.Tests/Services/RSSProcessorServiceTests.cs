@@ -13,16 +13,16 @@ namespace Headlines.RSSProcessingMicroService.Tests.Services
 {
     public sealed class RSSProcessorServiceTests
     {
-        private readonly RSSProcessorService _sut;
+        private readonly RssProcessorService _sut;
 
-        private readonly Mock<IRSSSourceReaderService> _rssSourceReaderServiceMock = new Mock<IRSSSourceReaderService>(MockBehavior.Strict);
+        private readonly Mock<IRssSourceReaderService> _rssSourceReaderServiceMock = new Mock<IRssSourceReaderService>(MockBehavior.Strict);
         private readonly Mock<IArticleFacade> _articleFacadeMock = new Mock<IArticleFacade>(MockBehavior.Strict);
         private readonly Mock<IHeadlineChangeFacade> _headlineChangeFacadeMock = new Mock<IHeadlineChangeFacade>(MockBehavior.Strict);
         private readonly Mock<IDateTimeProvider> _dateTimeProviderMock = new Mock<IDateTimeProvider>(MockBehavior.Strict);
 
         public RSSProcessorServiceTests()
         {
-            _sut = new RSSProcessorService(_rssSourceReaderServiceMock.Object, _articleFacadeMock.Object, _headlineChangeFacadeMock.Object, _dateTimeProviderMock.Object);
+            _sut = new RssProcessorService(_rssSourceReaderServiceMock.Object, _articleFacadeMock.Object, _headlineChangeFacadeMock.Object, _dateTimeProviderMock.Object);
         }
 
         [Theory]
@@ -40,7 +40,7 @@ namespace Headlines.RSSProcessingMicroService.Tests.Services
                     Published = new DateTime(2020, 10, 10),
                     Title = "title"
                 },
-                ArticleSource = new ArticleSourceDTO()
+                ArticleSource = new ArticleSourceDto()
                 {
                     Id = 1,
                     Name = "name",
@@ -52,11 +52,11 @@ namespace Headlines.RSSProcessingMicroService.Tests.Services
 
             _rssSourceReaderServiceMock.Setup(x => x.ReadFeedItemsFromSourcesAsync(default))
                 .ReturnsAsync(new List<FeedItemWithArticle> { data });
-            _articleFacadeMock.Setup(x => x.CreateOrUpdateArticleAsync(It.IsAny<ArticleDTO>()))
-                .ReturnsAsync((ArticleDTO article) => { return article; });
+            _articleFacadeMock.Setup(x => x.CreateOrUpdateArticleAsync(It.IsAny<ArticleDto>()))
+                .ReturnsAsync((ArticleDto article) => { return article; });
 
             //Act
-            ProcessingResultDTO result = await _sut.DoWorkAsync();
+            ProcessingResultDto result = await _sut.DoWorkAsync();
 
             //Assert
             result.Should().NotBeNull();
@@ -70,7 +70,7 @@ namespace Headlines.RSSProcessingMicroService.Tests.Services
             result.CreatedArticles[0].Published.Should().Be(data.FeedItem.Published);
             result.CreatedArticles[0].Link.Should().Be(data.FeedItem.Link);
 
-            _articleFacadeMock.Verify(x => x.CreateOrUpdateArticleAsync(It.IsAny<ArticleDTO>()), Times.Once);
+            _articleFacadeMock.Verify(x => x.CreateOrUpdateArticleAsync(It.IsAny<ArticleDto>()), Times.Once);
         }
 
         [Fact]
@@ -86,14 +86,14 @@ namespace Headlines.RSSProcessingMicroService.Tests.Services
                     Published = new DateTime(2020, 10, 10),
                     Title = "newTitle"
                 },
-                ArticleSource = new ArticleSourceDTO()
+                ArticleSource = new ArticleSourceDto()
                 {
                     Id = 1,
                     Name = "name",
                     RssUrl = "rssUrl",
                     UrlIdSource = ArticleUrlIdSource.Id
                 },
-                Article = new ArticleDTO()
+                Article = new ArticleDto()
                 {
                     Id = 1,
                     SourceId = 1,
@@ -106,15 +106,15 @@ namespace Headlines.RSSProcessingMicroService.Tests.Services
 
             _rssSourceReaderServiceMock.Setup(x => x.ReadFeedItemsFromSourcesAsync(default))
                 .ReturnsAsync(new List<FeedItemWithArticle> { data });
-            _articleFacadeMock.Setup(x => x.CreateOrUpdateArticleAsync(It.IsAny<ArticleDTO>()))
-                .ReturnsAsync((ArticleDTO article) => { return article; });
-            _headlineChangeFacadeMock.Setup(x => x.CreateOrUpdateHeadlineChangeAsync(It.IsAny<HeadlineChangeDTO>()))
-                .ReturnsAsync(new HeadlineChangeDTO());
+            _articleFacadeMock.Setup(x => x.CreateOrUpdateArticleAsync(It.IsAny<ArticleDto>()))
+                .ReturnsAsync((ArticleDto article) => { return article; });
+            _headlineChangeFacadeMock.Setup(x => x.CreateOrUpdateHeadlineChangeAsync(It.IsAny<HeadlineChangeDto>()))
+                .ReturnsAsync(new HeadlineChangeDto());
             _dateTimeProviderMock.Setup(x => x.Now)
                 .Returns(new DateTime(2020, 10, 10));
 
             //Act
-            ProcessingResultDTO result = await _sut.DoWorkAsync();
+            ProcessingResultDto result = await _sut.DoWorkAsync();
 
             //Assert
             result.Should().NotBeNull();
@@ -128,7 +128,7 @@ namespace Headlines.RSSProcessingMicroService.Tests.Services
             result.UpdatedArticles[0].CurrentTitle.Should().Be(data.FeedItem?.Title);
             result.UpdatedArticles[0].Link.Should().Be(data.FeedItem?.Link);
 
-            _articleFacadeMock.Verify(x => x.CreateOrUpdateArticleAsync(It.IsAny<ArticleDTO>()), Times.Once);
+            _articleFacadeMock.Verify(x => x.CreateOrUpdateArticleAsync(It.IsAny<ArticleDto>()), Times.Once);
         }
 
         [Fact]
@@ -147,14 +147,14 @@ namespace Headlines.RSSProcessingMicroService.Tests.Services
                     Published = new DateTime(2020, 10, 10),
                     Title = "newTitle"
                 },
-                ArticleSource = new ArticleSourceDTO()
+                ArticleSource = new ArticleSourceDto()
                 {
                     Id = 1,
                     Name = "name",
                     RssUrl = "rssUrl",
                     UrlIdSource = ArticleUrlIdSource.Id
                 },
-                Article = new ArticleDTO()
+                Article = new ArticleDto()
                 {
                     Id = 1,
                     SourceId = 1,
@@ -169,13 +169,13 @@ namespace Headlines.RSSProcessingMicroService.Tests.Services
                 .ReturnsAsync(new List<FeedItemWithArticle> { data });
             _dateTimeProviderMock.Setup(x => x.Now)
                 .Returns(now);
-            _articleFacadeMock.Setup(x => x.CreateOrUpdateArticleAsync(It.IsAny<ArticleDTO>()))
-                .ReturnsAsync((ArticleDTO article) => { return article; });
-            _headlineChangeFacadeMock.Setup(x => x.CreateOrUpdateHeadlineChangeAsync(It.IsAny<HeadlineChangeDTO>()))
-                .ReturnsAsync((HeadlineChangeDTO change) => { return change; });
+            _articleFacadeMock.Setup(x => x.CreateOrUpdateArticleAsync(It.IsAny<ArticleDto>()))
+                .ReturnsAsync((ArticleDto article) => { return article; });
+            _headlineChangeFacadeMock.Setup(x => x.CreateOrUpdateHeadlineChangeAsync(It.IsAny<HeadlineChangeDto>()))
+                .ReturnsAsync((HeadlineChangeDto change) => { return change; });
 
             //Act
-            ProcessingResultDTO result = await _sut.DoWorkAsync();
+            ProcessingResultDto result = await _sut.DoWorkAsync();
 
             //Assert
             result.Should().NotBeNull();

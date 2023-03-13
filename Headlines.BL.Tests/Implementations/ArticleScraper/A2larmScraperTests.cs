@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Headlines.BL.Tests.Implementations.ArticleScraper
 {
-    public sealed class A2larmScraperTests : ScraperTestBase<A2larmScraper>
+    public sealed class A2LarmScraperTests : ScraperTestBase<A2LarmScraper>
     {
         [Theory]
         [InlineData("001")]
@@ -12,8 +12,8 @@ namespace Headlines.BL.Tests.Implementations.ArticleScraper
         public async Task ScrapeArticleAsync(string index)
         {
             //Arrange
-            var html = await ScraperDataLoader.GetHtmlAsync("A2larm", index);
-            var expected = await ScraperDataLoader.GetExpectedAsync("A2larm", index);
+            var html = await ScraperDataLoader.GetHtmlAsync("A2Larm", index);
+            var expected = await ScraperDataLoader.GetExpectedAsync("A2Larm", index);
             SetupDocumentLoader(html);
 
             //Act

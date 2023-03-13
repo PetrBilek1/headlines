@@ -23,7 +23,7 @@ namespace Headlines.WebAPI.Controllers.v1
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            List<ArticleSourceDTO> sources = await _articleSourceFacade.GetAllArticleSourcesAsync(cancellationToken);
+            List<ArticleSourceDto> sources = await _articleSourceFacade.GetAllArticleSourcesAsync(cancellationToken);
 
             return Ok(new GetAllResponse
             {

@@ -46,7 +46,7 @@ builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 string connectionStringTemplate = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
 
 builder.Services.AddORMDependencyGroup<HeadlinesDbContext>(GetConnectionString(connectionStringTemplate));
-builder.Services.AddWebAPIDependencyGroup();
+builder.Services.AddWebApiDependencyGroup();
 builder.Services.AddObjectStorageDependencyGroup(GetObjectStorageConfiguration());
 builder.Services.AddMessageQueueDependencyGroup(GetMessageBrokerSettings());
 builder.Services.AddMappingDependencyGroup();

@@ -6,9 +6,9 @@ using PBilek.ORM.EntityFrameworkCore.DAO;
 
 namespace Headlines.BL.DAO
 {
-    public sealed class UserUpvotesDAO : EfCoreDAO<UserUpvotes, long>, IUserUpvotesDAO
+    public sealed class UserUpvotesDao : EfCoreDAO<UserUpvotes, long>, IUserUpvotesDao
     {
-        public UserUpvotesDAO(IUnitOfWorkProvider provider, IDateTimeProvider dateTimeProvider) : base(provider, dateTimeProvider)
+        public UserUpvotesDao(IUnitOfWorkProvider provider, IDateTimeProvider dateTimeProvider) : base(provider, dateTimeProvider)
         {
         }
 

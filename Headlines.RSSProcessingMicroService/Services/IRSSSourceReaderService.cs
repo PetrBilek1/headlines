@@ -2,7 +2,7 @@
 
 namespace Headlines.RSSProcessingMicroService.Services
 {
-    public interface IRSSSourceReaderService
+    public interface IRssSourceReaderService
     {
         Task<List<FeedItemWithArticle>> ReadFeedItemsFromSourcesAsync(CancellationToken cancellationToken = default);
     }

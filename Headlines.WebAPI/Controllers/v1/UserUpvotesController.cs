@@ -26,9 +26,9 @@ namespace Headlines.WebAPI.Controllers.V1
             if (string.IsNullOrWhiteSpace(userToken))
                 return BadRequest(Messages.M0002);
 
-            UserUpvotesDTO userUpvotes = await _userUpvotesFacade.GetUserUpvotesByUserTokenAsync(userToken, cancellationToken);
+            UserUpvotesDto userUpvotes = await _userUpvotesFacade.GetUserUpvotesByUserTokenAsync(userToken, cancellationToken);
 
-            userUpvotes ??= await _userUpvotesFacade.CreateOrUpdateUserUpvotesAsync(new UserUpvotesDTO
+            userUpvotes ??= await _userUpvotesFacade.CreateOrUpdateUserUpvotesAsync(new UserUpvotesDto
             {
                 UserToken = userToken,
                 Json = JsonConvert.SerializeObject(new List<UpvoteModel>(), Formatting.None)

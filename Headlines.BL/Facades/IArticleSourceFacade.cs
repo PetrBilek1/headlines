@@ -4,6 +4,6 @@ namespace Headlines.BL.Facades
 {
     public interface IArticleSourceFacade
     {
-        Task<List<ArticleSourceDTO>> GetAllArticleSourcesAsync(CancellationToken cancellationToken = default);
+        Task<List<ArticleSourceDto>> GetAllArticleSourcesAsync(CancellationToken cancellationToken = default);
     }
 }

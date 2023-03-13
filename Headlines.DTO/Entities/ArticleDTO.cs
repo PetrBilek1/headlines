@@ -1,6 +1,6 @@
 ﻿namespace Headlines.DTO.Entities
 {
-    public sealed class ArticleDTO
+    public sealed class ArticleDto
     {
         public long Id { get; set; }
         public long SourceId { get; set; }
@@ -12,7 +12,7 @@
         public string CurrentTitle { get; set; }
         public string Link { get; set; }
 
-        public ArticleSourceDTO Source { get; set; }
-        public List<ObjectDataDTO> Details { get; set; }
+        public ArticleSourceDto Source { get; set; }
+        public List<ObjectDataDto> Details { get; set; }
     }
 }
