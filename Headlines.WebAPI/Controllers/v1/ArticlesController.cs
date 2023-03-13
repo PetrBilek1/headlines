@@ -42,7 +42,7 @@ namespace Headlines.WebAPI.Controllers.v1
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(long id, CancellationToken cancellationToken)
         {
-            ArticleDTO article = await _articleFacade.GetArticleByIdIncludeSourceAsync(id, cancellationToken);
+            ArticleDto article = await _articleFacade.GetArticleByIdIncludeSourceAsync(id, cancellationToken);
             if (article == null)
                 return NotFound();
 
@@ -55,21 +55,21 @@ namespace Headlines.WebAPI.Controllers.v1
         [HttpGet("{id}/Detail")]
         public async Task<IActionResult> GetDetailById(long id, CancellationToken cancellationToken)
         {
-            ArticleDTO article = await _articleFacade.GetArticleByIdIncludeDetailsAsync(id, cancellationToken);
+            ArticleDto article = await _articleFacade.GetArticleByIdIncludeDetailsAsync(id, cancellationToken);
             if (article == null)
                 return NotFound();
 
-            ObjectDataDTO? latestDetail = article.Details.OrderByDescending(x => x.Created).FirstOrDefault();
+            ObjectDataDto? latestDetail = article.Details.OrderByDescending(x => x.Created).FirstOrDefault();
             if (latestDetail == null)
                 return Ok(new GetDetailByIdResponse
                 {
                     Detail = null
                 });
 
-            ArticleDetailDTO? detail = await _cache.GetRecordAsync<ArticleDetailDTO?>(GetObjectStorageCacheKey(latestDetail.Bucket, latestDetail.Key));
+            ArticleDetailDto? detail = await _cache.GetRecordAsync<ArticleDetailDto?>(GetObjectStorageCacheKey(latestDetail.Bucket, latestDetail.Key));
             if (detail == null)
             {
-                detail = await _objectStorage.DownloadObjectAsync<ArticleDetailDTO>(latestDetail.Bucket, latestDetail.Key, cancellationToken);
+                detail = await _objectStorage.DownloadObjectAsync<ArticleDetailDto>(latestDetail.Bucket, latestDetail.Key, cancellationToken);
                 await _cache.SetRecordAsync(GetObjectStorageCacheKey(latestDetail.Bucket, latestDetail.Key), detail, TimeSpan.FromMinutes(5));
             }
 
@@ -93,7 +93,7 @@ namespace Headlines.WebAPI.Controllers.v1
                     MatchesFiltersCount = 0
                 });
 
-            List<ArticleDTO> articles = await _articleFacade.GetArticlesByFiltersSkipTakeAsync(request.Skip.Value, request.Take.Value, request.SearchPrompt, request.ArticleSources, null, null, cancellationToken);
+            List<ArticleDto> articles = await _articleFacade.GetArticlesByFiltersSkipTakeAsync(request.Skip.Value, request.Take.Value, request.SearchPrompt, request.ArticleSources, null, null, cancellationToken);
             long count = await _articleFacade.GetArticlesCountByFiltersAsync(request.SearchPrompt, request.ArticleSources, null, null, cancellationToken);
 
             return Ok(new SearchResponse
@@ -106,7 +106,7 @@ namespace Headlines.WebAPI.Controllers.v1
         [HttpPost("RequestDetailScrape")]
         public async Task<IActionResult> RequestDetailScrape([FromBody] RequestDetailScrapeRequest request, CancellationToken cancellationToken)
         {
-            ArticleDTO article = await _articleFacade.GetArticleByIdIncludeSourceAsync(request.ArticleId);
+            ArticleDto article = await _articleFacade.GetArticleByIdIncludeSourceAsync(request.ArticleId, cancellationToken);
             if (article == null)
                 return NotFound(Messages.M0004);
             if (!article.Source.ScraperType.HasValue)
@@ -126,7 +126,7 @@ namespace Headlines.WebAPI.Controllers.v1
         {
             take = Math.Min(take, MaxTake);
 
-            List<HeadlineChangeDTO> headlineChanges = await _headlineChangeFacade.GetHeadlineChangesByArticleIdOrderByDetectedDescendingAsync(id, skip, take, cancellationToken);
+            List<HeadlineChangeDto> headlineChanges = await _headlineChangeFacade.GetHeadlineChangesByArticleIdOrderByDetectedDescendingAsync(id, skip, take, cancellationToken);
             long count = await _headlineChangeFacade.GetHeadlineChangeCountAsync(id);
 
             return Ok(new GetHeadlineChangesByArticleIdResponse
@@ -136,6 +136,6 @@ namespace Headlines.WebAPI.Controllers.v1
             });
         }
 
-        private string GetObjectStorageCacheKey(string bucket, string key) => $"ObjectData-Bucket:{bucket}-Key:{key}";
+        private static string GetObjectStorageCacheKey(string bucket, string key) => $"ObjectData-Bucket:{bucket}-Key:{key}";
     }
 }

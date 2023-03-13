@@ -6,9 +6,9 @@ using PBilek.ORM.EntityFrameworkCore.DAO;
 
 namespace Headlines.BL.DAO
 {
-    public sealed class ObjectDataDAO : EfCoreDAO<ObjectData, long>, IObjectDataDAO
+    public sealed class ObjectDataDao : EfCoreDAO<ObjectData, long>, IObjectDataDao
     {
-        public ObjectDataDAO(IUnitOfWorkProvider provider, IDateTimeProvider dateTimeProvider) : base(provider, dateTimeProvider)
+        public ObjectDataDao(IUnitOfWorkProvider provider, IDateTimeProvider dateTimeProvider) : base(provider, dateTimeProvider)
         {
         }
 

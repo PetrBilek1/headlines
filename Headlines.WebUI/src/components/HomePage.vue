@@ -99,9 +99,9 @@ export default {
                 })
         },
         resolveAnimations(showGreetings) {
-            var bestChangesDelay = 0
+            let bestChangesDelay = 0
 
-            if (showGreetings == true) {
+            if (showGreetings) {
                 bestChangesDelay = 2500
                 this.topHeadlineChangesStartAnimDelay = 3300
                 this.animateGreetingTitle()
@@ -110,7 +110,7 @@ export default {
             this.animateBestChangesTitle(bestChangesDelay)
         },
         animateGreetingTitle() {
-            var textWrapper = document.querySelector('.ml10 .letters')
+            let textWrapper = document.querySelector('.ml10 .letters')
             textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter' style='display: inline-block; line-height: 1em; transform-origin: 0 0;'>$&</span>")
 
             anime.timeline({ loop: false })
@@ -128,7 +128,7 @@ export default {
                 })
         },
         animateBestChangesTitle(baseDelay) {
-            var textWrapper2 = document.querySelector('.ml7 .letters')
+            let textWrapper2 = document.querySelector('.ml7 .letters')
             textWrapper2.innerHTML = textWrapper2.textContent.replace(/\S/g, "<span class='letter' style='transform-origin: 0 100%; display: inline-block; line-height: 1em;'>$&</span>")
 
             anime.timeline({ loop: false })
@@ -157,13 +157,13 @@ export default {
         this.fetchHeadlineChangePage(0)
     },
     mounted() {
-        var homePageStore = this.$store.state.homePage
+        let homePageStore = this.$store.state.homePage
         this.stopAnimating = homePageStore.stopAnimating
         if (homePageStore.stopAnimating)
             return
 
         //hours
-        var seenAgo = (new Date().getTime() - new Date(this.$store.state.userData.lastSeen).getTime()) / 1000 / 60 / 60
+        let seenAgo = (new Date().getTime() - new Date(this.$store.state.userData.lastSeen).getTime()) / 1000 / 60 / 60
 
         this.showGreetingOnMount = seenAgo > 3
         this.resolveAnimations(this.showGreetingOnMount)

@@ -48,15 +48,14 @@ namespace Headlines.BL.Implementations.ArticleScraper
             if (isPagedArticle)
             {
                 return document.DocumentNode
-                    .SelectNodes(string.Join(string.Empty, new string[]
-                    {
+                    .SelectNodes(string.Join(string.Empty,                     
                         $"//li[@id and @data-id and not({ContainsExact("data-id", "related")})]",
                         "//*[",
                         $"self::p[not(ancestor::div[{ContainsExact("class", "videoInArticle")}])]",
                         " or ",
                         "self::h2[not(@class) and text()]",
-                        "]",
-                    }))
+                        "]"
+                    ))
                     .Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
                     .Select(x => x.InnerText.Trim())
                     .ToList()

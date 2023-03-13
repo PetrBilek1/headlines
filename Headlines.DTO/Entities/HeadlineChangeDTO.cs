@@ -1,6 +1,6 @@
 ﻿namespace Headlines.DTO.Entities
 {
-    public sealed class HeadlineChangeDTO
+    public sealed class HeadlineChangeDto
     {
         public long Id { get; set; }
         public long ArticleId { get; set; }
@@ -10,6 +10,6 @@
         public string TitleAfter { get; set; }
         public long UpvoteCount { get; set; }
 
-        public ArticleDTO Article { get; set; }
+        public ArticleDto Article { get; set; }
     }
 }

@@ -18,11 +18,11 @@ namespace Headlines.RSSProcessingMicroService
             _serviceProvider = serviceProvider;
         }
 
-        public override async Task StartAsync(CancellationToken stoppingToken)
+        public override async Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("RSS Reader Hosted Service is starting.");
 
-            await base.StartAsync(stoppingToken);
+            await base.StartAsync(cancellationToken);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -34,7 +34,7 @@ namespace Headlines.RSSProcessingMicroService
                 {
                     using IServiceScope scope = _serviceProvider.CreateScope();
 
-                    IRSSProcessorService processorService = scope.ServiceProvider.GetRequiredService<IRSSProcessorService>();
+                    IRssProcessorService processorService = scope.ServiceProvider.GetRequiredService<IRssProcessorService>();
 
                     var result = await processorService.DoWorkAsync(stoppingToken);
 
@@ -47,14 +47,14 @@ namespace Headlines.RSSProcessingMicroService
             }
         }
 
-        public override async Task StopAsync(CancellationToken stoppingToken)
+        public override async Task StopAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("RSS Reader Hosted Service is stopping.");
 
-            await base.StopAsync(stoppingToken);
+            await base.StopAsync(cancellationToken);
         }
 
-        private async Task PublishScrapeRequestsAsync(List<ArticleDTO> articles, IServiceScope scope)
+        private static async Task PublishScrapeRequestsAsync(List<ArticleDto> articles, IServiceScope scope)
         {
             IEventBus eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
 

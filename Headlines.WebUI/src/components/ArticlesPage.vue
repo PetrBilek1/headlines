@@ -76,7 +76,7 @@ export default {
     },
     methods: {
         async fetchArticleSources() {
-            var response = await axios.get(endpoints.ArticleSources.GetAll())
+            let response = await axios.get(endpoints.ArticleSources.GetAll())
 
             this.articleSources = []
             response.data.articleSources.forEach(x => this.articleSources.push({ source: x, isSelected: true }))
@@ -84,7 +84,7 @@ export default {
             this.setAllSourcesSelected()
         },
         async fetchArticlePage(page) {
-            var response = await axios.post(endpoints.Articles.Search(), {
+            let response = await axios.post(endpoints.Articles.Search(), {
                     skip: page * this.articlesPerPage,
                     take: this.articlesPerPage,
                     searchPrompt: this.searchPrompt,
@@ -98,14 +98,14 @@ export default {
             this.setArticlesPageState()
         },
         toggleSelectArticleSource(id) {
-            var sourcePair = this.articleSources.find(x => x.source.id === id)
+            let sourcePair = this.articleSources.find(x => x.source.id === id)
 
             sourcePair.isSelected = !sourcePair.isSelected
 
             this.setAllSourcesSelected()
         },
         toggleAllSources(){
-            var wantedState = !this.allSourcesSelected
+            let wantedState = !this.allSourcesSelected
 
             this.articleSources.forEach(x => x.isSelected = wantedState)
 
@@ -115,7 +115,7 @@ export default {
             this.allSourcesSelected = this.articleSources.every(x => x.isSelected)
         },
         getSelectedSourcesArray() {
-            var selected = []
+            let selected = []
 
             this.articleSources.forEach(x => {
                 if (x.isSelected) {
@@ -128,9 +128,9 @@ export default {
                 : selected
         },
         setArticlesPageState() {
-            var articlesPageState = this.$store.state.articlesPage
+            let articlesPageState = this.$store.state.articlesPage
 
-            var selectedSources = []
+            let selectedSources = []
             this.articleSources.forEach(x => {
                 if (!x.isSelected)
                     return
@@ -149,7 +149,7 @@ export default {
         
     },
     async beforeMount() {
-        var articlesPageState = this.$store.state.articlesPage
+        let articlesPageState = this.$store.state.articlesPage
 
         this.selectedPage = articlesPageState.selectedPage
         this.startPage = this.selectedPage

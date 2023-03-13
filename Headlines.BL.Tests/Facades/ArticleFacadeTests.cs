@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using Headlines.BL.DAO;
+using Headlines.BL.Exceptions;
 using Headlines.BL.Facades;
 using Headlines.DTO.Entities;
 using Headlines.ORM.Core.Entities;
@@ -16,7 +17,7 @@ namespace Headlines.BL.Tests.Facades
         private readonly ArticleFacade _sut;
         private readonly TestData _data;
 
-        private readonly Mock<IArticleDAO> _articleDaoMock = new Mock<IArticleDAO>(MockBehavior.Strict);
+        private readonly Mock<IArticleDao> _articleDaoMock = new Mock<IArticleDao>(MockBehavior.Strict);
         private readonly Mock<IUnitOfWorkProvider> _uowProviderMock = new Mock<IUnitOfWorkProvider>(MockBehavior.Strict);
         private readonly Mock<IUnitOfWork> _uowMock = new Mock<IUnitOfWork>(MockBehavior.Strict);
         private readonly IMapper _mapper = TestUtils.GetMapper();
@@ -40,7 +41,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(_data.Article1);
 
             //Act
-            ArticleDTO result = await _sut.GetArticleByIdIncludeSourceAsync(_data.Article1.Id, default);
+            ArticleDto result = await _sut.GetArticleByIdIncludeSourceAsync(_data.Article1.Id, default);
 
             //Assert
             result.Should().NotBeNull();
@@ -63,7 +64,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(_data.Article1);
 
             //Act
-            ArticleDTO result = await _sut.GetArticleByIdIncludeDetailsAsync(_data.Article1.Id, default);
+            ArticleDto result = await _sut.GetArticleByIdIncludeDetailsAsync(_data.Article1.Id, default);
 
             //Assert
             result.Should().NotBeNull();
@@ -86,7 +87,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(_data.Articles);
 
             //Act
-            List<ArticleDTO> result = await _sut.GetArticlesByUrlIdsAsync(_data.UrlIds);
+            List<ArticleDto> result = await _sut.GetArticlesByUrlIdsAsync(_data.UrlIds);
 
             //Assert
             result.Should().NotBeNull();
@@ -101,7 +102,7 @@ namespace Headlines.BL.Tests.Facades
         public async Task CreateOrUpdateArticleAsync_ShouldCreateArticle()
         {
             //Arrange
-            ArticleDTO article = new()
+            ArticleDto article = new()
             {
                 Id = default,
                 SourceId = 1,
@@ -121,7 +122,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(new Article() { Id = 1 });
 
             //Act
-            ArticleDTO result = await _sut.CreateOrUpdateArticleAsync(article);
+            ArticleDto result = await _sut.CreateOrUpdateArticleAsync(article);
 
             //Assert
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(), Times.Once());
@@ -142,7 +143,7 @@ namespace Headlines.BL.Tests.Facades
         public async Task CreateOrUpdateArticleAsync_ShouldUpdateArticle()
         {
             //Arrange
-            ArticleDTO article = new()
+            ArticleDto article = new()
             {
                 Id = 1,
                 SourceId = 1,
@@ -162,7 +163,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(_data.Article1);
 
             //Act
-            ArticleDTO result = await _sut.CreateOrUpdateArticleAsync(article);
+            ArticleDto result = await _sut.CreateOrUpdateArticleAsync(article);
 
             //Assert
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(), Times.Once());
@@ -186,7 +187,7 @@ namespace Headlines.BL.Tests.Facades
         public async Task GetArticlesByFiltersSkipTakeAsync_ShouldReturnArticles(int skip, int take)
         {
             //Arrange
-            List<Article> data = _data.Articles.GetRange(skip, Math.Min(_data.Articles.Count() - skip, take));
+            List<Article> data = _data.Articles.GetRange(skip, Math.Min(_data.Articles.Count - skip, take));
 
             _uowProviderMock.Setup(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking))
                 .Returns(_uowMock.Object);
@@ -196,7 +197,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(data);
 
             //Act
-            List<ArticleDTO> result = await _sut.GetArticlesByFiltersSkipTakeAsync(skip, take, null, null, null, null, default);
+            List<ArticleDto> result = await _sut.GetArticlesByFiltersSkipTakeAsync(skip, take, null, null, null, null, default);
 
             //Assert
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking), Times.Once());
@@ -204,9 +205,9 @@ namespace Headlines.BL.Tests.Facades
             _articleDaoMock.Verify(x => x.GetByFiltersSkipTakeAsync(skip, take, default, null, null, null, null), Times.Once);
 
             result.Should().NotBeNull();
-            result.Should().HaveCount(Math.Min(_data.Articles.Count() - skip, take));
+            result.Should().HaveCount(Math.Min(_data.Articles.Count - skip, take));
 
-            for(int i = 0; i < data.Count(); i++)
+            for(int i = 0; i < data.Count; i++)
             {
                 var expected = data[i];
                 var actual = result[i];
@@ -247,7 +248,7 @@ namespace Headlines.BL.Tests.Facades
         {
             //Arrange
             long articleId = 1;
-            ObjectDataDTO objectData = new()
+            ObjectDataDto objectData = new()
             {
                 Bucket = "bucket",
                 Key = "key",
@@ -264,7 +265,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(_data.Article1);
 
             //Act
-            ObjectDataDTO result = await _sut.InsertArticleDetailByArticleIdAsync(articleId, objectData);
+            ObjectDataDto result = await _sut.InsertArticleDetailByArticleIdAsync(articleId, objectData);
 
             //Assert
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(), Times.Once());
@@ -280,7 +281,7 @@ namespace Headlines.BL.Tests.Facades
         public async Task InsertArticleDetailByArticleIdAsync_WhenArticleNotFound_ShouldThrowException()
         {
             //Arrange
-            ObjectDataDTO objectData = new()
+            ObjectDataDto objectData = new()
             {
                 Bucket = "bucket",
                 Key = "key",
@@ -300,7 +301,7 @@ namespace Headlines.BL.Tests.Facades
             Func<Task> act = async () => await _sut.InsertArticleDetailByArticleIdAsync(1, objectData);
 
             //Assert           
-            await act.Should().ThrowAsync<Exception>().WithMessage($"Article with Id '{1}' not found.");
+            await act.Should().ThrowAsync<ResourceNotFoundException>().WithMessage($"Article with Id '{1}' not found.");
 
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(), Times.Once());
             _uowMock.Verify(x => x.CommitAsync(), Times.Never);

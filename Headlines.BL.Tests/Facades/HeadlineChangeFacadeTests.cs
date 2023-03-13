@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using Headlines.BL.DAO;
+using Headlines.BL.Exceptions;
 using Headlines.BL.Facades;
 using Headlines.DTO.Entities;
 using Headlines.ORM.Core.Entities;
@@ -18,7 +19,7 @@ namespace Headlines.BL.Tests.Facades
 
         private readonly Mock<IUnitOfWorkProvider> _uowProviderMock = new Mock<IUnitOfWorkProvider>(MockBehavior.Strict);
         private readonly Mock<IUnitOfWork> _uowMock = new Mock<IUnitOfWork>(MockBehavior.Strict);
-        private readonly Mock<IHeadlineChangeDAO> _headlineChangeDaoMock = new Mock<IHeadlineChangeDAO>(MockBehavior.Strict);
+        private readonly Mock<IHeadlineChangeDao> _headlineChangeDaoMock = new Mock<IHeadlineChangeDao>(MockBehavior.Strict);
         private readonly IMapper _mapper = TestUtils.GetMapper();
 
         public HeadlineChangeFacadeTests()
@@ -31,7 +32,7 @@ namespace Headlines.BL.Tests.Facades
         public async Task CreateOrUpdateHeadlineChangeAsync_ShouldCreateHeadlineChange()
         {
             //Arrange
-            HeadlineChangeDTO headlineChange = new()
+            HeadlineChangeDto headlineChange = new()
             {
                 Id = default,
                 ArticleId = 1,
@@ -51,7 +52,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(new HeadlineChange() { Id = 1 });
 
             //Act
-            HeadlineChangeDTO result = await _sut.CreateOrUpdateHeadlineChangeAsync(headlineChange);
+            HeadlineChangeDto result = await _sut.CreateOrUpdateHeadlineChangeAsync(headlineChange);
 
             //Assert
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(), Times.Once());
@@ -72,7 +73,7 @@ namespace Headlines.BL.Tests.Facades
         public async Task CreateOrUpdateHeadlineChangeAsync_ShouldUpdateHeadlineChange()
         {
             //Arrange
-            HeadlineChangeDTO headlineChange = new()
+            HeadlineChangeDto headlineChange = new()
             {
                 Id = 1,
                 ArticleId = 1,
@@ -92,7 +93,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(_data.HeadlineChange1);
 
             //Act
-            HeadlineChangeDTO result = await _sut.CreateOrUpdateHeadlineChangeAsync(headlineChange);
+            HeadlineChangeDto result = await _sut.CreateOrUpdateHeadlineChangeAsync(headlineChange);
 
             //Assert
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(), Times.Once());
@@ -120,7 +121,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(_data.HeadlineChanges);
 
             //Act
-            List<HeadlineChangeDTO> result = await _sut.GetHeadlineChangesOrderByUpvotesCountIncludeArticleAsync();
+            List<HeadlineChangeDto> result = await _sut.GetHeadlineChangesOrderByUpvotesCountIncludeArticleAsync();
 
             //Assert
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking), Times.Once);
@@ -142,7 +143,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(_data.HeadlineChanges);
 
             //Act
-            List<HeadlineChangeDTO> result = await _sut.GetHeadlineChangesOrderByDetectedDescendingIncludeArticleAsync(10, 10);
+            List<HeadlineChangeDto> result = await _sut.GetHeadlineChangesOrderByDetectedDescendingIncludeArticleAsync(10, 10);
 
             //Assert
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking), Times.Once);
@@ -185,7 +186,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(_data.HeadlineChanges);
 
             //Act
-            List<HeadlineChangeDTO> result = await _sut.GetHeadlineChangesByArticleIdOrderByDetectedDescendingAsync(1, 10, 10);
+            List<HeadlineChangeDto> result = await _sut.GetHeadlineChangesByArticleIdOrderByDetectedDescendingAsync(1, 10, 10);
 
             //Assert
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking), Times.Once);
@@ -213,7 +214,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(new HeadlineChange() { UpvoteCount = originalUpvoteCount });
 
             //Act
-            HeadlineChangeDTO result = await _sut.AddUpvotesToHeadlineChangeAsync(1, amount);
+            HeadlineChangeDto result = await _sut.AddUpvotesToHeadlineChangeAsync(1, amount);
 
             //Assert
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(), Times.Once);
@@ -237,7 +238,7 @@ namespace Headlines.BL.Tests.Facades
             Func<Task> act = async () => await _sut.AddUpvotesToHeadlineChangeAsync(1, 1);
 
             //Assert
-            await act.Should().ThrowAsync<Exception>().WithMessage($"HeadlineChange with Id '{1}' not found.");
+            await act.Should().ThrowAsync<ResourceNotFoundException>().WithMessage($"HeadlineChange with Id '{1}' not found.");
 
             _uowMock.Verify(x => x.Dispose(), Times.Once);
             _uowMock.Verify(x => x.CommitAsync(), Times.Never);
@@ -257,7 +258,7 @@ namespace Headlines.BL.Tests.Facades
             _headlineChangeDaoMock.Setup(x => x.Delete(_data.HeadlineChange1.Id));
 
             //Act
-            HeadlineChangeDTO result = await _sut.DeleteHeadlineChangeAsync(new HeadlineChangeDTO { Id = _data.HeadlineChange1.Id });
+            HeadlineChangeDto result = await _sut.DeleteHeadlineChangeAsync(new HeadlineChangeDto { Id = _data.HeadlineChange1.Id });
 
             //Assert
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(), Times.Once);
@@ -277,10 +278,10 @@ namespace Headlines.BL.Tests.Facades
                 .Returns(Task.FromResult<HeadlineChange>(null!));
 
             //Act
-            Func<Task> act = async () => await _sut.DeleteHeadlineChangeAsync(new HeadlineChangeDTO { Id = _data.HeadlineChange1.Id });
+            Func<Task> act = async () => await _sut.DeleteHeadlineChangeAsync(new HeadlineChangeDto { Id = _data.HeadlineChange1.Id });
 
             //Assert
-            await act.Should().ThrowAsync<Exception>().WithMessage($"HeadlineChange with Id '{_data.HeadlineChange1.Id}' does not exist.");
+            await act.Should().ThrowAsync<ResourceNotFoundException>().WithMessage($"HeadlineChange with Id '{_data.HeadlineChange1.Id}' does not exist.");
 
             _uowMock.Verify(x => x.Dispose(), Times.Once);
             _uowMock.Verify(x => x.CommitAsync(), Times.Never);
@@ -291,7 +292,7 @@ namespace Headlines.BL.Tests.Facades
         {
             public List<HeadlineChange> HeadlineChanges => new() { HeadlineChange1, HeadlineChange2 };
 
-            public HeadlineChange HeadlineChange1 => new()
+            public HeadlineChange HeadlineChange1 { get; set; } = new()
             {
                 Id = 1,
                 ArticleId = 1,
@@ -301,7 +302,7 @@ namespace Headlines.BL.Tests.Facades
                 UpvoteCount = 1
             };
 
-            public HeadlineChange HeadlineChange2 => new()
+            public HeadlineChange HeadlineChange2 { get; set; } = new()
             {
                 Id = 2,
                 ArticleId = 2,

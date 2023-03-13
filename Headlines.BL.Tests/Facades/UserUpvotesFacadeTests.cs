@@ -18,7 +18,7 @@ namespace Headlines.BL.Tests.Facades
 
         private readonly Mock<IUnitOfWorkProvider> _uowProviderMock = new Mock<IUnitOfWorkProvider>(MockBehavior.Strict);
         private readonly Mock<IUnitOfWork> _uowMock = new Mock<IUnitOfWork>(MockBehavior.Strict);
-        private readonly Mock<IUserUpvotesDAO> _userUpvotesDaoMock = new Mock<IUserUpvotesDAO>(MockBehavior.Strict);
+        private readonly Mock<IUserUpvotesDao> _userUpvotesDaoMock = new Mock<IUserUpvotesDao>(MockBehavior.Strict);
         private readonly IMapper _mapper = TestUtils.GetMapper();
 
         public UserUpvotesFacadeTests()
@@ -31,7 +31,7 @@ namespace Headlines.BL.Tests.Facades
         public async Task CreateOrUpdateUserUpvotesAsync_ShouldCreateUserUpvotes()
         {
             //Arrange
-            UserUpvotesDTO upvotes = new()
+            UserUpvotesDto upvotes = new()
             {
                 Id = default,
                 UserToken = "userToken",
@@ -48,7 +48,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(new UserUpvotes() { Id = 1 });
 
             //Act
-            UserUpvotesDTO result = await _sut.CreateOrUpdateUserUpvotesAsync(upvotes);
+            UserUpvotesDto result = await _sut.CreateOrUpdateUserUpvotesAsync(upvotes);
 
             //Assert
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(), Times.Once());
@@ -66,7 +66,7 @@ namespace Headlines.BL.Tests.Facades
         public async Task CreateOrUpdateUserUpvotesAsync_ShouldUpdateUserUpvotes()
         {
             //Arrange
-            UserUpvotesDTO upvotes = new()
+            UserUpvotesDto upvotes = new()
             {
                 Id = 1,
                 UserToken = "NEWuserToken",
@@ -83,7 +83,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(_data.UserUpvotes1);
 
             //Act
-            UserUpvotesDTO result = await _sut.CreateOrUpdateUserUpvotesAsync(upvotes);
+            UserUpvotesDto result = await _sut.CreateOrUpdateUserUpvotesAsync(upvotes);
 
             //Assert
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(), Times.Once);
@@ -109,7 +109,7 @@ namespace Headlines.BL.Tests.Facades
                 .ReturnsAsync(_data.UserUpvotes1);
 
             //Act
-            UserUpvotesDTO result = await _sut.GetUserUpvotesByUserTokenAsync(_data.UserUpvotes1.UserToken);
+            UserUpvotesDto result = await _sut.GetUserUpvotesByUserTokenAsync(_data.UserUpvotes1.UserToken);
 
             //Assert
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking), Times.Once);

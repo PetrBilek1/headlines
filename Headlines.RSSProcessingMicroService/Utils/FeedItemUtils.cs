@@ -6,7 +6,7 @@ namespace Headlines.RSSProcessingMicroService.Utils
 {
     public static class FeedItemUtils
     {
-        public static string GetUrlId(FeedItemDTO feedItem, ArticleSourceDTO source)
+        public static string GetUrlId(FeedItemDTO feedItem, ArticleSourceDto source)
         {
             return source.UrlIdSource switch
             {

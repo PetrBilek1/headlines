@@ -28,11 +28,11 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
         public async Task GetHeadlineChangesByArticleId_ShouldReturnHeadlineChanges(int skip, int take, int count, int matchingCount)
         {
             //Arrange
-            List<HeadlineChangeDTO> data = DataGenerator.GenerateHeadlineChanges(count).ToList();
-            ArticleDTO matchingArticle = data.First().Article;
+            List<HeadlineChangeDto> data = DataGenerator.GenerateHeadlineChanges(count).ToList();
+            ArticleDto matchingArticle = data.First().Article;
 
             await using var populator = await DatabasePopulator.CreateAsync(_serviceProvider);
-            matchingArticle = (await populator.InsertArticlesAsync(new List<ArticleDTO> { matchingArticle })).First();
+            matchingArticle = (await populator.InsertArticlesAsync(new List<ArticleDto> { matchingArticle })).First();
 
             for (int i = 0; i < matchingCount; i++)
             {
@@ -49,7 +49,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Articles
             //Assert
             var expectedData = data.Where(x => x.ArticleId == matchingArticle.Id).ToList();
             expectedData = skip >= expectedData.Count
-                ? new List<HeadlineChangeDTO>()
+                ? new List<HeadlineChangeDto>()
                 : expectedData.GetRange(skip, Math.Max(0, Math.Min(expectedData.Count - skip, take)));
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);

@@ -8,14 +8,14 @@ namespace Headlines.BL.Configs
     {
         public MappingProfile()
         {
-            CreateMap<Article, ArticleDTO>();
-            CreateMap<ArticleSource, ArticleSourceDTO>();
+            CreateMap<Article, ArticleDto>();
+            CreateMap<ArticleSource, ArticleSourceDto>();
 
-            CreateMap<HeadlineChange, HeadlineChangeDTO>();
+            CreateMap<HeadlineChange, HeadlineChangeDto>();
 
-            CreateMap<ObjectData, ObjectDataDTO>();
+            CreateMap<ObjectData, ObjectDataDto>();
 
-            CreateMap<UserUpvotes, UserUpvotesDTO>();
+            CreateMap<UserUpvotes, UserUpvotesDto>();
         }
     }
 }

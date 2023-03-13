@@ -47,7 +47,7 @@ namespace Headlines.WebAPI.Controllers.V1
         {
             take = Math.Min(take, MaxTake);
 
-            List<HeadlineChangeDTO> headlineChanges = await _headlineChangeFacade.GetHeadlineChangesOrderByUpvotesCountIncludeArticleAsync(take, cancellationToken);
+            List<HeadlineChangeDto> headlineChanges = await _headlineChangeFacade.GetHeadlineChangesOrderByUpvotesCountIncludeArticleAsync(take, cancellationToken);
 
             return Ok(new GetTopUpvotedResponse
             {
@@ -60,7 +60,7 @@ namespace Headlines.WebAPI.Controllers.V1
         {
             take = Math.Min(take, MaxTake);
 
-            List<HeadlineChangeDTO> headlineChanges = await _headlineChangeFacade.GetHeadlineChangesOrderByDetectedDescendingIncludeArticleAsync(skip, take, cancellationToken);
+            List<HeadlineChangeDto> headlineChanges = await _headlineChangeFacade.GetHeadlineChangesOrderByDetectedDescendingIncludeArticleAsync(skip, take, cancellationToken);
 
             return Ok(new GetSkipTakeResponse
             {
@@ -76,8 +76,8 @@ namespace Headlines.WebAPI.Controllers.V1
             if (string.IsNullOrEmpty(request.UserToken))
                 return BadRequest(Messages.M0002);
 
-            UserUpvotesDTO userUpvotes = await _userUpvotesFacade.GetUserUpvotesByUserTokenAsync(request.UserToken, cancellationToken);
-            userUpvotes ??= await _userUpvotesFacade.CreateOrUpdateUserUpvotesAsync(new UserUpvotesDTO
+            UserUpvotesDto userUpvotes = await _userUpvotesFacade.GetUserUpvotesByUserTokenAsync(request.UserToken, cancellationToken);
+            userUpvotes ??= await _userUpvotesFacade.CreateOrUpdateUserUpvotesAsync(new UserUpvotesDto
             {
                 UserToken = request.UserToken,
                 Json = JsonConvert.SerializeObject(new List<UpvoteModel>(), Formatting.None)
@@ -91,7 +91,7 @@ namespace Headlines.WebAPI.Controllers.V1
                     Upvotes = jsonUpvotes
                 });
 
-            HeadlineChangeDTO upvotedChange = await _headlineChangeFacade.AddUpvotesToHeadlineChangeAsync(request.HeadlineChangeId, 1);
+            await _headlineChangeFacade.AddUpvotesToHeadlineChangeAsync(request.HeadlineChangeId, 1);
 
             jsonUpvotes.Add(new UpvoteModel
             {
@@ -102,7 +102,7 @@ namespace Headlines.WebAPI.Controllers.V1
 
             userUpvotes.Json = JsonConvert.SerializeObject(jsonUpvotes, Formatting.None);
 
-            UserUpvotesDTO updatedUserUpvotes = await _userUpvotesFacade.CreateOrUpdateUserUpvotesAsync(userUpvotes);
+            await _userUpvotesFacade.CreateOrUpdateUserUpvotesAsync(userUpvotes);
 
             return Ok(new UpvoteResponse 
             { 

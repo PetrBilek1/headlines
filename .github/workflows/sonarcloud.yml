@@ -30,6 +30,9 @@ jobs:
       - name: Add nuget package
         run: dotnet nuget add source --username ${{ github.repository_owner }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
       
+      - name: Install dotnet coverage
+        run: dotnet tool install --global dotnet-coverage
+
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
@@ -57,6 +60,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"PetrBilek1_headlines" /o:"petrbilek1" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build ./Headlines.sln
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"PetrBilek1_headlines" /o:"petrbilek1" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet build ./Headlines.sln --configuration Release
+          dotnet-coverage collect "dotnet test Headlines.sln --filter FullyQualifiedName\!~Integration" -f xml -o "coverage.xml"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"

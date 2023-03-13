@@ -3,7 +3,7 @@ using PBilek.ORM.Core.DAO;
 
 namespace Headlines.BL.DAO
 {
-    public interface IObjectDataDAO : IDAO<ObjectData, long>
+    public interface IObjectDataDao : IDAO<ObjectData, long>
     {
         Task<List<ObjectData>> GetAllAsync(CancellationToken cancellationToken);
     }

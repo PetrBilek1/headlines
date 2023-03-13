@@ -173,7 +173,7 @@ export default {
         await this.fetchHeadlineChangePage(this.currentPage)
         await this.fetchArticleDetailById(this.$route.params.id)
 
-        if (this.article.source.scrapingSupported != true)
+        if (!this.article.source.scrapingSupported)
             return
         
         this.connectWebSocketIfNotAlready()
@@ -181,7 +181,7 @@ export default {
         this.webSocket.onmessage = (event) => { 
             const data = JSON.parse(event.data)
             if (data.messageType === "article-detail-scraped" && data.articleId == this.$route.params.id) {
-                if (data.wasSuccessful == true) {
+                if (data.wasSuccessful) {
                     this.articleDetail = data.detail
                 }
                 setTimeout(() => { this.articleDetailScrapeRequested = false }, 1000)

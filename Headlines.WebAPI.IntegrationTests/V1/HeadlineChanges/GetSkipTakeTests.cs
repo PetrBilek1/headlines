@@ -101,7 +101,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
             content.Should().NotBeNull();
             content.HeadlineChanges.Should().NotBeNull();
 
-            List<HeadlineChangeDTO> dataOrdered = data.OrderByDescending(x => x.Detected).ToList();
+            List<HeadlineChangeDto> dataOrdered = data.OrderByDescending(x => x.Detected).ToList();
             for (int i = 0; i < dataOrdered.Count; i++)
             {
                 var actual = content.HeadlineChanges[i];

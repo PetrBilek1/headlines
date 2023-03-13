@@ -28,7 +28,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 ArticleScraperType.SeznamZpravy => new SeznamZpravyScraper(_htmlDocumentLoader),
                 ArticleScraperType.Lidovky => new LidovkyScraper(_htmlDocumentLoader),
                 ArticleScraperType.DenikReferendum => new DenikReferendumScraper(_htmlDocumentLoader),
-                ArticleScraperType.A2larm => new A2larmScraper(_htmlDocumentLoader),
+                ArticleScraperType.A2larm => new A2LarmScraper(_htmlDocumentLoader),
                 ArticleScraperType.DenikN => new DeniknScraper(_htmlDocumentLoader),
                 ArticleScraperType.E15 => new E15Scraper(_htmlDocumentLoader),
                 ArticleScraperType.ParlamentniListy => new ParlamentniListyScraper(_htmlDocumentLoader),

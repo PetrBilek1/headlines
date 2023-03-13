@@ -11,22 +11,22 @@ namespace Headlines.BL.Facades
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWorkProvider _uowProvider;
-        private readonly IArticleSourceDAO _articleSourceDAO;
+        private readonly IArticleSourceDao _articleSourceDAO;
 
-        public ArticleSourceFacade(IMapper mapper, IUnitOfWorkProvider uowProvider, IArticleSourceDAO articleSourceDAO)
+        public ArticleSourceFacade(IMapper mapper, IUnitOfWorkProvider uowProvider, IArticleSourceDao articleSourceDAO)
         {
             _mapper = mapper;
             _uowProvider = uowProvider;
             _articleSourceDAO = articleSourceDAO;
          }
 
-        public async Task<List<ArticleSourceDTO>> GetAllArticleSourcesAsync(CancellationToken cancellationToken = default)
+        public async Task<List<ArticleSourceDto>> GetAllArticleSourcesAsync(CancellationToken cancellationToken = default)
         {
             using var _ = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
             List<ArticleSource> sources = await _articleSourceDAO.GetAllAsync(cancellationToken);
 
-            return _mapper.Map<List<ArticleSourceDTO>>(sources);
+            return _mapper.Map<List<ArticleSourceDto>>(sources);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Headlines.BL.Tests
 {
     public static class AssertionUtils
     {
-        public static void AssertObjectDataMatches(ObjectDataDTO expected, ObjectDataDTO actual)
+        public static void AssertObjectDataMatches(ObjectDataDto expected, ObjectDataDto actual)
         {
             actual.Id.Should().Be(expected.Id);
             actual.Bucket.Should().Be(expected.Bucket);
@@ -15,7 +15,7 @@ namespace Headlines.BL.Tests
             actual.Created.Should().Be(expected.Created);
             actual.Changed.Should().Be(expected.Changed);
         }
-        public static void AssertObjectDataMatches(ObjectDataDTO expected, ObjectData actual)
+        public static void AssertObjectDataMatches(ObjectDataDto expected, ObjectData actual)
         {
             actual.Id.Should().Be(expected.Id);
             actual.Bucket.Should().Be(expected.Bucket);

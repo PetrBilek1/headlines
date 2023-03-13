@@ -8,7 +8,7 @@
                 <b style="font-size: 16px;">{{ getLocalTimeString(change.detected) }}</b>
             </div>
             <div :class="[order ? 'col-lg-10' : 'col-lg-9 col-xl-10']">
-                <div class="row" style="">
+                <div class="row">
                     <div :class="['col-lg-6', 'd-none', hovering == true || clicked == true ? 'd-lg-none' : 'd-lg-block', 'single-line-text', 'col-anim', 'cursor-default']" style="color: #9E0937;" ref="titlebefore">
                         {{ change.titleBefore }}
                     </div>
@@ -109,8 +109,8 @@ export default {
             return moment(date).format("HH:mm DD.MM.")
         },
         enterTitle(type) {
-            var titleBefore = this.$refs["titlebefore"]
-            var titleAfter = this.$refs["titleafter"]
+            let titleBefore = this.$refs["titlebefore"]
+            let titleAfter = this.$refs["titleafter"]
 
             titleBefore.classList.remove("col-lg-6")
             titleAfter.classList.remove("col-lg-6")
@@ -125,8 +125,8 @@ export default {
             }
         },
         leaveTitle(type) {
-            var titleBefore = this.$refs["titlebefore"]
-            var titleAfter = this.$refs["titleafter"]
+            let titleBefore = this.$refs["titlebefore"]
+            let titleAfter = this.$refs["titleafter"]
 
             titleBefore.classList.add("col-lg-6")
             titleAfter.classList.add("col-lg-6")
@@ -147,14 +147,15 @@ export default {
                 fragment = document.createDocumentFragment()
 
             diff.forEach((part) => {
-                const color = part.added ? '#148C55' : part.removed ? '#9E0937' : '#000000'
+                const colorIfNotAdded = part.removed ? '#9E0937' : '#000000'
+                const color = part.added ? '#148C55' : colorIfNotAdded
                 span = document.createElement('span')
                 span.style.color = color
                 span.appendChild(document.createTextNode(part.value))
                 fragment.appendChild(span)
             });
 
-            var div = document.createElement('div');
+            let div = document.createElement('div');
             div.appendChild(fragment.cloneNode(true));
 
             return div.innerHTML

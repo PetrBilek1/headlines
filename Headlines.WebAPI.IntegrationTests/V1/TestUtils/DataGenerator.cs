@@ -11,7 +11,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
     {
         public static int Seed { get; } = 6684796;
 
-        public static IEnumerable<ArticleSourceDTO> GenerateArticleSources(int count)
+        public static IEnumerable<ArticleSourceDto> GenerateArticleSources(int count)
         {
             var articleSourceGenerator = ArticleSourceDTO();
 
@@ -21,7 +21,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
             }
         }
 
-        public static IEnumerable<ArticleDTO> GenerateArticles(int count, bool sourceHasScraper = false)
+        public static IEnumerable<ArticleDto> GenerateArticles(int count, bool sourceHasScraper = false)
         {
             var articleSourceGenerator = ArticleSourceDTO();
             if (sourceHasScraper)
@@ -37,7 +37,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
             }
         }
 
-        public static IEnumerable<ArticleDetailDTO> GenerateArticleDetails(int count)
+        public static IEnumerable<ArticleDetailDto> GenerateArticleDetails(int count)
         {
             var articleDetailGenerator = ArticleDetailDTO();
 
@@ -47,7 +47,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
             }
         }
 
-        public static IEnumerable<HeadlineChangeDTO> GenerateHeadlineChanges(int count)
+        public static IEnumerable<HeadlineChangeDto> GenerateHeadlineChanges(int count)
         {
             var articleSourceGenerator = ArticleSourceDTO();
             var articleGenerator = ArticleDTO().RuleFor(x => x.Source, articleSourceGenerator);
@@ -85,9 +85,9 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
                 .RuleFor(x => x.Date, faker => faker.Date.Between(new DateTime(2020, 10, 1), new DateTime(2022, 10, 1)));
         }
 
-        public static Faker<HeadlineChangeDTO> HeadlineChangeDTO()
+        public static Faker<HeadlineChangeDto> HeadlineChangeDTO()
         {
-            return new Faker<HeadlineChangeDTO>()
+            return new Faker<HeadlineChangeDto>()
                 .UseSeed(Seed)
                 .RuleFor(x => x.Id, y => default)
                 .RuleFor(x => x.ArticleId, y => default)
@@ -97,9 +97,9 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
                 .RuleFor(x => x.UpvoteCount, faker => faker.Random.Long(0, 1000));
         }
 
-        public static Faker<ArticleDTO> ArticleDTO(int detailCount = 0)
+        public static Faker<ArticleDto> ArticleDTO(int detailCount = 0)
         {
-            return new Faker<ArticleDTO>()
+            return new Faker<ArticleDto>()
                 .UseSeed(Seed)
                 .RuleFor(x => x.Id, y => default)
                 .RuleFor(x => x.SourceId, y => default)
@@ -110,9 +110,9 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
                 .RuleFor(x => x.Details, y => ObjectDataDTO().GenerateBetween(detailCount, detailCount));
         }
 
-        public static Faker<ArticleSourceDTO> ArticleSourceDTO()
+        public static Faker<ArticleSourceDto> ArticleSourceDTO()
         {
-            return new Faker<ArticleSourceDTO>()
+            return new Faker<ArticleSourceDto>()
                 .UseSeed(Seed)
                 .RuleFor(x => x.Id, y => default)
                 .RuleFor(x => x.Name, faker => faker.Lorem.Word())
@@ -120,9 +120,9 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
                 .RuleFor(x => x.UrlIdSource, y => ArticleUrlIdSource.Id);
         }
 
-        public static Faker<ObjectDataDTO> ObjectDataDTO()
+        public static Faker<ObjectDataDto> ObjectDataDTO()
         {
-            return new Faker<ObjectDataDTO>()
+            return new Faker<ObjectDataDto>()
                 .UseSeed(Seed)
                 .RuleFor(x => x.Id, y => default)
                 .RuleFor(x => x.Bucket, y => "bucket")
@@ -131,9 +131,9 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
                 .RuleFor(x => x.Created, faker => faker.Date.Between(new DateTime(2020, 10, 1), new DateTime(2022, 10, 1)));
         }
 
-        public static Faker<ArticleDetailDTO> ArticleDetailDTO()
+        public static Faker<ArticleDetailDto> ArticleDetailDTO()
         {
-            return new Faker<ArticleDetailDTO>()
+            return new Faker<ArticleDetailDto>()
                 .UseSeed(Seed)
                 .RuleFor(x => x.IsPaywalled, faker => faker.Random.Bool())
                 .RuleFor(x => x.Title, faker => faker.Lorem.Sentence())

@@ -6,14 +6,14 @@ using PBilek.Infrastructure.DatetimeProvider;
 
 namespace Headlines.RSSProcessingMicroService.Services
 {
-    public sealed class RSSProcessorService : IRSSProcessorService
+    public sealed class RssProcessorService : IRssProcessorService
     {
-        private readonly IRSSSourceReaderService _sourceReaderService;
+        private readonly IRssSourceReaderService _sourceReaderService;
         private readonly IArticleFacade _articleFacade;
         private readonly IHeadlineChangeFacade _headlineChangeFacade;
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public RSSProcessorService(IRSSSourceReaderService sourceReaderService, IArticleFacade articleFacade, IHeadlineChangeFacade headlineChangeFacade, IDateTimeProvider dateTimeProvider)
+        public RssProcessorService(IRssSourceReaderService sourceReaderService, IArticleFacade articleFacade, IHeadlineChangeFacade headlineChangeFacade, IDateTimeProvider dateTimeProvider)
         {
             _sourceReaderService = sourceReaderService;
             _articleFacade = articleFacade;
@@ -21,10 +21,10 @@ namespace Headlines.RSSProcessingMicroService.Services
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<ProcessingResultDTO> DoWorkAsync(CancellationToken cancellationToken = default)
+        public async Task<ProcessingResultDto> DoWorkAsync(CancellationToken cancellationToken = default)
         {
             List<FeedItemWithArticle> feedItems = await _sourceReaderService.ReadFeedItemsFromSourcesAsync(cancellationToken);
-            var result = new ProcessingResultDTO();
+            var result = new ProcessingResultDto();
 
             foreach (FeedItemWithArticle group in feedItems)
             {
@@ -35,16 +35,16 @@ namespace Headlines.RSSProcessingMicroService.Services
                     await RecordHeadlineChangeAsync(group, result);
                 }
 
-                ArticleDTO article = await _articleFacade.CreateOrUpdateArticleAsync(group.Article);
+                ArticleDto article = await _articleFacade.CreateOrUpdateArticleAsync(group.Article);
                 AddArticleToResult(result, article, createdArticle);
             }
 
             return result;
         }    
 
-        private async Task RecordHeadlineChangeAsync(FeedItemWithArticle feedItem, ProcessingResultDTO result)
+        private async Task RecordHeadlineChangeAsync(FeedItemWithArticle feedItem, ProcessingResultDto result)
         {
-            HeadlineChangeDTO change = await _headlineChangeFacade.CreateOrUpdateHeadlineChangeAsync(new HeadlineChangeDTO
+            HeadlineChangeDto change = await _headlineChangeFacade.CreateOrUpdateHeadlineChangeAsync(new HeadlineChangeDto
             {
                 ArticleId = feedItem.Article!.Id,
                 Detected = _dateTimeProvider.Now,
@@ -58,7 +58,7 @@ namespace Headlines.RSSProcessingMicroService.Services
             feedItem.Article.Link = feedItem.FeedItem.Link;
         }
 
-        private void AddArticleToResult(ProcessingResultDTO result, ArticleDTO article, bool wasCreated)
+        private static void AddArticleToResult(ProcessingResultDto result, ArticleDto article, bool wasCreated)
         {
             if (wasCreated)
             {
@@ -74,7 +74,7 @@ namespace Headlines.RSSProcessingMicroService.Services
             if (group.Article != null)
                 return false;
 
-            group.Article = new ArticleDTO()
+            group.Article = new ArticleDto()
             {
                 SourceId = group.ArticleSource!.Id,
                 Published = group.FeedItem!.Published ?? _dateTimeProvider.Now,

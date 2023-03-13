@@ -5,9 +5,9 @@ using System.Reflection;
 
 namespace Headlines.WebAPI.DependencyResolution
 {
-    public static class WebAPIServiceCollection
+    public static class WebApiServiceCollection
     {
-        public static IServiceCollection AddWebAPIDependencyGroup(this IServiceCollection services)
+        public static IServiceCollection AddWebApiDependencyGroup(this IServiceCollection services)
         {
             services.AddSingleton<IDateTimeProvider, DefaultDateTimeProvider>();
 
@@ -18,7 +18,7 @@ namespace Headlines.WebAPI.DependencyResolution
 
             services
                 .RegisterAssemblyPublicNonGenericClasses(assembliesToScan)
-                .Where(x => x.Name.EndsWith("Facade") || x.Name.EndsWith("DAO"))
+                .Where(x => x.Name.EndsWith("Facade") || x.Name.EndsWith("Dao"))
                 .AsPublicImplementedInterfaces(ServiceLifetime.Transient);
 
             return services;

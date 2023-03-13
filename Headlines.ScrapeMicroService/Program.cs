@@ -7,7 +7,7 @@ using PBilek.ORM.EntityFrameworkCore.SQL.DependencyResolution;
 
 namespace Headlines.ScrapeMicroService
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {

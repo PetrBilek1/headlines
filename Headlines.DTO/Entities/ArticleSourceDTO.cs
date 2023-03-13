@@ -2,7 +2,7 @@
 
 namespace Headlines.DTO.Entities
 {
-    public sealed class ArticleSourceDTO
+    public sealed class ArticleSourceDto
     {
         public long Id { get; set; }
         public string Name { get; set; }

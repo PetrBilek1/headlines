@@ -18,8 +18,8 @@ namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils
                 currentProperty.Should().NotBeNull();
                 currentProperty.PropertyType.Should().Be(expected.Type);
 
-                currentProperty.CustomAttributes.Should().HaveCount(expected.Attributes?.Count() ?? 0);
-                foreach(var attribute in expected.Attributes ?? new string[0])
+                currentProperty.CustomAttributes.Should().HaveCount(expected.Attributes?.Length ?? 0);
+                foreach(var attribute in expected.Attributes ?? Array.Empty<string>())
                 {
                     currentProperty.CustomAttributes
                         .FirstOrDefault(x => x.AttributeType.FullName == attribute)

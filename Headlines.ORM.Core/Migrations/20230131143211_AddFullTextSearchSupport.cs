@@ -22,7 +22,7 @@ namespace Headlines.ORM.Core.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            throw new NotSupportedException();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
             return outputDocument;
         }
 
-        private HtmlDocument ReplaceNewLineTags(HtmlDocument inputDocument, string replaceWith = "\n")
+        private static HtmlDocument ReplaceNewLineTags(HtmlDocument inputDocument, string replaceWith = "\n")
         {
             var html = inputDocument.DocumentNode.OuterHtml
                 .Replace("<br>", replaceWith)
@@ -27,7 +27,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
             return outputDocument;
         }
 
-        private HtmlDocument RemoveProhibitedNodes(HtmlDocument inputDocument)
+        private static HtmlDocument RemoveProhibitedNodes(HtmlDocument inputDocument)
         {
             var sanitizer = new HtmlSanitizer(new HtmlSanitizerOptions
             {

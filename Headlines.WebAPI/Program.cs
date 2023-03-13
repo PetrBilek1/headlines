@@ -46,7 +46,7 @@ builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 string connectionStringTemplate = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
 
 builder.Services.AddORMDependencyGroup<HeadlinesDbContext>(GetConnectionString(connectionStringTemplate));
-builder.Services.AddWebAPIDependencyGroup();
+builder.Services.AddWebApiDependencyGroup();
 builder.Services.AddObjectStorageDependencyGroup(GetObjectStorageConfiguration());
 builder.Services.AddMessageQueueDependencyGroup(GetMessageBrokerSettings());
 builder.Services.AddMappingDependencyGroup();
@@ -67,20 +67,16 @@ await dbContext.Database.MigrateAsync();
 
 app.UseCors(corsPolicyName);
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        IApiVersionDescriptionProvider descriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+    IApiVersionDescriptionProvider descriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
-        foreach (var description in descriptionProvider.ApiVersionDescriptions)
-        {
-            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
-        }
-    });
-}
+    foreach (var groupName in descriptionProvider.ApiVersionDescriptions.Select(x => x.GroupName))
+    {
+        options.SwaggerEndpoint($"/swagger/{groupName}/swagger.json", groupName.ToUpperInvariant());
+    }
+});
 
 app.UseAuthorization();
 

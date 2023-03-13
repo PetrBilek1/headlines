@@ -55,7 +55,7 @@ namespace Headlines.WebAPI.Tests.Integration.V1.HeadlineChanges
             var userToken = Guid.NewGuid().ToString();
             var headlineChange = (await populator.InsertHeadlineChangesAsync(DataGenerator.GenerateHeadlineChanges(1))).First();
             var originalUpvoteDate = new DateTime(2020, 10, 10);
-            var userUpvotes = await populator.InsertUserUpvotesAsync(new UserUpvotesDTO()
+            var userUpvotes = await populator.InsertUserUpvotesAsync(new UserUpvotesDto()
             {
                 Id = default,
                 UserToken = userToken,

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Headlines.BL.DAO;
+using Headlines.BL.Exceptions;
 using Headlines.DTO.Entities;
 using Headlines.ORM.Core.Entities;
 using PBilek.ORM.Core.Enum;
@@ -10,51 +11,51 @@ namespace Headlines.BL.Facades
     public sealed class ArticleFacade : IArticleFacade
     {
 
-        private readonly IArticleDAO _articleDAO;
+        private readonly IArticleDao _articleDao;
         private readonly IUnitOfWorkProvider _uowProvider;
         private readonly IMapper _mapper;
 
-        public ArticleFacade(IArticleDAO articleDAO, IUnitOfWorkProvider uowProvider, IMapper mapper)
+        public ArticleFacade(IArticleDao articleDAO, IUnitOfWorkProvider uowProvider, IMapper mapper)
         {
-            _articleDAO = articleDAO;
+            _articleDao = articleDAO;
             _uowProvider = uowProvider;
             _mapper = mapper;
         }
 
-        public async Task<ArticleDTO> GetArticleByIdIncludeSourceAsync(long id, CancellationToken cancellationToken = default)
+        public async Task<ArticleDto> GetArticleByIdIncludeSourceAsync(long id, CancellationToken cancellationToken = default)
         {
             using var _ = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
-            Article article = await _articleDAO.GetByIdAsync(id, cancellationToken, x => x.Source);
+            Article article = await _articleDao.GetByIdAsync(id, cancellationToken, x => x.Source);
 
-            return _mapper.Map<ArticleDTO>(article);
+            return _mapper.Map<ArticleDto>(article);
         }
 
-        public async Task<ArticleDTO> GetArticleByIdIncludeDetailsAsync(long id, CancellationToken cancellationToken = default)
+        public async Task<ArticleDto> GetArticleByIdIncludeDetailsAsync(long id, CancellationToken cancellationToken = default)
         {
             using var _ = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
-            Article article = await _articleDAO.GetByIdAsync(id, cancellationToken, x => x.Details);
+            Article article = await _articleDao.GetByIdAsync(id, cancellationToken, x => x.Details);
 
-            return _mapper.Map<ArticleDTO>(article);
+            return _mapper.Map<ArticleDto>(article);
         }
 
-        public async Task<List<ArticleDTO>> GetArticlesByUrlIdsAsync(string[] ids, CancellationToken cancellationToken = default)
+        public async Task<List<ArticleDto>> GetArticlesByUrlIdsAsync(string[] ids, CancellationToken cancellationToken = default)
         {
             using var _ = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
-            List<Article> articles = await _articleDAO.GetByUrlIdsAsync(ids, cancellationToken);
+            List<Article> articles = await _articleDao.GetByUrlIdsAsync(ids, cancellationToken);
 
-            return _mapper.Map<List<ArticleDTO>>(articles);
+            return _mapper.Map<List<ArticleDto>>(articles);
         }
 
-        public async Task<ArticleDTO> CreateOrUpdateArticleAsync(ArticleDTO articleDTO)
+        public async Task<ArticleDto> CreateOrUpdateArticleAsync(ArticleDto articleDTO)
         {
             using IUnitOfWork uow = _uowProvider.CreateUnitOfWork();
 
             Article article = articleDTO.Id == default
-                ? await _articleDAO.InsertAsync(new Article())
-                : await _articleDAO.AssertExistsAsync(articleDTO.Id);
+                ? await _articleDao.InsertAsync(new Article())
+                : await _articleDao.AssertExistsAsync(articleDTO.Id);
 
             article.SourceId = articleDTO.SourceId;
             article.Published = articleDTO.Published;
@@ -64,16 +65,16 @@ namespace Headlines.BL.Facades
 
             await uow.CommitAsync();
 
-            return _mapper.Map<ArticleDTO>(article);
+            return _mapper.Map<ArticleDto>(article);
         }
 
-        public async Task<ObjectDataDTO> InsertArticleDetailByArticleIdAsync(long articleId, ObjectDataDTO dataDTO)
+        public async Task<ObjectDataDto> InsertArticleDetailByArticleIdAsync(long articleId, ObjectDataDto dataDTO)
         {
             using IUnitOfWork uow = _uowProvider.CreateUnitOfWork();
 
-            var article = await _articleDAO.GetByIdAsync(articleId);
+            var article = await _articleDao.GetByIdAsync(articleId);
             if (article == null)
-                throw new Exception($"Article with Id '{articleId}' not found.");
+                throw new ResourceNotFoundException($"Article with Id '{articleId}' not found.");
 
             var data = new ObjectData
             {
@@ -85,23 +86,23 @@ namespace Headlines.BL.Facades
 
             await uow.CommitAsync();
 
-            return _mapper.Map<ObjectDataDTO>(data);
+            return _mapper.Map<ObjectDataDto>(data);
         }
 
-        public async Task<List<ArticleDTO>> GetArticlesByFiltersSkipTakeAsync(int skip, int take, string? currentTitlePrompt = null, long[]? articleSources = null, DateTime? from = null, DateTime? to = null, CancellationToken cancellationToken = default)
+        public async Task<List<ArticleDto>> GetArticlesByFiltersSkipTakeAsync(int skip, int take, string? currentTitlePrompt = null, long[]? articleSources = null, DateTime? from = null, DateTime? to = null, CancellationToken cancellationToken = default)
         {
             using IUnitOfWork uow = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
-            List<Article> articles = await _articleDAO.GetByFiltersSkipTakeAsync(skip, take, cancellationToken, currentTitlePrompt, articleSources, from, to);
+            List<Article> articles = await _articleDao.GetByFiltersSkipTakeAsync(skip, take, cancellationToken, currentTitlePrompt, articleSources, from, to);
 
-            return _mapper.Map<List<ArticleDTO>>(articles);
+            return _mapper.Map<List<ArticleDto>>(articles);
         }
 
         public async Task<long> GetArticlesCountByFiltersAsync(string? currentTitlePrompt = null, long[]? articleSources = null, DateTime? from = null, DateTime? to = null, CancellationToken cancellationToken = default)
         {
             using IUnitOfWork uow = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
-            long count = await _articleDAO.GetCountByFiltersAsync(cancellationToken, currentTitlePrompt, articleSources, from, to);
+            long count = await _articleDao.GetCountByFiltersAsync(cancellationToken, currentTitlePrompt, articleSources, from, to);
 
             return count;
         }

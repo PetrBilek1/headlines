@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Headlines.BL.Tests.Implementations.ArticleScraper
 {
-    public sealed class A2larmScraperTests : ScraperTestBase<A2larmScraper>
+    public sealed class A2LarmScraperTests : ScraperTestBase<A2LarmScraper>
     {
         [Theory]
         [InlineData("001")]

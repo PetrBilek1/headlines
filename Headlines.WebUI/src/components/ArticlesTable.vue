@@ -1,6 +1,6 @@
 <template>
     <div>
-        <table class="table table-striped">
+        <table class="table table-striped" aria-label="Články odpovídající hledaným parametrům.">
             <thead>
                 <tr>
                     <th scope="col">Zdroj</th>
@@ -83,20 +83,27 @@ export default {
             return this.articleSources.find(x => x.source.id == sourceId).source.name
         },
         selectPage(page) {
-            var lastPage = this.getLastPage()
+            let checkedPage = ensurePageIsInLimits(page, this.getLastPage())
 
-            page = page <= 0 ? 0 : page >= lastPage ? lastPage : page
-
-            if (page == this.currentPage)
+            if (checkedPage == this.currentPage)
                 return
 
-            this.currentPage = page
-            this.pagination = this.calculatePagination(page, lastPage)
+            this.currentPage = checkedPage
+            this.pagination = this.calculatePagination(checkedPage, this.getLastPage())
 
-            this.$emit('fetcharticles', page)
+            this.$emit('fetcharticles', checkedPage)
+
+            function ensurePageIsInLimits(pageToCheck, maxPage) {
+                let checked = pageToCheck
+
+                checked = checked >= maxPage ? maxPage : checked
+                checked = checked <= 0 ? 0 : checked
+
+                return checked
+            }
         },
         calculatePagination(currentPage, lastPage) {
-            var pages = []
+            let pages = []
 
             if (lastPage < 5) {
                 for (let i = 0; i <= lastPage; i++) {
