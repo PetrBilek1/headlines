@@ -1,7 +1,7 @@
 # base image
 FROM node:18-alpine
 RUN addgroup --system nonroot 
-RUN adduser --system nonroot -G nonroot
+RUN adduser --system nonroot --group nonroot
 
 # set working directory
 WORKDIR /app

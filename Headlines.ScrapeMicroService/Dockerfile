@@ -22,7 +22,7 @@ RUN dotnet publish "Headlines.ScrapeMicroService.csproj" -c Release -o /app/publ
 
 FROM base AS final
 RUN addgroup --system nonroot 
-RUN adduser --system nonroot -G nonroot
+RUN adduser --system nonroot --group nonroot
 
 WORKDIR /app
 COPY --from=publish /app/publish .

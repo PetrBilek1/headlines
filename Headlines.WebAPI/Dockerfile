@@ -20,7 +20,7 @@ RUN dotnet publish "Headlines.WebAPI.csproj" -c Release -o /app/publish /p:UseAp
 
 FROM base AS final
 RUN addgroup --system nonroot 
-RUN adduser --system nonroot -G nonroot
+RUN adduser --system nonroot --group nonroot
 
 WORKDIR /app
 COPY --from=publish /app/publish .

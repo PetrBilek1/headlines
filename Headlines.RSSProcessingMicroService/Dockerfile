@@ -25,7 +25,7 @@ RUN dotnet publish "Headlines.RSSProcessingMicroService.csproj" -c Release -o /a
 
 FROM base AS final
 RUN addgroup --system nonroot 
-RUN adduser --system nonroot -G nonroot
+RUN adduser --system nonroot --group nonroot
 
 WORKDIR /app
 COPY --from=publish /app/publish .
