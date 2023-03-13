@@ -19,10 +19,7 @@ FROM build AS publish
 RUN dotnet publish "Headlines.WebAPI.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
-RUN addgroup --system nonroot 
-RUN adduser --system nonroot --group nonroot
 
 WORKDIR /app
 COPY --from=publish /app/publish .
-USER nonroot
 ENTRYPOINT ["dotnet", "Headlines.WebAPI.dll"]
