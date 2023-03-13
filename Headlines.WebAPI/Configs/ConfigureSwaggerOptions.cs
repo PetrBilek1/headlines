@@ -28,7 +28,7 @@ namespace Headlines.WebAPI.Configs
             Configure(options);
         }
 
-        private OpenApiInfo CreateVersionInfo(ApiVersionDescription description)
+        private static OpenApiInfo CreateVersionInfo(ApiVersionDescription description)
         {
             var info = new OpenApiInfo()
             {

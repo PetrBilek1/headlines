@@ -106,7 +106,7 @@ namespace Headlines.WebAPI.Controllers.v1
         [HttpPost("RequestDetailScrape")]
         public async Task<IActionResult> RequestDetailScrape([FromBody] RequestDetailScrapeRequest request, CancellationToken cancellationToken)
         {
-            ArticleDto article = await _articleFacade.GetArticleByIdIncludeSourceAsync(request.ArticleId);
+            ArticleDto article = await _articleFacade.GetArticleByIdIncludeSourceAsync(request.ArticleId, cancellationToken);
             if (article == null)
                 return NotFound(Messages.M0004);
             if (!article.Source.ScraperType.HasValue)
@@ -136,6 +136,6 @@ namespace Headlines.WebAPI.Controllers.v1
             });
         }
 
-        private string GetObjectStorageCacheKey(string bucket, string key) => $"ObjectData-Bucket:{bucket}-Key:{key}";
+        private static string GetObjectStorageCacheKey(string bucket, string key) => $"ObjectData-Bucket:{bucket}-Key:{key}";
     }
 }

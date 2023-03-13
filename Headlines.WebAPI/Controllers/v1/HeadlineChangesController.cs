@@ -91,7 +91,7 @@ namespace Headlines.WebAPI.Controllers.V1
                     Upvotes = jsonUpvotes
                 });
 
-            HeadlineChangeDto upvotedChange = await _headlineChangeFacade.AddUpvotesToHeadlineChangeAsync(request.HeadlineChangeId, 1);
+            await _headlineChangeFacade.AddUpvotesToHeadlineChangeAsync(request.HeadlineChangeId, 1);
 
             jsonUpvotes.Add(new UpvoteModel
             {
@@ -102,7 +102,7 @@ namespace Headlines.WebAPI.Controllers.V1
 
             userUpvotes.Json = JsonConvert.SerializeObject(jsonUpvotes, Formatting.None);
 
-            UserUpvotesDto updatedUserUpvotes = await _userUpvotesFacade.CreateOrUpdateUserUpvotesAsync(userUpvotes);
+            await _userUpvotesFacade.CreateOrUpdateUserUpvotesAsync(userUpvotes);
 
             return Ok(new UpvoteResponse 
             { 

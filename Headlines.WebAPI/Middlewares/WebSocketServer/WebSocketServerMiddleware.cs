@@ -40,7 +40,7 @@ namespace Headlines.WebAPI.Middlewares.WebSocketServer
             });
         }
 
-        private async Task ReceiveMessage(WebSocket socket, Action<WebSocketReceiveResult, byte[]> handleMessage)
+        private static async Task ReceiveMessage(WebSocket socket, Action<WebSocketReceiveResult, byte[]> handleMessage)
         {
             var buffer = new byte[1024 * 4];
 
