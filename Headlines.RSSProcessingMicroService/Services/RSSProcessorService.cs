@@ -58,7 +58,7 @@ namespace Headlines.RSSProcessingMicroService.Services
             feedItem.Article.Link = feedItem.FeedItem.Link;
         }
 
-        private void AddArticleToResult(ProcessingResultDto result, ArticleDto article, bool wasCreated)
+        private static void AddArticleToResult(ProcessingResultDto result, ArticleDto article, bool wasCreated)
         {
             if (wasCreated)
             {
