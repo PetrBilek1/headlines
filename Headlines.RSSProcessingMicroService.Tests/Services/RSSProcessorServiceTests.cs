@@ -187,7 +187,7 @@ namespace Headlines.RSSProcessingMicroService.Tests.Services
             result.RecordedHeadlineChanges[0].TitleAfter.Should().Be(data.FeedItem?.Title);
         }
 
-        private string ExpectedUrlId(FeedItemDTO expectedFeedItem, ArticleUrlIdSource source)
+        private static string ExpectedUrlId(FeedItemDTO expectedFeedItem, ArticleUrlIdSource source)
         {
             return source switch
             {
