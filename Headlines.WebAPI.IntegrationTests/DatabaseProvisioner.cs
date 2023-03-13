@@ -38,22 +38,22 @@ namespace Headlines.WebAPI.Tests.Integration
         {
             public string DbPassword { get; init; }
             public int DbPort { get; init; }
-            public TestcontainersContainer DbContainer { get; init; }
+            public IContainer DbContainer { get; init; }
 
             public ProvisionerCore(string password, int port)
             {
                 DbPassword = password;
                 DbPort = port;
-                DbContainer = new TestcontainersBuilder<TestcontainersContainer>()
-                .WithName($"mssql-fts-ha-{Guid.NewGuid()}")
-                .WithImage("ghcr.io/petrbilek1/mssql-fts-ha:latest")
-                .WithEnvironment("ACCEPT_EULA", "Y")
-                .WithEnvironment("MSSQL_SA_PASSWORD", DbPassword)
-                .WithEnvironment("MSSQL_TCP_PORT", DbPort.ToString())
-                .WithPortBinding(DbPort)
-                .WithCleanUp(true)
-                .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(DbPort))
-                .Build();
+                DbContainer = new ContainerBuilder()
+                    .WithName($"mssql-fts-ha-{Guid.NewGuid()}")
+                    .WithImage("ghcr.io/petrbilek1/mssql-fts-ha:latest")
+                    .WithEnvironment("ACCEPT_EULA", "Y")
+                    .WithEnvironment("MSSQL_SA_PASSWORD", DbPassword)
+                    .WithEnvironment("MSSQL_TCP_PORT", DbPort.ToString())
+                    .WithPortBinding(DbPort)
+                    .WithCleanUp(true)
+                    .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(DbPort))
+                    .Build();
             }
         }
     }
