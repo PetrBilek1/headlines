@@ -1,6 +1,7 @@
 <template>
     <div>
         <table class="table table-striped">
+            <caption>Články odpovídající hledaným parametrům.</caption>
             <thead>
                 <tr>
                     <th scope="col">Zdroj</th>
