@@ -186,7 +186,7 @@ namespace Headlines.BL.Tests.Facades
         public async Task GetArticlesByFiltersSkipTakeAsync_ShouldReturnArticles(int skip, int take)
         {
             //Arrange
-            List<Article> data = _data.Articles.GetRange(skip, Math.Min(_data.Articles.Count() - skip, take));
+            List<Article> data = _data.Articles.GetRange(skip, Math.Min(_data.Articles.Count - skip, take));
 
             _uowProviderMock.Setup(x => x.CreateUnitOfWork(EntityTrackingOptions.NoTracking))
                 .Returns(_uowMock.Object);
@@ -204,9 +204,9 @@ namespace Headlines.BL.Tests.Facades
             _articleDaoMock.Verify(x => x.GetByFiltersSkipTakeAsync(skip, take, default, null, null, null, null), Times.Once);
 
             result.Should().NotBeNull();
-            result.Should().HaveCount(Math.Min(_data.Articles.Count() - skip, take));
+            result.Should().HaveCount(Math.Min(_data.Articles.Count - skip, take));
 
-            for(int i = 0; i < data.Count(); i++)
+            for(int i = 0; i < data.Count; i++)
             {
                 var expected = data[i];
                 var actual = result[i];
