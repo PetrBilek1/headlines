@@ -291,7 +291,7 @@ namespace Headlines.BL.Tests.Facades
         {
             public List<HeadlineChange> HeadlineChanges => new() { HeadlineChange1, HeadlineChange2 };
 
-            public HeadlineChange HeadlineChange1 => new()
+            public HeadlineChange HeadlineChange1 { get; set; } = new()
             {
                 Id = 1,
                 ArticleId = 1,
@@ -301,7 +301,7 @@ namespace Headlines.BL.Tests.Facades
                 UpvoteCount = 1
             };
 
-            public HeadlineChange HeadlineChange2 => new()
+            public HeadlineChange HeadlineChange2 { get; set; } = new()
             {
                 Id = 2,
                 ArticleId = 2,
