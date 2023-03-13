@@ -75,20 +75,27 @@ export default {
             this.$emit('upvoted', data)
         },        
         selectPage(page) {
-            var lastPage = this.getLastPage()
+            let checkedPage = ensurePageIsInLimits(page, this.getLastPage())
 
-            page = page <= 0 ? 0 : page >= lastPage ? lastPage : page
-
-            if (page == this.currentPage)
+            if (checkedPage == this.currentPage)
                 return
 
-            this.currentPage = page
-            this.pagination = this.calculatePagination(page, lastPage)
+            this.currentPage = checkedPage
+            this.pagination = this.calculatePagination(checkedPage, this.getLastPage())
 
-            this.$emit('fetchheadlinechanges', page)
+            this.$emit('fetchheadlinechanges', checkedPage)
+
+            function ensurePageIsInLimits(pageToCheck, maxPage) {
+                let checked = pageToCheck
+
+                checked = checked >= maxPage ? maxPage : checked
+                checked = checked <= 0 ? 0 : checked
+
+                return checked
+            }
         },
         calculatePagination(currentPage, lastPage) {
-            var pages = []
+            let pages = []
 
             if (lastPage < 5) {
                 for (let i = 0; i <= lastPage; i++) {
@@ -120,8 +127,3 @@ export default {
     }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>
