@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Headlines.BL.DAO;
+using Headlines.BL.Exceptions;
 using Headlines.DTO.Entities;
 using Headlines.ORM.Core.Entities;
 using PBilek.ORM.Core.Enum;
@@ -10,13 +11,13 @@ namespace Headlines.BL.Facades
     public sealed class ArticleFacade : IArticleFacade
     {
 
-        private readonly IArticleDao _articleDAO;
+        private readonly IArticleDao _articleDao;
         private readonly IUnitOfWorkProvider _uowProvider;
         private readonly IMapper _mapper;
 
         public ArticleFacade(IArticleDao articleDAO, IUnitOfWorkProvider uowProvider, IMapper mapper)
         {
-            _articleDAO = articleDAO;
+            _articleDao = articleDAO;
             _uowProvider = uowProvider;
             _mapper = mapper;
         }
@@ -25,7 +26,7 @@ namespace Headlines.BL.Facades
         {
             using var _ = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
-            Article article = await _articleDAO.GetByIdAsync(id, cancellationToken, x => x.Source);
+            Article article = await _articleDao.GetByIdAsync(id, cancellationToken, x => x.Source);
 
             return _mapper.Map<ArticleDto>(article);
         }
@@ -34,7 +35,7 @@ namespace Headlines.BL.Facades
         {
             using var _ = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
-            Article article = await _articleDAO.GetByIdAsync(id, cancellationToken, x => x.Details);
+            Article article = await _articleDao.GetByIdAsync(id, cancellationToken, x => x.Details);
 
             return _mapper.Map<ArticleDto>(article);
         }
@@ -43,7 +44,7 @@ namespace Headlines.BL.Facades
         {
             using var _ = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
-            List<Article> articles = await _articleDAO.GetByUrlIdsAsync(ids, cancellationToken);
+            List<Article> articles = await _articleDao.GetByUrlIdsAsync(ids, cancellationToken);
 
             return _mapper.Map<List<ArticleDto>>(articles);
         }
@@ -53,8 +54,8 @@ namespace Headlines.BL.Facades
             using IUnitOfWork uow = _uowProvider.CreateUnitOfWork();
 
             Article article = articleDTO.Id == default
-                ? await _articleDAO.InsertAsync(new Article())
-                : await _articleDAO.AssertExistsAsync(articleDTO.Id);
+                ? await _articleDao.InsertAsync(new Article())
+                : await _articleDao.AssertExistsAsync(articleDTO.Id);
 
             article.SourceId = articleDTO.SourceId;
             article.Published = articleDTO.Published;
@@ -71,9 +72,9 @@ namespace Headlines.BL.Facades
         {
             using IUnitOfWork uow = _uowProvider.CreateUnitOfWork();
 
-            var article = await _articleDAO.GetByIdAsync(articleId);
+            var article = await _articleDao.GetByIdAsync(articleId);
             if (article == null)
-                throw new Exception($"Article with Id '{articleId}' not found.");
+                throw new ResourceNotFoundException($"Article with Id '{articleId}' not found.");
 
             var data = new ObjectData
             {
@@ -92,7 +93,7 @@ namespace Headlines.BL.Facades
         {
             using IUnitOfWork uow = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
-            List<Article> articles = await _articleDAO.GetByFiltersSkipTakeAsync(skip, take, cancellationToken, currentTitlePrompt, articleSources, from, to);
+            List<Article> articles = await _articleDao.GetByFiltersSkipTakeAsync(skip, take, cancellationToken, currentTitlePrompt, articleSources, from, to);
 
             return _mapper.Map<List<ArticleDto>>(articles);
         }
@@ -101,7 +102,7 @@ namespace Headlines.BL.Facades
         {
             using IUnitOfWork uow = _uowProvider.CreateUnitOfWork(EntityTrackingOptions.NoTracking);
 
-            long count = await _articleDAO.GetCountByFiltersAsync(cancellationToken, currentTitlePrompt, articleSources, from, to);
+            long count = await _articleDao.GetCountByFiltersAsync(cancellationToken, currentTitlePrompt, articleSources, from, to);
 
             return count;
         }

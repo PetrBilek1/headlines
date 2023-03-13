@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using Headlines.BL.DAO;
+using Headlines.BL.Exceptions;
 using Headlines.BL.Facades;
 using Headlines.DTO.Entities;
 using Headlines.ORM.Core.Entities;
@@ -300,7 +301,7 @@ namespace Headlines.BL.Tests.Facades
             Func<Task> act = async () => await _sut.InsertArticleDetailByArticleIdAsync(1, objectData);
 
             //Assert           
-            await act.Should().ThrowAsync<Exception>().WithMessage($"Article with Id '{1}' not found.");
+            await act.Should().ThrowAsync<ResourceNotFoundException>().WithMessage($"Article with Id '{1}' not found.");
 
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(), Times.Once());
             _uowMock.Verify(x => x.CommitAsync(), Times.Never);

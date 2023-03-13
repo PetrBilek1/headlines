@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Headlines.BL.DAO;
+using Headlines.BL.Exceptions;
 using Headlines.DTO.Entities;
 using Headlines.ORM.Core.Entities;
 using PBilek.ORM.Core.Enum;
@@ -46,7 +47,7 @@ namespace Headlines.BL.Facades
             HeadlineChange headlineChange = await _headlineChangeDAO.GetByIdAsync(headlineChangeDTO.Id);
 
             if (headlineChange == null)
-                throw new Exception($"HeadlineChange with Id '{headlineChangeDTO.Id}' does not exist.");
+                throw new ResourceNotFoundException($"HeadlineChange with Id '{headlineChangeDTO.Id}' does not exist.");
 
             _headlineChangeDAO.Delete(headlineChange.Id);
 
@@ -98,7 +99,7 @@ namespace Headlines.BL.Facades
             HeadlineChange headlineChange = await _headlineChangeDAO.GetByIdAsync(id);
 
             if (headlineChange == null)
-                throw new Exception($"HeadlineChange with Id '{id}' not found.");
+                throw new ResourceNotFoundException($"HeadlineChange with Id '{id}' not found.");
 
             headlineChange.UpvoteCount += amount;
 

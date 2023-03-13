@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using Headlines.BL.DAO;
+using Headlines.BL.Exceptions;
 using Headlines.BL.Facades;
 using Headlines.DTO.Entities;
 using Headlines.ORM.Core.Entities;
@@ -237,7 +238,7 @@ namespace Headlines.BL.Tests.Facades
             Func<Task> act = async () => await _sut.AddUpvotesToHeadlineChangeAsync(1, 1);
 
             //Assert
-            await act.Should().ThrowAsync<Exception>().WithMessage($"HeadlineChange with Id '{1}' not found.");
+            await act.Should().ThrowAsync<ResourceNotFoundException>().WithMessage($"HeadlineChange with Id '{1}' not found.");
 
             _uowMock.Verify(x => x.Dispose(), Times.Once);
             _uowMock.Verify(x => x.CommitAsync(), Times.Never);
@@ -280,7 +281,7 @@ namespace Headlines.BL.Tests.Facades
             Func<Task> act = async () => await _sut.DeleteHeadlineChangeAsync(new HeadlineChangeDto { Id = _data.HeadlineChange1.Id });
 
             //Assert
-            await act.Should().ThrowAsync<Exception>().WithMessage($"HeadlineChange with Id '{_data.HeadlineChange1.Id}' does not exist.");
+            await act.Should().ThrowAsync<ResourceNotFoundException>().WithMessage($"HeadlineChange with Id '{_data.HeadlineChange1.Id}' does not exist.");
 
             _uowMock.Verify(x => x.Dispose(), Times.Once);
             _uowMock.Verify(x => x.CommitAsync(), Times.Never);
