@@ -1,7 +1,7 @@
 # base image
 FROM node:18-alpine
-RUN addgroup -S nonroot \
-    && adduser -S nonroot -G nonroot
+RUN addgroup --system nonroot 
+RUN adduser --system nonroot -G nonroot
 
 # set working directory
 WORKDIR /app
@@ -14,4 +14,5 @@ COPY Headlines.WebUI/package.json /app/package.json
 RUN npm install
 
 # start app
+USER nonroot
 CMD ["npm", "run", "serve"]
