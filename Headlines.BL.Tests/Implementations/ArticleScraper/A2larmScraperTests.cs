@@ -12,8 +12,8 @@ namespace Headlines.BL.Tests.Implementations.ArticleScraper
         public async Task ScrapeArticleAsync(string index)
         {
             //Arrange
-            var html = await ScraperDataLoader.GetHtmlAsync("A2Larm", index);
-            var expected = await ScraperDataLoader.GetExpectedAsync("A2Larm", index);
+            var html = await ScraperDataLoader.GetHtmlAsync("A2larm", index);
+            var expected = await ScraperDataLoader.GetExpectedAsync("A2larm", index);
             SetupDocumentLoader(html);
 
             //Act
