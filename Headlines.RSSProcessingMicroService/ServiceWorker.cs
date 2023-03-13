@@ -25,10 +25,10 @@ namespace Headlines.RSSProcessingMicroService
             await base.StartAsync(cancellationToken);
         }
 
-        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             using PeriodicTimer timer = new PeriodicTimer(_readingPeriod);
-            while (!cancellationToken.IsCancellationRequested && await timer.WaitForNextTickAsync(cancellationToken))
+            while (!stoppingToken.IsCancellationRequested && await timer.WaitForNextTickAsync(stoppingToken))
             {
                 try
                 {
@@ -36,7 +36,7 @@ namespace Headlines.RSSProcessingMicroService
 
                     IRssProcessorService processorService = scope.ServiceProvider.GetRequiredService<IRssProcessorService>();
 
-                    var result = await processorService.DoWorkAsync(cancellationToken);
+                    var result = await processorService.DoWorkAsync(stoppingToken);
 
                     await PublishScrapeRequestsAsync(result.CreatedArticles, scope);                    
                 }
