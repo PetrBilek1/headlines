@@ -25,7 +25,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
             
             authorNode ??= document.DocumentNode.SelectSingleNode($"//a[{ContainsExact("class", "article-info__author")}]");
 
-            return Regex.Replace(authorNode.InnerText.Replace("\n", "").Trim() ?? string.Empty, @"\s+", " ");
+            return ScraperRegex.WhiteSpaceRegex().Replace(authorNode.InnerText.Replace("\n", "").Trim() ?? string.Empty, " ");
         }
 
         protected override string GetPerex(HtmlDocument document)
