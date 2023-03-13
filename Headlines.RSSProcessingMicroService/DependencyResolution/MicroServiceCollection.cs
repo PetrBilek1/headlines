@@ -21,7 +21,7 @@ namespace Headlines.RSSProcessingMicroService.DependencyResolution
 
             services
                 .RegisterAssemblyPublicNonGenericClasses(assembliesToScan)
-                .Where(x => x.Name.EndsWith("Facade") || x.Name.EndsWith("DAO"))
+                .Where(x => x.Name.EndsWith("Facade") || x.Name.EndsWith("Dao"))
                 .AsPublicImplementedInterfaces(ServiceLifetime.Transient);
 
             services.AddTransient<IRSSReaderService, RSSReaderService>();

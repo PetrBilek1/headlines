@@ -27,7 +27,7 @@ namespace Headlines.ScrapeMicroService.DependencyResolution
 
             services
                 .RegisterAssemblyPublicNonGenericClasses(assembliesToScan)
-                .Where(x => x.Name.EndsWith("Facade") || x.Name.EndsWith("DAO"))
+                .Where(x => x.Name.EndsWith("Facade") || x.Name.EndsWith("Dao"))
                 .AsPublicImplementedInterfaces(ServiceLifetime.Transient);
 
             return services;
