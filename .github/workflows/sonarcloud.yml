@@ -49,13 +49,6 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      
-      - name: "Log in to the container registry"
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Add nuget source
         run: dotnet nuget add source --username ${{ github.repository_owner }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
@@ -70,6 +63,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"PetrBilek1_headlines" /o:"petrbilek1" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml" /d:sonar.host.url="https://sonarcloud.io"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"PetrBilek1_headlines" /o:"petrbilek1" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="coverage.xml" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build ./Headlines.sln --no-incremental
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
