@@ -17,9 +17,6 @@ jobs:
         with:
           dotnet-version: '7.0.x'
           
-      - name: "🔧 install dotnet coverage"
-        run: dotnet tool install --global dotnet-coverage
-          
       - name: "🔧 setup package sources"
         run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
         
@@ -27,7 +24,7 @@ jobs:
         run: dotnet restore Headlines.sln
         
       - name: "🔍 run tests"
-        run: dotnet-coverage collect "dotnet test Headlines.sln --filter FullyQualifiedName\!~Integration" -f xml -o "coverage-unit.xml"
+        run: dotnet test Headlines.sln --filter FullyQualifiedName\!~Integration
         
   integration-test:
     name: Integration Test .NET
@@ -41,9 +38,6 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
-          
-      - name: "🔧 install dotnet coverage"
-        run: dotnet tool install --global dotnet-coverage
           
       - name: "🔧 log in to the container registry"
         uses: docker/login-action@v2
@@ -59,4 +53,4 @@ jobs:
         run: dotnet restore Headlines.sln
         
       - name: "🔍 run tests"
-        run: dotnet-coverage collect "dotnet test Headlines.sln --filter FullyQualifiedName\~Integration" -f xml -o "coverage-integration.xml"
+        run: dotnet test Headlines.sln --filter FullyQualifiedName\~Integration
