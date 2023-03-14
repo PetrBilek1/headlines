@@ -53,6 +53,9 @@ jobs:
       - name: Add nuget source
         run: dotnet nuget add source --username ${{ github.repository_owner }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
       
+      - name: Sonar begin
+        run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"PetrBilek1_headlines" /o:"petrbilek1" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.vscoveragexml.reportsPaths="**\coverage.xml" /d:sonar.host.url="https://sonarcloud.io"
+
       - name: Download code coverage
         uses: actions/download-artifact@v3
         with:
@@ -63,6 +66,5 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"PetrBilek1_headlines" /o:"petrbilek1" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.vscoveragexml.reportsPaths="**\coverage.xml" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build ./Headlines.sln --no-incremental
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
