@@ -63,7 +63,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          echo dir
+          Get-ChildItem
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"PetrBilek1_headlines" /o:"petrbilek1" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.vscoveragexml.reportsPaths="coverage-should-not-find.xml" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build ./Headlines.sln --no-incremental
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
