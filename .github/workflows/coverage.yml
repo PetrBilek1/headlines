@@ -16,6 +16,9 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
+      
+      - name: "🔧 install dotnet coverage"
+        run: dotnet tool install --global dotnet-coverage
           
       - name: "🔧 setup package sources"
         run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
@@ -24,10 +27,7 @@ jobs:
         run: dotnet restore Headlines.sln
         
       - name: "🔍 collect code coverage"
-        run: dotnet test Headlines.sln --no-build --verbosity normal --collect:"XPlat Code Coverage;Format=opencover" --logger trx --results-directory coverage
-
-      - name: "📦 copy coverage to predictable location"
-        run: cp coverage/*/coverage.opencover.xml coverage.xml
+        run: dotnet-coverage collect "dotnet test Headlines.sln" -f xml -o "coverage.xml"
         
       - name: "🚀 upload code coverage"
         uses: actions/upload-artifact@v3
