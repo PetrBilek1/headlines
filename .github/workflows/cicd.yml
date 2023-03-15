@@ -5,12 +5,6 @@ on:
     #branches: [ develop, master, bugfix/*, feature/* ] 
   pull_request:
     branches: [ develop, master ]
-  workflow_dispatch:
-    inputs:
-      publish_docker_images:
-        description: Publish docker images?
-        required: false
-        type: boolean
 
 jobs:
   build:
@@ -86,7 +80,6 @@ jobs:
       SONARCLOUD_ORGANIZATION: petrbilek1
       SONARCLOUD_KEY: PetrBilek1_headlines
       SONARCLOUD_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      PUBLISH_DOCKER_IMAGES: ${{ inputs.publish_docker_images }}
 
     steps:
       - name: Checkout Repository
@@ -133,6 +126,7 @@ jobs:
         run: dotnet cake --target=Sonar-End
 
       - name: Draft Release
+        if: ${{ contains(fromJson('["develop", "master"]'), github.ref_name) }}
         uses: release-drafter/release-drafter@6df64e4ba4842c203c604c1f45246c5863410adb
         with:
           version: ${{ env.semVer }} # Cake sets the semVer environment variable

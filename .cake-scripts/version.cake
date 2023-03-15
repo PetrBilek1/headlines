@@ -15,7 +15,6 @@ internal sealed class BuildInformation
     public bool IsLocalBuild { get; private set; }
     public bool IsReleaseBuild { get; private set; }
     public bool IsPullRequest { get; private set; }
-    public bool ShouldPublish { get; private set; }
 
     public static BuildInformation Instance(ICakeContext context, string propertiesFilePath)
     {
@@ -24,8 +23,6 @@ internal sealed class BuildInformation
         var isLocalBuild = buildSystem.IsLocalBuild;
 
         var environment = buildSystem.GitHubActions.Environment;
-
-        var publishImages = context.EnvironmentVariable("PUBLISH_DOCKER_IMAGES");
 
         var version = context.XmlPeek(propertiesFilePath, "/Project/PropertyGroup[2]/Version/text()");
 
@@ -69,21 +66,19 @@ internal sealed class BuildInformation
 
         var isReleaseBuild = GetIsReleaseBuild(branch);
 
-        var shouldPublish = GetShouldPublish(branch) && ("1".Equals(publishImages, StringComparison.Ordinal) || (bool.TryParse(publishImages, out var result) && result));
-
-        if (isFork && isPullRequest && shouldPublish)
+        if (isFork && isPullRequest)
         {
             throw new ArgumentException("Use 'feature/' or 'bugfix/' prefix for pull request branches.");
         }
 
         if (!isReleaseBuild)
         {
-          version = $"{version}-beta";
+            version = $"{version}-beta";
         }
 
         if (!isReleaseBuild && !string.IsNullOrEmpty(buildId))
         {
-          version = $"{version}.{buildId}";
+            version = $"{version}.{buildId}";
         }
 
         return new BuildInformation
@@ -97,19 +92,12 @@ internal sealed class BuildInformation
             IsLocalBuild = isLocalBuild,
             IsReleaseBuild = isReleaseBuild,
             IsPullRequest = isPullRequest,
-            ShouldPublish = shouldPublish
         };
     }
 
     private static bool GetIsReleaseBuild(string branch)
     {
         var branches = new[] { "master" };
-        return branches.Any(b => StringComparer.OrdinalIgnoreCase.Equals(b, branch));
-    }
-
-    private static bool GetShouldPublish(string branch)
-    {
-        var branches = new[] { "master", "develop" };
         return branches.Any(b => StringComparer.OrdinalIgnoreCase.Equals(b, branch));
     }
 }
