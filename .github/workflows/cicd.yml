@@ -117,6 +117,9 @@ jobs:
       - name: Restore .NET Tools
         run: dotnet tool restore
 
+      - name: Add Private NuGet Source
+        run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
+
       - name: Restore NuGet Packages
         run: dotnet cake --target=Restore-NuGet-Packages
 
