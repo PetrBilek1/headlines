@@ -44,7 +44,7 @@ jobs:
         run: dotnet cake --target=Build
 
       - name: Run Tests
-        run: dotnet cake --target=Tests
+        run: dotnet cake --target=Test
 
       - name: Upload Test And Coverage Results
         uses: actions/upload-artifact@v3
