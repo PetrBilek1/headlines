@@ -24,7 +24,7 @@ Task("Clean")
 Task("Restore-NuGet-Packages")
     .Does(() => {
         var credentials = parameters.PBilekPackageSourceCredentials;
-        Console.WriteLine(credentials.ToString());
+        Console.WriteLine("P: " + credentials.Password);
         NuGetAddSource(credentials.Name, credentials.Source, new NuGetSourcesSettings{
             UserName = credentials.Username,
             Password = credentials.Password,
