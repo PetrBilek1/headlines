@@ -126,7 +126,7 @@ jobs:
         run: dotnet cake --target=Sonar-End
 
       - name: Draft Release
-        if: ${{ contains(fromJson('["develop", "master"]'), github.ref_name) }}
+        if: ${{ contains(fromJson('["master"]'), github.ref_name) }}
         uses: release-drafter/release-drafter@6df64e4ba4842c203c604c1f45246c5863410adb
         with:
           version: ${{ env.semVer }} # Cake sets the semVer environment variable
