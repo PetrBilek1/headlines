@@ -12,90 +12,90 @@ on:
         required: false
         type: boolean
 
-  jobs:
-    build:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v3
-          with:
-            lfs: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          lfs: true
 
-        - name: Setup .NET
-          uses: actions/setup-dotnet@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
 
-        - name: Restore .NET Tools
-          run: dotnet tool restore
+      - name: Restore .NET Tools
+        run: dotnet tool restore
 
-        - name: Restore NuGet Packages
-          run: dotnet cake --target=Restore-NuGet-Packages
+      - name: Restore NuGet Packages
+        run: dotnet cake --target=Restore-NuGet-Packages
 
-        - name: Run Build
-          run: dotnet cake --target=Build
+      - name: Run Build
+        run: dotnet cake --target=Build
 
-        - name: Run Tests
-          run: dotnet cake --target=Tests
+      - name: Run Tests
+        run: dotnet cake --target=Tests
 
-        - name: Upload Test And Coverage Results
-          uses: actions/upload-artifact@v3
-          with:
-            name: test-results
-            path: test-results
-    
-    publish:
-      if: ${{ contains(fromJson('["develop", "master"]'), github.ref_name) }}
+      - name: Upload Test And Coverage Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: test-results
+  
+  publish:
+    if: ${{ contains(fromJson('["develop", "master"]'), github.ref_name) }}
 
-      needs: build
-      runs-on: windows-2022
+    needs: build
+    runs-on: windows-2022
 
-      permissions:
-        contents: write
-        pull-requests: read
+    permissions:
+      contents: write
+      pull-requests: read
 
-      env:
-        SONARCLOUD_URL: https://sonarcloud.io
-        SONARCLOUD_ORGANIZATION: petrbilek1
-        SONARCLOUD_KEY: PetrBilek1_headlines
-        SONARCLOUD_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        PUBLISH_DOCKER_IMAGES: ${{ inputs.publish_docker_images }}
+    env:
+      SONARCLOUD_URL: https://sonarcloud.io
+      SONARCLOUD_ORGANIZATION: petrbilek1
+      SONARCLOUD_KEY: PetrBilek1_headlines
+      SONARCLOUD_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      PUBLISH_DOCKER_IMAGES: ${{ inputs.publish_docker_images }}
 
-      steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v3
-          with:
-            lfs: true
-            fetch-depth: 0
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+          fetch-depth: 0
 
-        - name: Download Test And Coverage Results
-          uses: actions/download-artifact@v3
-          with:
-            name: test-results
-            path: test-results
+      - name: Download Test And Coverage Results
+        uses: actions/download-artifact@v3
+        with:
+          name: test-results
+          path: test-results
 
-        - name: Fix Absolute Code Coverage Paths
-          run: Get-ChildItem -Path 'test-results' -Filter *.xml -Recurse | Select-Object -ExpandProperty FullName | % { (Get-Content -LiteralPath $_) -Replace 'fullPath="[A-Za-z0-9:\-\/\\]+(src|tests)', 'fullPath="${{ github.workspace }}/$1' | Set-Content -LiteralPath $_ }
-          shell: pwsh
+      - name: Fix Absolute Code Coverage Paths
+        run: Get-ChildItem -Path 'test-results' -Filter *.xml -Recurse | Select-Object -ExpandProperty FullName | % { (Get-Content -LiteralPath $_) -Replace 'fullPath="[A-Za-z0-9:\-\/\\]+(src|tests)', 'fullPath="${{ github.workspace }}/$1' | Set-Content -LiteralPath $_ }
+        shell: pwsh
 
-        - name: Setup Java
-          uses: actions/setup-java@v3
-          with:
-            distribution: temurin
-            java-version: 11
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
 
-        - name: Setup .NET
-          uses: actions/setup-dotnet@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
 
-        - name: Restore .NET Tools
-          run: dotnet tool restore
+      - name: Restore .NET Tools
+        run: dotnet tool restore
 
-        - name: Restore NuGet Packages
-          run: dotnet cake --target=Restore-NuGet-Packages
+      - name: Restore NuGet Packages
+        run: dotnet cake --target=Restore-NuGet-Packages
 
-        - name: Run Sonar Analysis
-          run: dotnet cake --target=Sonar-Begin
+      - name: Run Sonar Analysis
+        run: dotnet cake --target=Sonar-Begin
 
-        - name: Run Build
-          run: dotnet cake --target=Build
+      - name: Run Build
+        run: dotnet cake --target=Build
 
-        - name: Upload Sonar Results
-          run: dotnet cake --target=Sonar-End
+      - name: Upload Sonar Results
+        run: dotnet cake --target=Sonar-End
