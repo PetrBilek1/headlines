@@ -2,9 +2,9 @@ name: Continuous Integration & Delivery
 
 on:
   push:
-    #branches: [ develop, main, bugfix/*, feature/* ]
+    #branches: [ develop, master, bugfix/*, feature/* ]
   pull_request:
-    branches: [ develop, main ]
+    branches: [ develop, master ]
   workflow_dispatch:
     inputs:
       publish_docker_images:
@@ -14,7 +14,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -34,7 +34,28 @@ jobs:
         run: dotnet cake --target=Restore-NuGet-Packages
 
       - name: Run Build
-        run: dotnet cake --target=Build
+        run: dotnet cake --target=Build           
+  
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+
+      - name: Restore .NET Tools
+        run: dotnet tool restore
+
+      - name: Add Private NuGet Source
+        run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
+
+      - name: Restore NuGet Packages
+        run: dotnet cake --target=Restore-NuGet-Packages
 
       - name: Run Tests
         run: dotnet cake --target=Test
@@ -44,11 +65,11 @@ jobs:
         with:
           name: test-results
           path: test-results
-  
-  publish:
+
+  sonarcloud:
     if: ${{ contains(fromJson('["develop", "master"]'), github.ref_name) }}
 
-    needs: build
+    needs: [build, test]
     runs-on: windows-2022
 
     permissions:
