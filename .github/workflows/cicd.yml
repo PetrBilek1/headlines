@@ -21,6 +21,13 @@ jobs:
         with:
           lfs: true
 
+      - name: "LogIn to GHCR"
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
 
