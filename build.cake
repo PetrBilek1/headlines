@@ -23,17 +23,17 @@ Task("Clean")
 
 Task("Restore-NuGet-Packages")
     .Does(() => {
-        var pbilekCredentials = parameters.PBilekPackageSourceCredentials;
-        NuGetAddSource(pbilekCredentials.Name, pbilekCredentials.Source, new NuGetSourcesSettings{
-            UserName = pbilekCredentials.Username,
-            Password = pbilekCredentials.Password,
-            IsSensitiveSource = true
+        var credentials = parameters.PBilekPackageSourceCredentials;
+        NuGetAddSource(credentials.Name, credentials.Source, new NuGetSourcesSettings{
+            UserName = credentials.Username,
+            Password = credentials.Password,
+            IsSensitiveSource = false,
+            Verbosity = NuGetVerbosity.Detailed
         });
 
-        DotNetRestore(parameters.Solution, new DotNetRestoreSettings
-        {
-            Sources = new[] { "https://api.nuget.org/v3/index.json", pbilekCredentials.Source }
-        });
+        NuGetSetApiKey(credentials.Password, credentials.Source);
+
+        DotNetRestore(parameters.Solution);
     });
 
 Task("Build")
