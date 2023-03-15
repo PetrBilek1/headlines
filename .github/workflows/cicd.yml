@@ -58,7 +58,7 @@ jobs:
         run: dotnet cake --target=Restore-NuGet-Packages
 
       - name: Run Tests
-        run: dotnet cake --target=Test
+        run: dotnet cake --target=Tests
 
       - name: Upload Test And Coverage Results
         uses: actions/upload-artifact@v3
