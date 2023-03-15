@@ -95,7 +95,7 @@ jobs:
           path: test-results
 
       - name: Fix Absolute Code Coverage Paths
-        run: Get-ChildItem -Path 'test-results' -Filter *.xml -Recurse | Select-Object -ExpandProperty FullName | % { (Get-Content -LiteralPath $_) -Replace 'fullPath="[A-Za-z0-9:\-\/\\]+(src|tests)', 'fullPath="${{ github.workspace }}/$1' | Set-Content -LiteralPath $_ }
+        run: Get-ChildItem -Path 'test-results' -Filter *.xml -Recurse | Select-Object -ExpandProperty FullName | % { (Get-Content -LiteralPath $_) -Replace 'fullPath="[A-Za-z0-9:\-\/\\]+(headlines)', 'fullPath="${{ github.workspace }}/$1' | Set-Content -LiteralPath $_ }
         shell: pwsh
 
       - name: Setup Java
@@ -126,7 +126,7 @@ jobs:
         run: dotnet cake --target=Sonar-End
 
       - name: Draft Release
-        if: ${{ contains(fromJson('["develop", "master"]'), github.ref_name) }}
+        if: ${{ contains(fromJson('["master"]'), github.ref_name) }}
         uses: release-drafter/release-drafter@6df64e4ba4842c203c604c1f45246c5863410adb
         with:
           version: ${{ env.semVer }} # Cake sets the semVer environment variable
