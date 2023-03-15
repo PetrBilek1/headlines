@@ -24,6 +24,7 @@ internal sealed class BuildParameters
     public DotNetVerbosity Verbosity { get; private set; }
     public SonarQubeCredentials SonarQubeCredentials { get; private set; }
     public BuildPaths Paths { get; private set; }
+    public NuGetPackageSourceCredentials PBilekPackageSourceCredentials { get; private set; }
 
     public static BuildParameters Instance(ICakeContext context)
     {
@@ -48,7 +49,8 @@ internal sealed class BuildParameters
             ShouldPublish = !buildInformation.IsLocalBuild && buildInformation.ShouldPublish,
             Verbosity = DotNetVerbosity.Quiet,
             SonarQubeCredentials = SonarQubeCredentials.GetSonarQubeCredentials(context),
-            Paths = BuildPaths.Instance(context)
+            Paths = BuildPaths.Instance(context),
+            PBilekPackageSourceCredentials = NuGetPackageSourceCredentials.GetPBilekPackageSourceCredentials(context)
         };
     }
 }

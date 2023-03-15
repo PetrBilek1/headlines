@@ -24,3 +24,30 @@ internal sealed class SonarQubeCredentials
         );
     }
 }
+
+internal sealed class NuGetPackageSourceCredentials
+{
+    public string Username { get; private set; }
+    public string Password { get; private set; }
+    public string Name { get; private set; }
+    public string Source { get; private set; }
+
+    private NuGetPackageSourceCredentials(string username, string password, string name, string source)
+    {
+        Username = username;
+        Password = password;
+        Name = name;
+        Source = source;
+    }
+
+    public static NuGetPackageSourceCredentials GetPBilekPackageSourceCredentials(ICakeContext context)
+    {
+        return new NuGetPackageSourceCredentials
+        (
+            context.EnvironmentVariable("GITHUB_ACTOR"),
+            context.EnvironmentVariable("PBILEK_PACKAGES_TOKEN"),
+            "PBilek_github",
+            "https://nuget.pkg.github.com/PetrBilek1/index.json"
+        );
+    }
+}

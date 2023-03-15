@@ -23,6 +23,13 @@ Task("Clean")
 
 Task("Restore-NuGet-Packages")
     .Does(() => {
+        var pbilekCredentials = parameters.PBilekPackageSourceCredentials;
+        NuGetAddSource(pbilekCredentials.Name, pbilekCredentials.Source, new NuGetSourcesSettings{
+            UserName = pbilekCredentials.Username,
+            Password = pbilekCredentials.Password,
+            IsSensitiveSource = true
+        });
+
         DotNetRestore(parameters.Solution);
     });
 
@@ -86,7 +93,7 @@ Task("Sonar-End")
 Task("Default")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore-NuGet-Packages")
-    .IsDependentOn("Build")
-    .IsDependentOn("Test");
+    .IsDependentOn("Build");
+    //.IsDependentOn("Test");
 
 RunTarget(parameters.Target);

@@ -12,6 +12,10 @@ on:
         required: false
         type: boolean
 
+env:
+  GITHUB_ACTOR: ${{ github.actor }}
+  PBILEK_PACKAGES_TOKEN: ${{ secrets.PBILEK_PACKAGES_TOKEN }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
