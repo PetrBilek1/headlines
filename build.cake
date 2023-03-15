@@ -33,7 +33,10 @@ Task("Restore-NuGet-Packages")
 
         NuGetSetApiKey(credentials.Password, credentials.Source);
 
-        DotNetRestore(parameters.Solution);
+        DotNetRestore(parameters.Solution, new DotNetRestoreSettings
+        {
+            Sources = new[] { credentials.Source }
+        });
     });
 
 Task("Build")
