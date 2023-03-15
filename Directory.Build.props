@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <SolutionDir Condition=" '$(SolutionDir)' == '' ">$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectDirectory)', 'Headlines.sln'))/</SolutionDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Version>0.2.2</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
+    <Product>Headlines</Product>
+    <Copyright>Copyright (c) 2023 Petr Bílek</Copyright>
+    <Authors>Petr Bílek</Authors>
+    <Company>Petr Bílek</Company>
+    <Description>A web application for tracking news articles and their title changes.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://titulkovac.pbilek.eu/</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/PetrBilek1/headlines</RepositoryUrl>
+  </PropertyGroup>
+</Project>

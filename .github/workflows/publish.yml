@@ -1,7 +1,11 @@
-name: Publish containers
+name: Publish Docker Images
 
 on:
-  workflow_call:
+  release:
+    types: 
+      - published
+    branches:
+      - master
 
 jobs:  
   publish:

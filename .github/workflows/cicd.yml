@@ -1,0 +1,134 @@
+name: Continuous Integration & Delivery
+
+on:
+  push:
+    branches: [ develop, master, bugfix/*, feature/* ] 
+  pull_request:
+    branches: [ develop, master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          lfs: true      
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+
+      - name: Restore .NET Tools
+        run: dotnet tool restore
+
+      - name: Add Private NuGet Source
+        run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
+
+      - name: Restore NuGet Packages
+        run: dotnet cake --target=Restore-NuGet-Packages
+
+      - name: Run Build
+        run: dotnet cake --target=Build           
+  
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+
+      - name: "LogIn to GHCR"
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Restore .NET Tools
+        run: dotnet tool restore
+
+      - name: Add Private NuGet Source
+        run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
+
+      - name: Restore NuGet Packages
+        run: dotnet cake --target=Restore-NuGet-Packages
+
+      - name: Run Tests
+        run: dotnet cake --target=Test
+
+      - name: Upload Test And Coverage Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: test-results
+
+  analyze-draft-release:
+    needs: [build, test]
+    runs-on: windows-2022
+
+    permissions:
+      contents: write
+      pull-requests: read
+
+    env:
+      SONARCLOUD_URL: https://sonarcloud.io
+      SONARCLOUD_ORGANIZATION: petrbilek1
+      SONARCLOUD_KEY: PetrBilek1_headlines
+      SONARCLOUD_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - name: Download Test And Coverage Results
+        uses: actions/download-artifact@v3
+        with:
+          name: test-results
+          path: test-results
+
+      - name: Fix Absolute Code Coverage Paths
+        run: Get-ChildItem -Path 'test-results' -Filter *.xml -Recurse | Select-Object -ExpandProperty FullName | % { (Get-Content -LiteralPath $_) -Replace 'fullPath="[A-Za-z0-9:\-\/\\]+(src|tests)', 'fullPath="${{ github.workspace }}/$1' | Set-Content -LiteralPath $_ }
+        shell: pwsh
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+
+      - name: Restore .NET Tools
+        run: dotnet tool restore
+
+      - name: Add Private NuGet Source
+        run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
+
+      - name: Restore NuGet Packages
+        run: dotnet cake --target=Restore-NuGet-Packages
+
+      - name: Run Sonar Analysis
+        run: dotnet cake --target=Sonar-Begin
+
+      - name: Run Build
+        run: dotnet cake --target=Build
+
+      - name: Upload Sonar Results
+        run: dotnet cake --target=Sonar-End
+
+      - name: Draft Release
+        if: ${{ contains(fromJson('["develop", "master"]'), github.ref_name) }}
+        uses: release-drafter/release-drafter@6df64e4ba4842c203c604c1f45246c5863410adb
+        with:
+          version: ${{ env.semVer }} # Cake sets the semVer environment variable
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
