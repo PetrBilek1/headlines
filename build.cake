@@ -30,7 +30,10 @@ Task("Restore-NuGet-Packages")
             IsSensitiveSource = true
         });
 
-        DotNetRestore(parameters.Solution);
+        DotNetRestore(parameters.Solution, new DotNetRestoreSettings
+        {
+            Sources = new[] { "https://api.nuget.org/v3/index.json", pbilekCredentials.Source }
+        });
     });
 
 Task("Build")

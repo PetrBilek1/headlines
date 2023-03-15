@@ -46,7 +46,7 @@ internal sealed class NuGetPackageSourceCredentials
         (
             context.EnvironmentVariable("GITHUB_ACTOR"),
             context.EnvironmentVariable("PBILEK_PACKAGES_TOKEN"),
-            "github",
+            "pbilek-github",
             "https://nuget.pkg.github.com/PetrBilek1/index.json"
         );
     }
