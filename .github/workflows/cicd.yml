@@ -13,7 +13,7 @@ on:
         type: boolean
 
 env:
-  GITHUB_ACTOR: ${{ github.repository_owner }}
+  GITHUB_ACTOR: ${{ github.actor }}
   PBILEK_PACKAGES_TOKEN: ${{ secrets.PBILEK_PACKAGES_TOKEN }}
 
 jobs:
