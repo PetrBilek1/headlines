@@ -74,8 +74,6 @@ jobs:
           path: test-results
 
   sonarcloud:
-    if: ${{ contains(fromJson('["develop", "master"]'), github.ref_name) }}
-
     needs: [build, test]
     runs-on: windows-2022
 
