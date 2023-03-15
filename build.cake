@@ -23,20 +23,9 @@ Task("Clean")
 
 Task("Restore-NuGet-Packages")
     .Does(() => {
-        var credentials = parameters.PBilekPackageSourceCredentials;
-        
-        NuGetAddSource(credentials.Name, credentials.Source, new NuGetSourcesSettings{
-            UserName = credentials.Username,
-            Password = credentials.Password,
-            IsSensitiveSource = false,
-            Verbosity = NuGetVerbosity.Detailed
-        });
-
-        NuGetSetApiKey(credentials.Password, credentials.Source);
-
         DotNetRestore(parameters.Solution, new DotNetRestoreSettings
         {
-            Sources = new[] { credentials.Source }
+            Sources = parameters.PackageSources
         });
     });
 
