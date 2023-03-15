@@ -131,3 +131,10 @@ jobs:
 
       - name: Upload Sonar Results
         run: dotnet cake --target=Sonar-End
+
+      - name: Draft Release
+        uses: release-drafter/release-drafter@6df64e4ba4842c203c604c1f45246c5863410adb
+        with:
+          version: ${{ env.semVer }} # Cake sets the semVer environment variable
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

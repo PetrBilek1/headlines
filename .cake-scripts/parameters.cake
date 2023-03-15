@@ -16,6 +16,7 @@ internal sealed class BuildParameters
     public string SourceBranch { get; private set; }
     public string TargetBranch { get; private set; }
     public string PullRequestId { get; private set; }
+    public string Version { get; private set; }
     public string TestFilter { get; private set; }
     public bool IsLocalBuild { get; private set; }
     public bool IsReleaseBuild { get; private set; }
@@ -27,9 +28,10 @@ internal sealed class BuildParameters
 
     public static BuildParameters Instance(ICakeContext context)
     {
+        const string propertiesFilePath = "Directory.Build.props";
         const string solutionFilePath = "Headlines.sln";
         
-        var buildInformation = BuildInformation.Instance(context);
+        var buildInformation = BuildInformation.Instance(context, propertiesFilePath);
 
         return new BuildParameters
         {
@@ -41,6 +43,7 @@ internal sealed class BuildParameters
             SourceBranch = buildInformation.SourceBranch,
             TargetBranch = buildInformation.TargetBranch,
             PullRequestId = buildInformation.PullRequestId,
+            Version = buildInformation.Version,
             TestFilter = context.Argument<string>("test-filter", null),
             IsLocalBuild = buildInformation.IsLocalBuild,
             IsReleaseBuild = !buildInformation.IsLocalBuild && buildInformation.IsReleaseBuild,

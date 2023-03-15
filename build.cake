@@ -23,7 +23,10 @@ Task("Clean")
 
 Task("Restore-NuGet-Packages")
     .Does(() => {
-        DotNetRestore(parameters.Solution);
+        DotNetRestore(parameters.Solution, new DotNetRestoreSettings
+        {
+            Verbosity = parameters.Verbosity
+        });
     });
 
 Task("Build")
@@ -62,7 +65,7 @@ Task("Sonar-Begin")
             Branch = parameters.IsPullRequest ? null : parameters.Branch, // A pull request analysis cannot have the branch analysis parameter 'sonar.branch.name'.
             UseCoreClr = true,
             Silent = true,
-            Version = "0.0.0",
+            Version = parameters.Version.Substring(0, 5),
             PullRequestProvider = "GitHub",
             PullRequestGithubEndpoint = "https://api.github.com/",
             PullRequestGithubRepository = "PetrBilek1/headlines",
@@ -86,7 +89,7 @@ Task("Sonar-End")
 Task("Default")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore-NuGet-Packages")
-    .IsDependentOn("Build");
-    //.IsDependentOn("Test");
+    .IsDependentOn("Build")
+    .IsDependentOn("Test");
 
 RunTarget(parameters.Target);

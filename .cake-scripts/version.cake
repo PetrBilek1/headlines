@@ -11,12 +11,13 @@ internal sealed class BuildInformation
     public string SourceBranch { get; private set; }
     public string TargetBranch { get; private set; }
     public string PullRequestId { get; private set; }
+    public string Version { get; private set; }
     public bool IsLocalBuild { get; private set; }
     public bool IsReleaseBuild { get; private set; }
     public bool IsPullRequest { get; private set; }
     public bool ShouldPublish { get; private set; }
 
-    public static BuildInformation Instance(ICakeContext context)
+    public static BuildInformation Instance(ICakeContext context, string propertiesFilePath)
     {
         var buildSystem = context.BuildSystem();
 
@@ -25,6 +26,8 @@ internal sealed class BuildInformation
         var environment = buildSystem.GitHubActions.Environment;
 
         var publishImages = context.EnvironmentVariable("PUBLISH_DOCKER_IMAGES");
+
+        var version = context.XmlPeek(propertiesFilePath, "/Project/PropertyGroup[2]/Version/text()");
 
         var git = context.GitBranchCurrent(".");
 
@@ -52,6 +55,9 @@ internal sealed class BuildInformation
             isPullRequest = environment.PullRequest.IsPullRequest;
             isFork = "fork".Equals(environment.Workflow.EventName, StringComparison.OrdinalIgnoreCase);
             buildId = environment.Workflow.RunId;
+
+            // Set build system environment variables and parameters.
+            buildSystem.GitHubActions.Commands.SetEnvironmentVariable("semVer", version.Substring(0, 5));
         }
 
         if (isPullRequest)
@@ -70,6 +76,16 @@ internal sealed class BuildInformation
             throw new ArgumentException("Use 'feature/' or 'bugfix/' prefix for pull request branches.");
         }
 
+        if (!isReleaseBuild)
+        {
+          version = $"{version}-beta";
+        }
+
+        if (!isReleaseBuild && !string.IsNullOrEmpty(buildId))
+        {
+          version = $"{version}.{buildId}";
+        }
+
         return new BuildInformation
         {
             Sha = sha,
@@ -77,6 +93,7 @@ internal sealed class BuildInformation
             SourceBranch = sourceBranch,
             TargetBranch = targetBranch,
             PullRequestId = pullRequestId,
+            Version = version,
             IsLocalBuild = isLocalBuild,
             IsReleaseBuild = isReleaseBuild,
             IsPullRequest = isPullRequest,
