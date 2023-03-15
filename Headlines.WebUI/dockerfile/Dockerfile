@@ -1,11 +1,9 @@
 # base image
 FROM node:18-alpine
-RUN useradd --create-home nonroot
 
 # set working directory
 WORKDIR /app
 
-USER nonroot
 
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH

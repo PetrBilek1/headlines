@@ -2,7 +2,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 RUN useradd --create-home nonroot
 
 WORKDIR /app
-
 USER nonroot
 
 EXPOSE 80
