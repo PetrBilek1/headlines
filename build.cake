@@ -23,10 +23,7 @@ Task("Clean")
 
 Task("Restore-NuGet-Packages")
     .Does(() => {
-        DotNetRestore(parameters.Solution, new DotNetRestoreSettings
-        {
-            Sources = parameters.PackageSources
-        });
+        DotNetRestore(parameters.Solution);
     });
 
 Task("Build")
