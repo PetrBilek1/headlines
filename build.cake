@@ -41,7 +41,7 @@ Task("Test")
         {
             Configuration = parameters.Configuration,
             Verbosity = parameters.Verbosity,
-            NoBuild = false,
+            NoBuild = true,
             NoRestore = true,
             Collectors = new[] { "XPlat Code Coverage;Format=opencover" },
             Loggers = new[] { "trx" },
