@@ -1,5 +1,5 @@
-﻿using Headlines.BL.Abstractions.ObjectStorageWrapper;
-using Headlines.BL.Implementations.ObjectStorageWrapper;
+﻿using Headlines.BL.Abstractions.ObjectStorage;
+using Headlines.BL.Implementations.ObjectStorage;
 using PBilek.ObjectStorageService.Contabo;
 using PBilek.ObjectStorageService;
 using Microsoft.Extensions.DependencyInjection.Extensions;

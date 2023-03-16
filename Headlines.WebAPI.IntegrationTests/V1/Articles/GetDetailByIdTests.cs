@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Headlines.BL.Abstractions.ObjectStorageWrapper;
+using Headlines.BL.Abstractions.ObjectStorage;
 using Headlines.DTO.Custom;
 using Headlines.DTO.Entities;
 using Headlines.WebAPI.Contracts.V1.Responses.Articles;

@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PBilek.ORM.EntityFrameworkCore.SQL.DependencyResolution;
 using Headlines.ORM.Core.Context;
 using Headlines.WebAPI.DependencyResolution;
-using Headlines.BL.Abstractions.ObjectStorageWrapper;
+using Headlines.BL.Abstractions.ObjectStorage;
 using Headlines.WebAPI.Tests.Integration.V1.TestUtils;
 using Headlines.BL.Abstractions.EventBus;
 using Microsoft.Extensions.Caching.Distributed;

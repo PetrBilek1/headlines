@@ -1,5 +1,5 @@
 ﻿using Headlines.BL.Abstractions.EventBus;
-using Headlines.BL.Abstractions.ObjectStorageWrapper;
+using Headlines.BL.Abstractions.ObjectStorage;
 using Headlines.BL.Events;
 using Headlines.BL.Facades;
 using Headlines.DTO.Custom;

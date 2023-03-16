@@ -1,6 +1,6 @@
 ﻿using Headlines.DTO.Entities;
 
-namespace Headlines.BL.Abstractions.ObjectStorageWrapper
+namespace Headlines.BL.Abstractions.ObjectStorage
 {
     public interface IObjectStorageWrapper
     {
