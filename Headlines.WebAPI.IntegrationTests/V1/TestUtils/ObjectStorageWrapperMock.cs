@@ -1,4 +1,4 @@
-﻿using Headlines.BL.Abstractions.ObjectStorageWrapper;
+﻿using Headlines.BL.Abstractions.ObjectStorage;
 using Headlines.DTO.Entities;
 
 namespace Headlines.WebAPI.Tests.Integration.V1.TestUtils

@@ -1,4 +1,5 @@
 ﻿using Headlines.BL.Abstractions.ArticleScraping;
+using Headlines.BL.Implementations.ArticleScraper.Extensions;
 using HtmlAgilityPack;
 
 namespace Headlines.BL.Implementations.ArticleScraper
@@ -14,25 +15,20 @@ namespace Headlines.BL.Implementations.ArticleScraper
         protected override string GetTitle(HtmlDocument document)
             => document.DocumentNode
                 .SelectSingleNode("//h1[contains(@id, 'article-news-full')]")
-                ?.InnerText
-                .Trim()
-            ?? string.Empty;
+                .SelectInnerText();
 
         protected override string GetAuthor(HtmlDocument document)
             => document.DocumentNode
                 .SelectSingleNode($"//p[{ContainsExact("class", "meta")}]/strong")
-                ?.InnerText
-                .Trim()
-            ?? string.Empty;
+                .SelectInnerText();
 
         protected override string GetPerex(HtmlDocument document) => string.Empty;
 
         protected override List<string> GetParagraphs(HtmlDocument document)
             => document.DocumentNode
                 .SelectSingleNode($".//div[{ContainsExact("class", "b-detail")}]")
-                .SelectNodes($".//*[(self::p or self::div or self::h2) and not(contains(@class, 'meta')) and not (ancestor::a or ancestor::figure or ancestor::div[{ContainsExact("class", "embed")}] or ancestor::div[{ContainsExact("class", "b-tweet")}] or ancestor-or-self::div[{ContainsExact("class", "b-inline")}])]")
-                ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
-                .Select(x => x.InnerText.Trim())
+                ?.SelectNodes($".//*[(self::p or self::div or self::h2) and not(contains(@class, 'meta')) and not (ancestor::a or ancestor::figure or ancestor::div[{ContainsExact("class", "embed")}] or ancestor::div[{ContainsExact("class", "b-tweet")}] or ancestor-or-self::div[{ContainsExact("class", "b-inline")}])]")
+                .SelectNotNullOrWhiteSpaceInnerText()
                 .ToList()
             ?? new List<string>();
 

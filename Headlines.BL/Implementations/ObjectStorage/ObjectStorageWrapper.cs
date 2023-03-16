@@ -1,11 +1,11 @@
-﻿using Headlines.BL.Abstractions.ObjectStorageWrapper;
+﻿using Headlines.BL.Abstractions.ObjectStorage;
 using Headlines.DTO.Attributes;
 using Headlines.DTO.Entities;
 using Newtonsoft.Json;
 using PBilek.ObjectStorageService;
 using System.Text;
 
-namespace Headlines.BL.Implementations.ObjectStorageWrapper
+namespace Headlines.BL.Implementations.ObjectStorage
 {
     public sealed class ObjectStorageWrapper : IObjectStorageWrapper
     {

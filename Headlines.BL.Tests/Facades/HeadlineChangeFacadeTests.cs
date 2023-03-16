@@ -258,7 +258,7 @@ namespace Headlines.BL.Tests.Facades
             _headlineChangeDaoMock.Setup(x => x.Delete(_data.HeadlineChange1.Id));
 
             //Act
-            HeadlineChangeDto result = await _sut.DeleteHeadlineChangeAsync(new HeadlineChangeDto { Id = _data.HeadlineChange1.Id });
+            await _sut.DeleteHeadlineChangeAsync(new HeadlineChangeDto { Id = _data.HeadlineChange1.Id });
 
             //Assert
             _uowProviderMock.Verify(x => x.CreateUnitOfWork(), Times.Once);

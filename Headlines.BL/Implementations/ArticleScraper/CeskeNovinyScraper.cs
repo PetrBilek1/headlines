@@ -1,4 +1,5 @@
 ﻿using Headlines.BL.Abstractions.ArticleScraping;
+using Headlines.BL.Implementations.ArticleScraper.Extensions;
 using HtmlAgilityPack;
 
 namespace Headlines.BL.Implementations.ArticleScraper
@@ -14,16 +15,12 @@ namespace Headlines.BL.Implementations.ArticleScraper
         protected override string GetTitle(HtmlDocument document)
             => document.DocumentNode
                 .SelectSingleNode($"//h1[{ContainsExact("itemprop", "name")}]")
-                ?.InnerText
-                .Trim()
-            ?? string.Empty;
+                .SelectInnerText();
 
         protected override string GetAuthor(HtmlDocument document)
             => document.DocumentNode
                 .SelectSingleNode($"//p[{ContainsExact("class", "author")}]//a[text()]")
-                ?.InnerText
-                .Trim()
-            ?? string.Empty;
+                .SelectInnerText();
 
         protected override string GetPerex(HtmlDocument document) => string.Empty;
 
@@ -31,15 +28,14 @@ namespace Headlines.BL.Implementations.ArticleScraper
             => document.DocumentNode
                 .SelectSingleNode($".//div[{ContainsExact("itemprop", "articleBody")}]")
                 ?.SelectNodes($".//*[(self::p or self::h3) and not({ContainsExact("class", "tags")}) and not(ancestor::div[contains(@class, 'footer') or {ContainsExact("class", "infobox")}])]")
-                ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
-                .Select(x => x.InnerText.Trim())
+                .SelectNotNullOrWhiteSpaceInnerText()
                 .ToList()
             ?? new List<string>();
 
         protected override List<string> GetTags(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($".//p[{ContainsExact("class", "tags")}]//a[text()]")
-                ?.Select(x => x.InnerText.Trim())
+                ?.SelectInnerText()
                 .ToList()
             ?? new List<string>();
     }
