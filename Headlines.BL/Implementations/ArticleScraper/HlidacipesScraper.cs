@@ -1,4 +1,5 @@
 ﻿using Headlines.BL.Abstractions.ArticleScraping;
+using Headlines.BL.Implementations.ArticleScraper.Extensions;
 using HtmlAgilityPack;
 
 namespace Headlines.BL.Implementations.ArticleScraper
@@ -14,28 +15,23 @@ namespace Headlines.BL.Implementations.ArticleScraper
         protected override string GetTitle(HtmlDocument document)
             => document.DocumentNode
                 .SelectSingleNode($"//h1[{ContainsExact("class", "post-heading")}]")
-                ?.InnerText
-                .Trim()
-            ?? string.Empty;
+                .SelectInnerText();
 
         protected override string GetAuthor(HtmlDocument document)
-            => string.Join(
-                ", ",
-                document.DocumentNode
-                    .SelectNodes($"//div[{ContainsExact("class", "post-info")}]/a")
-                    ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
-                    ?.Select(x => x.InnerText.Trim())
-                    .ToList()
-                ?? new List<string>()
-            );
+            => document.DocumentNode
+                .SelectNodes($"//div[{ContainsExact("class", "post-info")}]/a")
+                ?.WhereNotInnerTextNullOrWhiteSpace()
+                .SelectInnerText()
+                .JoinStrings()
+            ?? string.Empty;
 
         protected override string GetPerex(HtmlDocument document) => string.Empty;
 
         protected override List<string> GetParagraphs(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($"//div[{ContainsExact("class", "post-content")}]/*[self::p or self::h3 or self::blockquote]")
-                ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
-                ?.Select(x => x.InnerText.Trim())
+                ?.WhereNotInnerTextNullOrWhiteSpace()
+                .SelectInnerText()
                 .ToList()
             ?? new List<string>();
 

@@ -1,4 +1,5 @@
 ﻿using Headlines.BL.Abstractions.ArticleScraping;
+using Headlines.BL.Implementations.ArticleScraper.Extensions;
 using HtmlAgilityPack;
 
 namespace Headlines.BL.Implementations.ArticleScraper
@@ -14,32 +15,27 @@ namespace Headlines.BL.Implementations.ArticleScraper
         protected override string GetTitle(HtmlDocument document)
             => document.DocumentNode
                 .SelectSingleNode($"//div[{ContainsExact("class", "header")}]//h2")
-                ?.InnerText
-                .Trim()
-            ?? string.Empty;
+                .SelectInnerText();
 
         protected override string GetAuthor(HtmlDocument document)
-            => string.Join(
-                ", ",
-                document.DocumentNode
-                    .SelectNodes($".//*[{ContainsExact("class", "articleDetailAuthorName")}]")
-                    ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
-                    .Select(x => x.InnerText.Trim())
-                ?? new List<string>()
-                );
+            => document.DocumentNode
+                .SelectNodes($".//*[{ContainsExact("class", "articleDetailAuthorName")}]")
+                ?.WhereNotInnerTextNullOrWhiteSpace()
+                .SelectInnerText()
+                .JoinStrings()
+            ?? string.Empty;
+
 
         protected override string GetPerex(HtmlDocument document)
             => document.DocumentNode
                 .SelectSingleNode($"//*[{ContainsExact("class", "perex")}]")
-                ?.InnerText
-                .Trim()
-            ?? string.Empty;
+                .SelectInnerText();
 
         protected override List<string> GetParagraphs(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($"//div[{ContainsExact("class", "text")}]/*[self::p or self::h3]")
-                ?.Where(x => !string.IsNullOrWhiteSpace(x.InnerText))
-                .Select(x => x.InnerText.Trim())
+                ?.WhereNotInnerTextNullOrWhiteSpace()
+                .SelectInnerText()
                 .ToList()
             ?? new List<string>();
 
