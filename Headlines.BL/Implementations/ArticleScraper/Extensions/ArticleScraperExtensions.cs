@@ -9,13 +9,13 @@ namespace Headlines.BL.Implementations.ArticleScraper.Extensions
 
         public static IEnumerable<string> SelectNotNullOrWhiteSpaceInnerText(this HtmlNodeCollection nodes)
             => nodes
-                .WhereInnerTextNotNullOrWhiteSpace()
+                .WhereNotInnerTextNullOrWhiteSpace()
                 .SelectInnerText();
 
-        public static IEnumerable<HtmlNode> WhereInnerTextNotNullOrWhiteSpace(this HtmlNodeCollection nodes)
+        public static IEnumerable<HtmlNode> WhereNotInnerTextNullOrWhiteSpace(this HtmlNodeCollection nodes)
             => nodes.Where(x => !string.IsNullOrWhiteSpace(x.InnerText));
 
-        public static string SelectInnerText(this HtmlNode node)
+        public static string SelectInnerText(this HtmlNode? node)
             => node?.InnerText.Trim() ?? string.Empty;
 
         public static IEnumerable<string> SelectInnerText(this IEnumerable<HtmlNode> nodes)

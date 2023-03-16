@@ -54,7 +54,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                         "self::h2[not(@class) and text()]",
                         "]"
                     ))
-                    ?.WhereInnerTextNotNullOrWhiteSpace()
+                    ?.WhereNotInnerTextNullOrWhiteSpace()
                     .SelectInnerText()
                     .ToList()
                 ?? new List<string>();
@@ -65,7 +65,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
             return contentNode
                 ?.SelectNodes($"./*[(self::p or self::h2) and not({ContainsExact("class", "title")})]")
-                ?.WhereInnerTextNotNullOrWhiteSpace()
+                ?.WhereNotInnerTextNullOrWhiteSpace()
                 .SelectInnerText()
                 .ToList()
             ?? new List<string>();

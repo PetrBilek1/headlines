@@ -33,7 +33,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
             contentNode ??= document.DocumentNode.SelectSingleNode($".//div[{ContainsExact("class", "article")}]/div[{ContainsExact("id", "root")}]");
 
             return contentNode.SelectNodes(".//p")
-                ?.WhereInnerTextNotNullOrWhiteSpace()
+                ?.WhereNotInnerTextNullOrWhiteSpace()
                 .SelectInnerText()
                 .ToList()
             ?? new List<string>();

@@ -31,7 +31,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
         protected override List<string> GetParagraphs(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($"//div[{ContainsExact("class", "entry-content")}]/*[self::p or self::h3 or self::blockquote]")
-                ?.WhereInnerTextNotNullOrWhiteSpace()
+                ?.WhereNotInnerTextNullOrWhiteSpace()
                 .SelectInnerText()
                 .ReplaceLongWhiteSpaces()
                 .ToList()
@@ -40,7 +40,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
         protected override List<string> GetTags(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($"//div[{ContainsExact("class", "post-header-title")}]//span[{ContainsExact("class", "term-badge")}]")
-                ?.WhereInnerTextNotNullOrWhiteSpace()
+                ?.WhereNotInnerTextNullOrWhiteSpace()
                 .SelectInnerText()
                 .ToList()
             ?? new List<string>();
