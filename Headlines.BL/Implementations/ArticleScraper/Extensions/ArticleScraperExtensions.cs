@@ -13,17 +13,18 @@ namespace Headlines.BL.Implementations.ArticleScraper.Extensions
                 .SelectInnerText();
 
         public static IEnumerable<HtmlNode> WhereNotInnerTextNullOrWhiteSpace(this HtmlNodeCollection nodes)
-            => nodes.Where(x => !string.IsNullOrWhiteSpace(x.InnerText));
+            => nodes.Where(x => !string.IsNullOrWhiteSpace(x.InnerText));        
 
-        public static string SelectInnerText(this HtmlNode? node)
+        public static IEnumerable<string> SelectInnerText(this IEnumerable<HtmlNode> nodes, bool trim = true)
+            => nodes.Select(x => SelectInnerText(x, trim));
+
+        public static string SelectInnerText(this HtmlNode? node, bool trim = true)
             => node?.InnerText.Trim() ?? string.Empty;
 
-        public static IEnumerable<string> SelectInnerText(this IEnumerable<HtmlNode> nodes)
-            => nodes
-                ?.Select(x => x.InnerText.Trim())
-            ?? Enumerable.Empty<string>();
-
         public static IEnumerable<string> ReplaceLongWhiteSpaces(this IEnumerable<string> strings, string replaceBy = " ")
-            => strings.Select(x => ScraperRegex.WhiteSpaceRegex().Replace(x, replaceBy));
+            => strings.Select(x => ReplaceLongWhiteSpaces(x));
+
+        public static string ReplaceLongWhiteSpaces(this string text, string replaceBy = " ")
+            => ScraperRegex.WhiteSpaceRegex().Replace(text, replaceBy);
     }
 }
