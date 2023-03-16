@@ -29,7 +29,8 @@ namespace Headlines.BL.Implementations.ArticleScraper
                 .SelectSingleNode($".//div[{ContainsExact("itemprop", "articleBody")}]")
                 ?.SelectNodes($".//*[(self::p or self::h3) and not({ContainsExact("class", "tags")}) and not(ancestor::div[contains(@class, 'footer') or {ContainsExact("class", "infobox")}])]")
                 .SelectNotNullOrWhiteSpaceInnerText()
-                .ToList();
+                .ToList()
+            ?? new List<string>();
 
         protected override List<string> GetTags(HtmlDocument document)
             => document.DocumentNode
