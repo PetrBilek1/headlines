@@ -1,4 +1,5 @@
 ﻿using Headlines.BL.Abstractions.ArticleScraping;
+using Headlines.BL.Implementations.ArticleScraper.Extensions;
 using HtmlAgilityPack;
 
 namespace Headlines.BL.Implementations.ArticleScraper
@@ -16,30 +17,26 @@ namespace Headlines.BL.Implementations.ArticleScraper
         protected override string GetTitle(HtmlDocument document)
             => document.DocumentNode
                 .SelectSingleNode("//h1")
-                ?.InnerText
-                .Trim()
-            ?? string.Empty;
+                .SelectInnerText();
 
         protected override string GetAuthor(HtmlDocument document)
             => document.DocumentNode
                 .SelectSingleNode($"//div[{ContainsExact("class", "authors")}]/a[text()]")
-                ?.InnerText
-                .Trim()
-            ?? string.Empty;
+                .SelectInnerText();
 
         protected override string GetPerex(HtmlDocument document) => string.Empty;
 
         protected override List<string> GetParagraphs(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($".//div[{ContainsExact("class", "article-body-part")} and {ContainsExact("class", "free-part")}]//p")
-                ?.Select(x => x.InnerText)
+                ?.SelectInnerText()
                 .ToList()
             ?? new List<string>();
 
         protected override List<string> GetTags(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($".//div[{ContainsExact("class", "tags")}]//li[contains(@id, 'tag')]")
-                ?.Select(x => x.InnerText.Trim())
+                ?.SelectInnerText()
                 .ToList()
             ?? new List<string>();
     }
