@@ -23,16 +23,25 @@ jobs:
 
       - name: Add Private NuGet Source
         run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
-
+      
+      - name: Cache NuGetPackages
+        id: cache-nuget
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ hashFiles('**/packages.lock.json') }}
+      
       - name: Restore NuGet Packages
-        run: dotnet cake --target=Restore-NuGet-Packages
+        if: steps.cache-nuget.outputs.cache-hit != 'true'
+        run: dotnet cake --target=Restore-NuGet-Packages              
 
       - name: Run Build
         run: dotnet cake --target=Build           
   
   test:
+    needs: build
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -54,8 +63,16 @@ jobs:
 
       - name: Add Private NuGet Source
         run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
-
+      
+      - name: Cache NuGetPackages
+        id: cache-nuget
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ hashFiles('**/packages.lock.json') }}
+      
       - name: Restore NuGet Packages
+        if: steps.cache-nuget.outputs.cache-hit != 'true'
         run: dotnet cake --target=Restore-NuGet-Packages
 
       - name: Run Tests
@@ -68,7 +85,7 @@ jobs:
           path: test-results
 
   analyze-draft-release:
-    needs: [build, test]
+    needs: test
     runs-on: windows-2022
 
     permissions:
@@ -112,8 +129,16 @@ jobs:
 
       - name: Add Private NuGet Source
         run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
-
+      
+      - name: Cache NuGetPackages
+        id: cache-nuget
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ hashFiles('**/packages.lock.json') }}
+      
       - name: Restore NuGet Packages
+        if: steps.cache-nuget.outputs.cache-hit != 'true'
         run: dotnet cake --target=Restore-NuGet-Packages
 
       - name: Run Sonar Analysis
