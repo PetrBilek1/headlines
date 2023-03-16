@@ -22,18 +22,18 @@ jobs:
         run: dotnet tool restore
 
       - name: Add Private NuGet Source
-        run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
+        run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"            
       
+      - name: Restore NuGet Packages
+        if: steps.cache-nuget.outputs.cache-hit != 'true'
+        run: dotnet cake --target=Restore-NuGet-Packages   
+        
       - name: Cache NuGetPackages
         id: cache-nuget
         uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
           key: nuget-${{ hashFiles('**/packages.lock.json') }}
-      
-      - name: Restore NuGet Packages
-        if: steps.cache-nuget.outputs.cache-hit != 'true'
-        run: dotnet cake --target=Restore-NuGet-Packages              
 
       - name: Run Build
         run: dotnet cake --target=Build           
