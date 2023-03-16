@@ -29,10 +29,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
-          key: nuget-${{ hashFiles('Directory.Build.props') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('Directory.Build.props') }}
       
       - name: Restore NuGet Packages
-        if: steps.cache-nuget.outputs.cache-hit != 'true'
         run: dotnet cake --target=Restore-NuGet-Packages                 
 
       - name: Run Build
@@ -69,10 +68,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
-          key: nuget-${{ hashFiles('Directory.Build.props') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('Directory.Build.props') }}
       
       - name: Restore NuGet Packages
-        if: steps.cache-nuget.outputs.cache-hit != 'true'
         run: dotnet cake --target=Restore-NuGet-Packages
 
       - name: Run Tests
@@ -135,10 +133,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
-          key: nuget-${{ hashFiles('Directory.Build.props') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('Directory.Build.props') }}
       
       - name: Restore NuGet Packages
-        if: steps.cache-nuget.outputs.cache-hit != 'true'
         run: dotnet cake --target=Restore-NuGet-Packages
 
       - name: Run Sonar Analysis
