@@ -24,16 +24,16 @@ jobs:
       - name: Add Private NuGet Source
         run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"            
       
-      - name: Restore NuGet Packages
-        if: steps.cache-nuget.outputs.cache-hit != 'true'
-        run: dotnet cake --target=Restore-NuGet-Packages   
-        
-      - name: Cache NuGetPackages
+      - name: Cache NuGet Packages
         id: cache-nuget
         uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
-          key: nuget-${{ hashFiles('**/packages.lock.json') }}
+          key: nuget-${{ github.run_id }}
+      
+      - name: Restore NuGet Packages
+        if: steps.cache-nuget.outputs.cache-hit != 'true'
+        run: dotnet cake --target=Restore-NuGet-Packages                 
 
       - name: Run Build
         run: dotnet cake --target=Build           
@@ -69,7 +69,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
-          key: nuget-${{ hashFiles('**/packages.lock.json') }}
+          key: nuget-${{ github.run_id }}
       
       - name: Restore NuGet Packages
         if: steps.cache-nuget.outputs.cache-hit != 'true'
@@ -130,12 +130,12 @@ jobs:
       - name: Add Private NuGet Source
         run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PBILEK_PACKAGES_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/PetrBilek1/index.json"
       
-      - name: Cache NuGetPackages
+      - name: Cache NuGet Packages
         id: cache-nuget
         uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
-          key: nuget-${{ hashFiles('**/packages.lock.json') }}
+          key: nuget-${{ github.run_id }}
       
       - name: Restore NuGet Packages
         if: steps.cache-nuget.outputs.cache-hit != 'true'
