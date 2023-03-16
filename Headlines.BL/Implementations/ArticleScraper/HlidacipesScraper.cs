@@ -20,20 +20,16 @@ namespace Headlines.BL.Implementations.ArticleScraper
         protected override string GetAuthor(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($"//div[{ContainsExact("class", "post-info")}]/a")
-                ?.WhereNotInnerTextNullOrWhiteSpace()
-                .SelectInnerText()
-                .JoinStrings()
-            ?? string.Empty;
+                .SelectNotNullOrWhiteSpaceInnerText()
+                .JoinStrings();
 
         protected override string GetPerex(HtmlDocument document) => string.Empty;
 
         protected override List<string> GetParagraphs(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($"//div[{ContainsExact("class", "post-content")}]/*[self::p or self::h3 or self::blockquote]")
-                ?.WhereNotInnerTextNullOrWhiteSpace()
-                .SelectInnerText()
-                .ToList()
-            ?? new List<string>();
+                .SelectNotNullOrWhiteSpaceInnerText()
+                .ToList();
 
         protected override List<string> GetTags(HtmlDocument document) => new List<string>();        
     }

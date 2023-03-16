@@ -22,8 +22,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
         protected override string GetAuthor(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($"//div[{ContainsExact("class", "author-name")}]/h3")
-                ?.WhereNotInnerTextNullOrWhiteSpace()
-                .SelectInnerText()
+                .SelectNotNullOrWhiteSpaceInnerText()
                 .JoinStrings()
             ?? string.Empty;
 
@@ -35,17 +34,13 @@ namespace Headlines.BL.Implementations.ArticleScraper
         protected override List<string> GetParagraphs(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($"//div[{ContainsExact("class", "content")}]/p")
-                ?.WhereNotInnerTextNullOrWhiteSpace()
-                .SelectInnerText()
-                .ToList()
-            ?? new List<string>();
+                .SelectNotNullOrWhiteSpaceInnerText()
+                .ToList();
 
         protected override List<string> GetTags(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($"//div[{ContainsExact("class", "keywords")}]/*[{ContainsExact("class", "keyword")}]")
-                ?.WhereNotInnerTextNullOrWhiteSpace()
-                .SelectInnerText()
-                .ToList()
-            ?? new List<string>();
+                .SelectNotNullOrWhiteSpaceInnerText()
+                .ToList();
     }
 }

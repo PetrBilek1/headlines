@@ -32,11 +32,10 @@ namespace Headlines.BL.Implementations.ArticleScraper
             var contentNode = document.DocumentNode.SelectSingleNode($".//div[{ContainsExact("class", "article__content")}]");            
             contentNode ??= document.DocumentNode.SelectSingleNode($".//div[{ContainsExact("class", "article")}]/div[{ContainsExact("id", "root")}]");
 
-            return contentNode.SelectNodes(".//p")
-                ?.WhereNotInnerTextNullOrWhiteSpace()
-                .SelectInnerText()
-                .ToList()
-            ?? new List<string>();
+            return contentNode
+                .SelectNodes(".//p")
+                .SelectNotNullOrWhiteSpaceInnerText()
+                .ToList();
         }
 
         protected override List<string> GetTags(HtmlDocument document)

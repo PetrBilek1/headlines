@@ -52,14 +52,12 @@ namespace Headlines.BL.Implementations.ArticleScraper
                     .SelectInnerText()
                     .ToList();
         }
-                
+
 
         protected override List<string> GetTags(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($"//*[contains(@class, 'Tag_root')]")
-                ?.WhereNotInnerTextNullOrWhiteSpace()
-                .SelectInnerText()
-                .ToList()
-            ?? new List<string>();
+                .SelectNotNullOrWhiteSpaceInnerText()
+                .ToList();
     }
 }

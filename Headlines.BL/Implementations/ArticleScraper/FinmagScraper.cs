@@ -30,17 +30,13 @@ namespace Headlines.BL.Implementations.ArticleScraper
         protected override List<string> GetParagraphs(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($"//div[{ContainsExact("id", "article_content")}]/*[self::p or self::h2]")
-                ?.WhereNotInnerTextNullOrWhiteSpace()
-                .SelectInnerText()
-                .ToList()
-            ?? new List<string>();
+                .SelectNotNullOrWhiteSpaceInnerText()
+                .ToList();
 
         protected override List<string> GetTags(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes($"//div[contains(@class, 'article') and contains(@class, 'header') and contains(@class, 'keywords')]/*")
-                ?.WhereNotInnerTextNullOrWhiteSpace()
-                .SelectInnerText()
-                .ToList()
-            ?? new List<string>();
+                .SelectNotNullOrWhiteSpaceInnerText()
+                .ToList();
     }
 }

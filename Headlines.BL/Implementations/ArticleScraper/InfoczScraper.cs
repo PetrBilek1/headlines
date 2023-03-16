@@ -32,17 +32,13 @@ namespace Headlines.BL.Implementations.ArticleScraper
         protected override List<string> GetParagraphs(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes("//div[contains(@class, 'rich-text')]/p")
-                ?.WhereNotInnerTextNullOrWhiteSpace()
-                .SelectInnerText()
-                .ToList()
-            ?? new List<string>();
+                .SelectNotNullOrWhiteSpaceInnerText()
+                .ToList();
 
         protected override List<string> GetTags(HtmlDocument document)
             => document.DocumentNode
                 .SelectNodes("//section[contains(@class, 'articles-content__top')]//a[contains(@class, 'layout-badge')]")
-                ?.WhereNotInnerTextNullOrWhiteSpace()
-                .SelectInnerText()
-                .ToList()
-            ?? new List<string>();
+                .SelectNotNullOrWhiteSpaceInnerText()
+                .ToList();
     }
 }

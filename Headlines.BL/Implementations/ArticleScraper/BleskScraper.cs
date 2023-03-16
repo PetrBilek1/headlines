@@ -28,11 +28,10 @@ namespace Headlines.BL.Implementations.ArticleScraper
             authorNode ??= document.DocumentNode.SelectSingleNode($"//div[{ContainsExact("class", "author")} and not(ancestor::div[{ContainsExact("class", "image-description")}])]");
 
             return authorNode
-                ?.InnerText
+                .SelectInnerText(false)
                 .Replace("Autor:", "")
                 .Replace("-", " ")
-                .Trim() 
-            ?? string.Empty;
+                .Trim();
         }
 
         protected override string GetPerex(HtmlDocument document)
@@ -54,8 +53,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
                         "self::h2[not(@class) and text()]",
                         "]"
                     ))
-                    ?.WhereNotInnerTextNullOrWhiteSpace()
-                    .SelectInnerText()
+                    .SelectNotNullOrWhiteSpaceInnerText()
                     .ToList()
                 ?? new List<string>();
             }
@@ -65,8 +63,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 
             return contentNode
                 ?.SelectNodes($"./*[(self::p or self::h2) and not({ContainsExact("class", "title")})]")
-                ?.WhereNotInnerTextNullOrWhiteSpace()
-                .SelectInnerText()
+                .SelectNotNullOrWhiteSpaceInnerText()
                 .ToList()
             ?? new List<string>();
         }
