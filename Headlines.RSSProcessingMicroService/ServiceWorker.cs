@@ -42,7 +42,7 @@ namespace Headlines.RSSProcessingMicroService
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError($"Failed to execute RSSProcessorService with exception message {ex.Message}.");
+                    _logger.LogError("Failed to execute RSSProcessorService with exception message '{message}'.", ex.Message);
                 }
             }
         }
