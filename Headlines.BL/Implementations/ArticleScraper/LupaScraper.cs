@@ -7,7 +7,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class LupaScraper : ArticleScraperBase
     {
-        public override ArticleScraperType ScraperType { get; } = ArticleScraperType.Lupa;
+        public new ArticleScraperType ScraperType { get; } = ArticleScraperType.Lupa;
 
         public LupaScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {

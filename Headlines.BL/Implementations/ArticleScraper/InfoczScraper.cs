@@ -7,7 +7,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class InfoczScraper : ArticleScraperBase
     {
-        public override ArticleScraperType ScraperType { get; } = ArticleScraperType.Infocz;
+        public new ArticleScraperType ScraperType { get; } = ArticleScraperType.Infocz;
 
         public InfoczScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {

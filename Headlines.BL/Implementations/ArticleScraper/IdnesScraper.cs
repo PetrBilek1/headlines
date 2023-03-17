@@ -7,7 +7,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class IdnesScraper : ArticleScraperBase
     {
-        public override ArticleScraperType ScraperType { get; } = ArticleScraperType.Idnes;
+        public new ArticleScraperType ScraperType { get; } = ArticleScraperType.Idnes;
 
         public IdnesScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {

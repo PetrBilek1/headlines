@@ -7,7 +7,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class AktualneScraper : ArticleScraperBase
     {
-        public override ArticleScraperType ScraperType { get; } = ArticleScraperType.Aktualne;
+        public new ArticleScraperType ScraperType { get; } = ArticleScraperType.Aktualne;
 
         public AktualneScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {

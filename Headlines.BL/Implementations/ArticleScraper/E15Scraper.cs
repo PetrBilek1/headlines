@@ -7,7 +7,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class E15Scraper : ArticleScraperBase
     {
-        public override ArticleScraperType ScraperType { get; } = ArticleScraperType.E15;
+        public new ArticleScraperType ScraperType { get; } = ArticleScraperType.E15;
 
         public E15Scraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {

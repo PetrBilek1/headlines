@@ -7,7 +7,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class RespektScraper : ArticleScraperBase
     {
-        public override ArticleScraperType ScraperType { get; } = ArticleScraperType.Respekt;
+        public new ArticleScraperType ScraperType { get; } = ArticleScraperType.Respekt;
 
         public RespektScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {

@@ -7,7 +7,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class LidovkyScraper : ArticleScraperBase
     {
-        public override ArticleScraperType ScraperType { get; } = ArticleScraperType.Lidovky;
+        public new ArticleScraperType ScraperType { get; } = ArticleScraperType.Lidovky;
 
         public LidovkyScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {

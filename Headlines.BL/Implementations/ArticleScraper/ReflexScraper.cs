@@ -7,7 +7,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class ReflexScraper : ArticleScraperBase
     {
-        public override ArticleScraperType ScraperType { get; } = ArticleScraperType.Reflex;
+        public new ArticleScraperType ScraperType { get; } = ArticleScraperType.Reflex;
 
         public ReflexScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {

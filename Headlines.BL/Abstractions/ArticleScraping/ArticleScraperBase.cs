@@ -7,6 +7,8 @@ namespace Headlines.BL.Abstractions.ArticleScraping
     {
         protected IHtmlDocumentLoader _documentLoader;
 
+        public ArticleScraperType ScraperType => throw new NotImplementedException();
+
         protected ArticleScraperBase(IHtmlDocumentLoader documentLoader)
         {
             _documentLoader = documentLoader;
@@ -33,8 +35,6 @@ namespace Headlines.BL.Abstractions.ArticleScraping
                 return new ArticleScrapeResult { IsSuccess = false };
             }
         }
-
-        public abstract ArticleScraperType ScraperType { get; }
 
         protected abstract bool IsPaywalled(HtmlDocument document);
         protected abstract string GetTitle(HtmlDocument document);

@@ -7,7 +7,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class A2LarmScraper : ArticleScraperBase
     {
-        public override ArticleScraperType ScraperType { get; } = ArticleScraperType.A2larm;
+        public new ArticleScraperType ScraperType { get; } = ArticleScraperType.A2larm;
 
         public A2LarmScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {

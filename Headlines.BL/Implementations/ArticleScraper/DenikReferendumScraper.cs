@@ -7,7 +7,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class DenikReferendumScraper : ArticleScraperBase
     {
-        public override ArticleScraperType ScraperType { get; } = ArticleScraperType.DenikReferendum;
+        public new ArticleScraperType ScraperType { get; } = ArticleScraperType.DenikReferendum;
 
         public DenikReferendumScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {

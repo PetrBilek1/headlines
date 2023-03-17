@@ -7,7 +7,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class BleskScraper : ArticleScraperBase
     {
-        public override ArticleScraperType ScraperType { get; } = ArticleScraperType.Blesk;
+        public new ArticleScraperType ScraperType { get; } = ArticleScraperType.Blesk;
 
         public BleskScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {

@@ -7,7 +7,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class ParlamentniListyScraper : ArticleScraperBase
     {
-        public override ArticleScraperType ScraperType { get; } = ArticleScraperType.ParlamentniListy;
+        public new ArticleScraperType ScraperType { get; } = ArticleScraperType.ParlamentniListy;
 
         public ParlamentniListyScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {

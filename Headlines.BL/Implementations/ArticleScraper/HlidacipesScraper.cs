@@ -7,7 +7,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class HlidacipesScraper : ArticleScraperBase
     {
-        public override ArticleScraperType ScraperType { get; } = ArticleScraperType.Hlidacipes;
+        public new ArticleScraperType ScraperType { get; } = ArticleScraperType.Hlidacipes;
 
         public HlidacipesScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {

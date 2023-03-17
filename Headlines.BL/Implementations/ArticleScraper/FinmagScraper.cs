@@ -7,7 +7,7 @@ namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class FinmagScraper : ArticleScraperBase
     {
-        public override ArticleScraperType ScraperType { get; } = ArticleScraperType.Finmag;
+        public new ArticleScraperType ScraperType { get; } = ArticleScraperType.Finmag;
 
         public FinmagScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {
