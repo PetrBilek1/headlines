@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using Headlines.Enums;
+using HtmlAgilityPack;
 
 namespace Headlines.BL.Abstractions.ArticleScraping
 {
@@ -32,6 +33,8 @@ namespace Headlines.BL.Abstractions.ArticleScraping
                 return new ArticleScrapeResult { IsSuccess = false };
             }
         }
+
+        public abstract ArticleScraperType ScraperType { get; }
 
         protected abstract bool IsPaywalled(HtmlDocument document);
         protected abstract string GetTitle(HtmlDocument document);

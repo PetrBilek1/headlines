@@ -1,11 +1,14 @@
 ﻿using Headlines.BL.Abstractions.ArticleScraping;
 using Headlines.BL.Implementations.ArticleScraper.Extensions;
+using Headlines.Enums;
 using HtmlAgilityPack;
 
 namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class ParlamentniListyScraper : ArticleScraperBase
     {
+        public override ArticleScraperType ScraperType { get; } = ArticleScraperType.ParlamentniListy;
+
         public ParlamentniListyScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {
         }
