@@ -1,11 +1,14 @@
 ﻿using Headlines.BL.Abstractions.ArticleScraping;
 using Headlines.BL.Implementations.ArticleScraper.Extensions;
+using Headlines.Enums;
 using HtmlAgilityPack;
 
 namespace Headlines.BL.Implementations.ArticleScraper
 {
     public sealed class ReflexScraper : ArticleScraperBase
     {
+        public new ArticleScraperType ScraperType { get; } = ArticleScraperType.Reflex;
+
         public ReflexScraper(IHtmlDocumentLoader documentLoader) : base(documentLoader)
         {
         }

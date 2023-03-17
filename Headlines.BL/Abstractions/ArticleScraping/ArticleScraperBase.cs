@@ -1,10 +1,13 @@
-﻿using HtmlAgilityPack;
+﻿using Headlines.Enums;
+using HtmlAgilityPack;
 
 namespace Headlines.BL.Abstractions.ArticleScraping
 {
     public abstract class ArticleScraperBase : IArticleScraper
     {
         protected IHtmlDocumentLoader _documentLoader;
+
+        public ArticleScraperType ScraperType => throw new NotImplementedException();
 
         protected ArticleScraperBase(IHtmlDocumentLoader documentLoader)
         {

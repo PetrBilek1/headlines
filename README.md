@@ -1,6 +1,7 @@
 # headlines
 [![Continuous Integration & Delivery](https://github.com/PetrBilek1/headlines/actions/workflows/cicd.yml/badge.svg)](https://github.com/PetrBilek1/headlines/actions/workflows/cicd.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=PetrBilek1_headlines&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=PetrBilek1_headlines)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=PetrBilek1_headlines&metric=coverage)](https://sonarcloud.io/summary/new_code?id=PetrBilek1_headlines)
 
 **Headlines is a web application for tracking articles and their headlines.**
 
