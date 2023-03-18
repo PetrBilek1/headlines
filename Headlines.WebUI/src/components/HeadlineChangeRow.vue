@@ -22,7 +22,7 @@
             <div class="col-lg-1 text-center mt-2 mt-lg-0">
                 <fai :icon="['fas', change.article.link.length > 0 ? 'link' : 'link-slash']" :class="['cursor-pointer']" v-on:click="redirect(change.article.link)"></fai>
                 &nbsp;
-                <router-link v-if="showarticledetaillink" :to="{ name: 'Article', params: { id: change.article.id } }" style="color: #333333">                    
+                <router-link v-if="showarticledetaillink" :to="{ name: 'Article', params: { id: change.article.id } }" style="color: #333333" aria-label="Pøejít na detail èlánku">                    
                     <fai :icon="['fas', 'newspaper']" :class="['cursor-pointer']"></fai>
                 </router-link>
                 &nbsp;
