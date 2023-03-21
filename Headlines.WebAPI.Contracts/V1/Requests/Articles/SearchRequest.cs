@@ -12,5 +12,9 @@ namespace Headlines.WebAPI.Contracts.V1.Requests.Articles
         public string SearchPrompt { get; set; }
         [JsonProperty("articleSources")]
         public long[] ArticleSources { get; set; }
+        [JsonProperty("publishedUtcFrom")]
+        public DateTime? PublishedUtcFrom { get; set; }
+        [JsonProperty("publishedUtcTo")]
+        public DateTime? PublishedUtcTo { get; set; }
     }
 }

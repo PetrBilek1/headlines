@@ -93,7 +93,7 @@ namespace Headlines.WebAPI.Controllers.v1
                     MatchesFiltersCount = 0
                 });
 
-            List<ArticleDto> articles = await _articleFacade.GetArticlesByFiltersSkipTakeAsync(request.Skip.Value, request.Take.Value, request.SearchPrompt, request.ArticleSources, null, null, cancellationToken);
+            List<ArticleDto> articles = await _articleFacade.GetArticlesByFiltersSkipTakeAsync(request.Skip.Value, request.Take.Value, request.SearchPrompt, request.ArticleSources, request.PublishedUtcFrom, request.PublishedUtcTo, cancellationToken);
             long count = await _articleFacade.GetArticlesCountByFiltersAsync(request.SearchPrompt, request.ArticleSources, null, null, cancellationToken);
 
             return Ok(new SearchResponse

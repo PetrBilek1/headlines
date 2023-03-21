@@ -46,7 +46,9 @@ namespace Headlines.WebAPI.Tests.Integration.V1.Contracts
                 ("Skip", typeof(int?), new string[] { _jsonPropertyAttribute }),
                 ("Take", typeof(int?), new string[] { _jsonPropertyAttribute }),
                 ("SearchPrompt", typeof(string), new string[] { _jsonPropertyAttribute }),
-                ("ArticleSources", typeof(long[]), new string[] { _jsonPropertyAttribute })
+                ("ArticleSources", typeof(long[]), new string[] { _jsonPropertyAttribute }),
+                ("PublishedUtcFrom", typeof(DateTime?), new string[] { _jsonPropertyAttribute }),
+                ("PublishedUtcTo", typeof(DateTime?), new string[] { _jsonPropertyAttribute })
             });
         }
 
