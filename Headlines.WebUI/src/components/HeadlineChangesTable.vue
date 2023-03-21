@@ -15,13 +15,13 @@
             <ul class="pagination justify-content-center">
                 <li :class="['page-item', 'cursor-pointer', currentPage <= 0 ? 'disabled' : '']" v-on:click="selectPage(currentPage - 1)">
                     <span class="page-link" aria-label="Předchozí">
-                        <span aria-hidden="true">&laquo;</span>
+                        <span aria-hidden="true">&lsaquo;</span>
                     </span>
                 </li>
                 <li :class="['page-item', 'cursor-pointer', page == currentPage ? 'active' : '']" v-for="page in pagination" v-bind:key="page" v-on:click="selectPage(page)"><span class="page-link">{{ page + 1 }}</span></li>
                 <li :class="['page-item', 'cursor-pointer', currentPage >= Math.floor(headlineChangeCount / recordsPerPage) ? 'disabled' : '']" v-on:click="selectPage(currentPage + 1)">
                     <span class="page-link" aria-label="Další">
-                        <span aria-hidden="true">&raquo;</span>
+                        <span aria-hidden="true">&rsaquo;</span>
                     </span>
                 </li>
             </ul>

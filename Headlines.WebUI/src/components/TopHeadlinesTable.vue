@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="padding-bottom: 50px;">
         <HeadlineChangeRow v-for="(headlineChange, i) in headlineChanges"
                            v-bind:key="headlineChange.id"
                            v-bind:change="headlineChange"

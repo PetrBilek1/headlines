@@ -8,26 +8,30 @@
             </h1>
         </div>
         <div class="section-first-content h-100">
-            <h1 class="ml7">
+            <h1 id="top-title" class="ml7">
                 <span class="color-yellow text-wrapper">
                     <span class="letters">Nejlepší změny titulků</span>
                     &nbsp;
                     <fai v-if="stopAnimating && topHeadlineChanges.length == 0" :icon="['fas', 'spinner']" :style="{ color: 'white' }" spin></fai>
                 </span>
             </h1>
-            <div class="masked hide-scrollbar" style="height: 85%;">                
+            <div id="top-table" class="masked hide-scrollbar" style="height: 85%;">                
                 <TopHeadlinesTable v-on:upvoted="upvoted"
                                    :headlineChanges="topHeadlineChanges"
                                    :startAnimDelay="topHeadlineChangesStartAnimDelay"
                                    :userToken="userData.userToken"
                                    :userUpvotes="userUpvotes"
                                    :animateonmount="!stopAnimating" />
-            </div>
+            </div>            
         </div>
     </section>
-    <section class="spacer layer1"></section>
+    <section class="spacer layer1">
+        <div class="down-button">
+            <span @click="scrollDown()"><b>DOLŮ</b></span>
+        </div>
+    </section>
 
-    <section class="section-second">
+    <section id="section-second" class="section-second">
         <div class="section-second-content">
             <h1 class="section-second-title">Nedávné změny titulků</h1>
             <HeadlineChangesTable v-on:upvoted="upvoted"
@@ -54,7 +58,7 @@ export default {
         return {
             showGreetingOnMount: false,
             stopAnimating: false,
-            topHeadlineChangesStartAnimDelay: 500,
+            topHeadlineChangesStartAnimDelay: 0,
             topHeadlineChanges: [],
             shownHeadlineChanges: [],
             headlineChangeCount: 0,
@@ -99,15 +103,10 @@ export default {
                 })
         },
         resolveAnimations(showGreetings) {
-            let bestChangesDelay = 0
-
             if (showGreetings) {
-                bestChangesDelay = 2500
                 this.topHeadlineChangesStartAnimDelay = 3300
                 this.animateGreetingTitle()
             }
-
-            this.animateBestChangesTitle(bestChangesDelay)
         },
         animateGreetingTitle() {
             let textWrapper = document.querySelector('.ml10 .letters')
@@ -125,23 +124,11 @@ export default {
                     duration: 1000,
                     easing: "easeOutExpo",
                     delay: 250
-                })
-        },
-        animateBestChangesTitle(baseDelay) {
-            let textWrapper2 = document.querySelector('.ml7 .letters')
-            textWrapper2.innerHTML = textWrapper2.textContent.replace(/\S/g, "<span class='letter' style='transform-origin: 0 100%; display: inline-block; line-height: 1em;'>$&</span>")
-
-            anime.timeline({ loop: false })
-                .add({
-                    targets: '.ml7 .letter',
-                    translateY: ["1.1em", 0],
-                    translateX: ["0.55em", 0],
-                    translateZ: 0,
-                    rotateZ: [180, 0],
+                }).add({
+                    targets: ['#top-title', '#top-table', ".down-button"],
+                    opacity: [0, 1],
                     duration: 750,
-                    easing: "easeOutExpo",
-                    delay: (el, i) => baseDelay + 50 * i,
-                    complete: () => this.topHeadlineChangesStartAnimDelay = 500
+                    easing: "easeOutExpo"
                 })
         },
         upvoted(data) {
@@ -149,6 +136,9 @@ export default {
 
             this.fetchTopHeadlines()
             this.fetchHeadlineChangePage(this.currentPage)
+        },
+        scrollDown() {
+            document.getElementById("section-second").scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
         }
     },
     created() {
@@ -303,4 +293,27 @@ export default {
         -ms-overflow-style: none; /* IE and Edge */
         scrollbar-width: none; /* Firefox */
     }
+
+    .down-button {    
+        position: static;
+        width: 100%;
+        height: 70%;
+        align-content: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .down-button span {
+            background-color: white;
+            border-radius: 25px;
+            padding: 10px 50px;
+            cursor: pointer;
+            transition: 0.4s;
+            z-index: 100;
+        }
+
+            .down-button span:hover {
+                background-color: #E8BE6D;                
+            }
 </style>
