@@ -19,7 +19,7 @@
                     </span>
                 </li>
                 <li :class="['page-item', 'cursor-pointer', page == currentPage ? 'active' : '']" v-for="page in pagination" v-bind:key="page" v-on:click="selectPage(page)"><span class="page-link">{{ page + 1 }}</span></li>
-                <li :class="['page-item', 'cursor-pointer', currentPage >= Math.floor(headlineChangeCount / recordsPerPage) ? 'disabled' : '']" v-on:click="selectPage(currentPage + 1)">
+                <li :class="['page-item', 'cursor-pointer', currentPage >= Math.floor((headlineChangeCount - 1) / recordsPerPage) ? 'disabled' : '']" v-on:click="selectPage(currentPage + 1)">
                     <span class="page-link" aria-label="Další">
                         <span aria-hidden="true">&rsaquo;</span>
                     </span>
@@ -119,7 +119,7 @@ export default {
             return pages
         },
         getLastPage() {
-            return Math.floor(this.headlineChangeCount / this.recordsPerPage)
+            return Math.floor((this.headlineChangeCount - 1) / this.recordsPerPage)
         },
     },
     beforeUpdate() {

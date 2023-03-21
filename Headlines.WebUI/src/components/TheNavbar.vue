@@ -31,10 +31,12 @@
 <style scoped>
     .navbar {
         background-color: #1B818C !important;
+        font-size: 22px;
     }
 
     .navbar-brand {
         color: #E8BE6D !important;
+        font-size: 26px;
     }
 
     .nav-link {

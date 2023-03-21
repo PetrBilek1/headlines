@@ -32,7 +32,7 @@
                     </span>
                 </li>
                 <li :class="['page-item', 'cursor-pointer', page == currentPage ? 'active' : '']" v-for="page in pagination" v-bind:key="page" v-on:click="selectPage(page)"><span class="page-link">{{ page + 1 }}</span></li>
-                <li :class="['page-item', 'cursor-pointer', currentPage >= Math.floor(articlesCount / recordsPerPage) ? 'disabled' : '']" v-on:click="selectPage(currentPage + 1)">
+                <li :class="['page-item', 'cursor-pointer', currentPage >= Math.floor((articlesCount - 1) / recordsPerPage) ? 'disabled' : '']" v-on:click="selectPage(currentPage + 1)">
                     <span class="page-link" aria-label="Další">
                         <span aria-hidden="true">&raquo;</span>
                     </span>
@@ -127,7 +127,7 @@ export default {
             return pages
         },
         getLastPage() {
-            return Math.floor(this.articlesCount / this.recordsPerPage)
+            return Math.floor((this.articlesCount - 1) / this.recordsPerPage)
         },
         getLocalTimeString(dateTimeUTC) {
             const date = new Date(dateTimeUTC + '+00:00')
