@@ -46,9 +46,17 @@
         font-size: 26px;
     }
 
+        .navbar-brand:hover {
+            color: #E8BE6D !important;
+        }
+
     .nav-link {
         color: #FFFFFF !important;
     }
+
+        .nav-link:hover {
+            color: #E8BE6D !important;
+        }
 
     .navbar-toggler {
         color: #FFFFFF55 !important;
