@@ -8,6 +8,7 @@
             <span class="cursor-pointer" style="font-size: 32px;" @click="redirect(article.link)"><b><i>{{ article.currentTitle }}</i></b></span>
             <br>
             <div class="color-white w-100 mt-3" style="text-align: right; font-size: 18px;" v-if="article">
+                <b v-if="articleDetail">{{ articleDetail.author }}</b><br>
                 <b>Publikováno {{ getLocalTimeString(article.published) }}</b>
             </div>
         </header>
