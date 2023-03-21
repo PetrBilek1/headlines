@@ -79,6 +79,12 @@ export default {
             this.articleSources = []
             response.data.articleSources.forEach(x => this.articleSources.push({ source: x, isSelected: true }))
 
+            this.articleSources.sort(function (a, b) {
+                var textA = a.source.name.toUpperCase();
+                var textB = b.source.name.toUpperCase();
+                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+            });
+
             this.setAllSourcesSelected()
         },
         async fetchArticlePage(page) {
