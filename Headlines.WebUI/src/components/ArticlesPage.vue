@@ -1,8 +1,6 @@
 <template>
     <section class="section-first" @keyup.enter="fetchArticlePage(selectedPage)">
-        <h1 class="color-yellow text-wrapper mb-3 mb-lg-5">
-            <b>Články</b>
-        </h1>
+        <h1 class="color-yellow text-wrapper mb-3 mb-lg-5 ml7">Články</h1>
         <div class="d-flex filters-width">
             <div>
                 <div class="dropdown">
@@ -212,5 +210,11 @@ export default {
         .filters-width {
             width: 100%;
         }
+    }
+
+    .ml7 {
+        position: relative;
+        font-weight: 800;
+        font-size: 2.3em;
     }
 </style>

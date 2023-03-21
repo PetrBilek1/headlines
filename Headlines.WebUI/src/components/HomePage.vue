@@ -33,7 +33,7 @@
 
     <section id="section-second" class="section-second">
         <div class="section-second-content">
-            <h1 class="section-second-title">Nedávné změny titulků</h1>
+            <h1 class="section-second-title ml7">Nedávné změny titulků</h1>
             <HeadlineChangesTable v-on:upvoted="upvoted"
                                v-on:fetchheadlinechanges="fetchHeadlineChangePage"
                                :headlineChanges="shownHeadlineChanges"
@@ -201,6 +201,7 @@ export default {
 
     .section-second-title {
         color: #0B5B8C;
+        margin-bottom: 20px;
     }
 
     @media screen and (max-width: 960px) {

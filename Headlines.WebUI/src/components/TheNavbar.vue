@@ -9,10 +9,10 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <router-link to="/" class="nav-link text-dark" asp-area="">Titulky</router-link>
+                            <router-link to="/" class="nav-link text-dark" :id="[currentRouteName === 'Home' ? 'nav-current' : '']">Titulky</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link to="/articles" class="nav-link text-dark" asp-area="">Články</router-link>
+                            <router-link to="/articles" class="nav-link text-dark" :id="[currentRouteName === 'Articles' ? 'nav-current' : '']">Články</router-link>
                         </li>
                     </ul>
                 </div>
@@ -22,8 +22,15 @@
 </template>
 
 <script>
+    import { useRoute } from 'vue-router'
+
     export default {
-        name: 'TheNavbar'
+        name: 'TheNavbar',
+        computed: {
+            currentRouteName() {
+                return useRoute().name
+            }
+        }
     }
 </script>
 
@@ -35,7 +42,7 @@
     }
 
     .navbar-brand {
-        color: #E8BE6D !important;
+        color: #FFFFFF !important;
         font-size: 26px;
     }
 
@@ -50,5 +57,9 @@
 
     .navbar-toggler-icon {
         filter: brightness(0) invert(1) opacity(1);
+    }
+
+    #nav-current {
+        color: #E8BE6D !important;
     }
 </style>
