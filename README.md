@@ -6,6 +6,7 @@
 **Headlines is a web application for tracking articles and their headlines.**
 
 Can be seen here: https://titulkovac.pbilek.eu/
+
 Swagger/OpenAPI here: https://api.titulkovac.pbilek.eu/swagger
 
 ### Technologies used:
