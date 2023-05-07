@@ -51,7 +51,7 @@ namespace Headlines.RSSProcessingMicroService.Services
 
             string[] urlIds = feedItems.Select(x => FeedItemUtils.GetUrlId(x, source)).ToArray();
             List<ArticleDto> articles = await _articleFacade.GetArticlesByUrlIdsAsync(urlIds, cancellationToken);
-            Dictionary<string, ArticleDto> articlesByUrlId = articles.ToDictionary(x => x.UrlId);
+            Dictionary<string, ArticleDto> articlesByUrlId = articles.Where(x => x.SourceId == source.Id).ToDictionary(x => x.UrlId);
 
             return feedItems.Select(feedItem => new FeedItemWithArticle()
             {
